@@ -1,0 +1,134 @@
+{{! Image choice template skeleton; use templater.py! }}
+
+<style type="text/css">
+label, input[type=radio], input[type=button] { cursor: pointer; }
+.blue { color: blue; }
+.red { color: red; }
+.trial { padding: 15px 10px; }
+.trial p, .trial table { padding-left: 50px; margin: 3px; }
+.trial img { width: 300px; border: 2; }
+.trial tr td { width: 33%; text-align: center; }
+.trial tr.labels td { border: 3px solid gray; }
+.trial_number { float: left; font-size: 1.5em; font-weight: bold; display:inline-block; min-width:50px; }
+#unanswered { font-weight: bold; font-size: 2em; color: black; background-color: red; margin: 0 auto; width: 500px; border: black 1px solid; padding: 10px; display:none; }
+#answered { margin: 0 auto; width: 500px; border: black 1px solid; padding: 10px; display:none; }
+</style>
+
+<p>Survey Code: <span class="blue">{{code}}</span></p>
+
+<p class="red"><strong>PLEASE COMPLETE AT MOST ONE <span class="blue">{{code}}</span> SURVEY. YOU WILL NOT BE PAID FOR COMPLETING MORE THAN ONE SURVEY WITH THIS CODE.</strong></p>
+
+<h3>Instructions</h3>
+
+<p>This survey has {{total_number}} questions. Each question consists of a sentence and three pictures of dots. All pictures contain blue, red and yellow dots, and the sentence is about the blue dots. Your task is to choose which one of the three pictures matches what the sentence says. 
+
+The pictures are not displayed as straightforwardly as you might expect: in all questions, one of the three pictures is hidden by a gray cover, and you will not be able to see what is behind it. Since there is always exactly one picture that matches the description in the sentence, you should only choose the covered picture if you think the other two pictures are not correct.
+
+<p>Here is an example:</p>
+
+<div class="trial">
+	
+	<p>Less than 3 of the dots are blue.</p>
+
+	<table><tbody>
+		<tr>
+			<td><label for="ChoiceSample1_1"><img src="http://web.mit.edu/hkotek/www/experimentpictures/gradientYN/Box.png" /></label></td>
+			<td><label for="ChoiceSample1_2"><img src="http://web.mit.edu/hkotek/www/experimentpictures/gradientYN/3C_Bal-1.png" /></label></td>
+			<td><label for="ChoiceSample1_3"><img src="http://web.mit.edu/hkotek/www/experimentpictures/gradientYN/3C_Unbal-9.png" /></label></td>
+		</tr>
+		<tr class="labels">
+			<td><input type="radio" id="ChoiceSample1_1" name="ChoiceSample1" value="1" /></td>
+			<td><input type="radio" id="ChoiceSample1_2" name="ChoiceSample1" value="2" /></td>
+			<td><input type="radio" id="ChoiceSample1_3" name="ChoiceSample1" value="3" /></td>
+		</tr>
+	</tbody></table>
+	
+</div>
+
+<p>In this case the sentence doesn't match either of the visible pictures, so please choose the covered picture.</p>
+
+<p class="red"><strong>In order to get paid, please make sure that you answer all {{total_number}} questions.</strong></p>
+
+<p><strong>Consent Statement:</strong> By answering the following questions, you are participating in a study being performed by linguists in the Department of Linguistics and Philosophy at Massachusetts Institute of Technology. If you have questions about this research, please contact <a href="mailto:EMAIL">EMAIL</a>. Your participation in this research is voluntary. You may decline to answer any or all of the following questions. You may decline further participation at any time without adverse consequences. Your anonymity is assured; the researchers who have requested your participation will not receive any personal information about you.</p>
+
+<p>If your browser has JavaScript turned on, a counter will be displayed at the bottom of the page indicating how many questions have been answered. <strong>It is highly recommended that you <span class="red">turn on JavaScript</span> and use this tool before submitting to ensure that all questions have been answered and you can receive payment.</strong></p>
+
+<hr noshade="noshade" />
+
+{{#items}}
+
+<div class="trial">
+	
+	<span class="trial_number">{{number}}.</span>
+	
+	<p>{{field_1}}</p>
+
+	<table class="count"><tbody>
+		<tr>
+			<td><label for="Choice{{number}}1"><img src="{{field_2}}" /></label></td>
+			<td><label for="Choice{{number}}2"><img src="{{field_3}}" /></label></td>
+			<td><label for="Choice{{number}}3"><img src="{{field_4}}" /></label></td>
+		</tr>
+		<tr class="labels">
+			<td><input class="count" type="radio" id="Choice{{number}}1" name="Choice{{number}}" value="1" /></td>
+			<td><input class="count" type="radio" id="Choice{{number}}2" name="Choice{{number}}" value="2" /></td>
+			<td><input class="count" type="radio" id="Choice{{number}}3" name="Choice{{number}}" value="3" /></td>
+		</tr>
+	</tbody></table>
+</div>
+	
+<hr noshade="noshade" />
+
+{{/items}}
+
+<p>Are you a native speaker of English? <label for="englishY"><input id="englishY" type="radio" name="english" value="1" /> Yes</label> <label for="englishN"><input id="englishN" type="radio" name="english" value="0" /> No</label></p>
+
+<p>Do you speak a language other than English? <label for="foreignlangY"><input id="foreignlangY" type="radio" name="foreignlang" value="1" /> Yes</label> <label for="foreignlangN"><input id="foreignlangN" type="radio" name="foreignlang" value="0" /> No</label></p>
+
+<p>(Your answers to these questions do not affect the payment.)</p>
+
+<div id="unanswered">
+	<span>&nbsp;</span> questions (out of {{total_number}} total) have been answered. If you submit now, you will not be paid.<br />
+	<input type="button" value="HIGHLIGHT UNANSWERED QUESTIONS" id="highlight-button" />
+</div>
+
+<div id="answered">
+	<span>&nbsp;</span> questions (out of {{total_number}} total) have been answered. You are ready to submit.
+</div>
+
+<p><input type="hidden" name="numanswered" id="numanswered" /> <input type="hidden" name="useragent" id="useragent" /></p>
+
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+<script type='text/javascript'>
+
+total_number = parseInt("{{total_number}}") || Infinity;
+
+function count() {
+	if ($(this).is('input'))
+		$(this).closest('table').css('background','transparent');
+
+	var num = $('input[type=radio].count:checked').length;
+
+	$('#unanswered span, #answered span').text(num);
+	$('#numanswered').val(num);
+
+	if ( num < total_number ) {
+		$('#unanswered').show();
+		$('#answered').hide();
+	} else {
+		$('#unanswered').hide();
+		$('#answered').show();
+	}
+}
+$(count);
+$('input[type=radio]').bind('change', count);
+
+$(function() {
+	$('#useragent').val(navigator.userAgent);
+});
+
+function highlight() {
+	$('.trial:not(:has(input[type=radio].count:checked)):not(:has([name=practice]))').css('background', 'yellow');
+}
+$('#highlight-button').click(highlight);
+</script>

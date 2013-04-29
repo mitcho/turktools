@@ -1,0 +1,131 @@
+{{! Binary sentence with image template skeleton; use templater.py! }}
+
+<style type="text/css">
+label, input[type=radio], input[type=button] { cursor: pointer; }
+.blue { color: blue; }
+.red { color: red; }
+.trial { padding: 15px 10px; }
+.trial p, .trial table { padding-left: 50px; margin: 3px; }
+.trial img { width: 400px; border: 2; }
+.trial table { width: 400px; }
+.trial tr td { width: 50%; text-align: center; }
+.trial_number { float: left; font-size: 1.5em; font-weight: bold; display:inline-block; min-width:50px; }
+#unanswered { font-weight: bold; font-size: 2em; color: black; background-color: red; margin: 0 auto; width: 500px; border: black 1px solid; padding: 10px; display:none; }
+#answered { margin: 0 auto; width: 500px; border: black 1px solid; padding: 10px; display:none; }
+</style>
+
+<p>Survey Code: <span class="blue">{{code}}</span></p>
+
+<p class="red"><strong>PLEASE COMPLETE AT MOST ONE <span class="blue">{{code}}</span> SURVEY. YOU WILL NOT BE PAID FOR COMPLETING MORE THAN ONE SURVEY WITH THIS CODE.</strong></p>
+
+<h3>Instructions</h3>
+
+<p>This survey has {{total_number}} questions.  Each question consists of a picture  with dots and a sentence. Some pictures contain blue and yellow dots,  and others contain blue, yellow and red dots. The sentence is about the  blue dots. Your task is to judge whether what the sentence says is TRUE  or FALSE about the picture.</p>
+
+<p>Here is an example:</p>
+
+<div class="trial">
+	
+	<p>Less than 3 of the dots are blue</p>
+
+	<p><img src="http://web.mit.edu/hkotek/www/experimentpictures/gradientYN/Practice.png" /></p>
+
+	<table><tbody>
+		<tr>
+			<td><label for="ChoiceSample1Y">TRUE</label></td>
+			<td><label for="ChoiceSample1N">FALSE</label></td>
+		</tr>
+		<tr>
+			<td><input type="radio" id="ChoiceSample1Y" name="ChoiceSample1" value="1" /></td>
+			<td><input type="radio" id="ChoiceSample1N" name="ChoiceSample1" value="0" /></td>
+		</tr>
+	</tbody></table>
+</div>
+
+<p>In this case the sentence is FALSE, so please answer FALSE.</p>
+
+<p class="red"><strong>In order to get paid, please make sure that you answer all {{total_number}} questions.</strong></p>
+
+<p><strong>Consent Statement:</strong> By answering the following questions, you are participating in a study being performed by linguists in the Department of Linguistics and Philosophy at Massachusetts Institute of Technology. If you have questions about this research, please contact <a href="mailto:EMAIL">EMAIL</a>. Your participation in this research is voluntary. You may decline to answer any or all of the following questions. You may decline further participation at any time without adverse consequences. Your anonymity is assured; the researchers who have requested your participation will not receive any personal information about you.</p>
+
+<p>If your browser has JavaScript turned on, a counter will be displayed at the bottom of the page indicating how many questions have been answered. <strong>It is highly recommended that you <span class="red">turn on JavaScript</span> and use this tool before submitting to ensure that all questions have been answered and you can receive payment.</strong></p>
+
+<hr noshade="noshade" />
+
+{{#items}}
+
+<div class="trial">
+	
+	<span class="trial_number">{{number}}.</span>
+	
+	<p>{{field_1}}</p>
+
+	<p><img src="{{field_2}}" /></p>
+
+	<table class="count"><tbody>
+		<tr>
+			<td><label for="Choice{{number}}Y">TRUE</label></td>
+			<td><label for="Choice{{number}}N">FALSE</label></td>
+		</tr>
+		<tr>
+			<td><input class="count" type="radio" id="Choice{{number}}Y" name="Choice{{number}}" value="1" /></td>
+			<td><input class="count" type="radio" id="Choice{{number}}N" name="Choice{{number}}" value="0" /></td>
+		</tr>
+	</tbody></table>
+</div>
+	
+<hr noshade="noshade" />
+
+{{/items}}
+
+<p>Are you a native speaker of English? <label for="englishY"><input id="englishY" type="radio" name="english" value="1" /> Yes</label> <label for="englishN"><input id="englishN" type="radio" name="english" value="0" /> No</label></p>
+
+<p>Do you speak a language other than English? <label for="foreignlangY"><input id="foreignlangY" type="radio" name="foreignlang" value="1" /> Yes</label> <label for="foreignlangN"><input id="foreignlangN" type="radio" name="foreignlang" value="0" /> No</label></p>
+
+<p>(Your answers to these questions do not affect the payment.)</p>
+
+<div id="unanswered">
+	<span>&nbsp;</span> questions (out of {{total_number}} total) have been answered. If you submit now, you will not be paid.<br />
+	<input type="button" value="HIGHLIGHT UNANSWERED QUESTIONS" id="highlight-button" />
+</div>
+
+<div id="answered">
+	<span>&nbsp;</span> questions (out of {{total_number}} total) have been answered. You are ready to submit.
+</div>
+
+<p><input type="hidden" name="numanswered" id="numanswered" /> <input type="hidden" name="useragent" id="useragent" /></p>
+
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+<script type='text/javascript'>
+
+total_number = parseInt("{{total_number}}") || Infinity;
+
+function count() {
+	if ($(this).is('input'))
+		$(this).closest('table').css('background','transparent');
+
+	var num = $('input[type=radio].count:checked').length;
+
+	$('#unanswered span, #answered span').text(num);
+	$('#numanswered').val(num);
+
+	if ( num < total_number ) {
+		$('#unanswered').show();
+		$('#answered').hide();
+	} else {
+		$('#unanswered').hide();
+		$('#answered').show();
+	}
+}
+$(count);
+$('input[type=radio]').bind('change', count);
+
+$(function() {
+	$('#useragent').val(navigator.userAgent);
+});
+
+function highlight() {
+	$('.trial:not(:has(input[type=radio].count:checked)):not(:has([name=practice]))').css('background', 'yellow');
+}
+$('#highlight-button').click(highlight);
+</script>
