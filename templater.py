@@ -34,10 +34,15 @@ TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
 
-from os.path import splitext
-from sys import argv
-from pystache import render
+import os, inspect
+from sys import argv, path
 from platform import system
+
+# add pystache submodule to path
+cmd_subfolder = os.path.realpath(os.path.abspath(os.path.join('.', 'ext', 'pystache')))
+if cmd_subfolder not in path:
+	path.insert(0, cmd_subfolder)
+from pystache import render
 
 def graceful_exit():
 	if system() == 'Windows':
@@ -67,7 +72,7 @@ while '{{' not in template_string:
 number   = int(argv[2]) if len(argv) > 2 else int(raw_input("Please enter the number of items: "))
 code     = argv[3]      if len(argv) > 3 else raw_input("Please enter the survey code: ")
 
-name_part, extension = splitext(template)
+name_part, extension = os.path.splitext(template)
 filename = name_part.replace('.skeleton', '') + '-' + code + '-' + str(number) + extension
 output_file = open(filename, 'w')
 
