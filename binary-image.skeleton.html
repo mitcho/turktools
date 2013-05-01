@@ -46,7 +46,7 @@ label, input[type=radio], input[type=button] { cursor: pointer; }
 
 <p class="red"><strong>In order to get paid, please make sure that you answer all {{total_number}} questions.</strong></p>
 
-<p><strong>Consent Statement:</strong> By answering the following questions, you are participating in a study being performed by linguists in the Department of Linguistics and Philosophy at Massachusetts Institute of Technology. If you have questions about this research, please contact <a href="mailto:EMAIL">EMAIL</a>. Your participation in this research is voluntary. You may decline to answer any or all of the following questions. You may decline further participation at any time without adverse consequences. Your anonymity is assured; the researchers who have requested your participation will not receive any personal information about you.</p>
+<p><strong>Consent Statement:</strong>...</p>
 
 <p>If your browser has JavaScript turned on, a counter will be displayed at the bottom of the page indicating how many questions have been answered. <strong>It is highly recommended that you <span class="red">turn on JavaScript</span> and use this tool before submitting to ensure that all questions have been answered and you can receive payment.</strong></p>
 
@@ -92,6 +92,8 @@ label, input[type=radio], input[type=button] { cursor: pointer; }
 <div id="answered">
 	<span>&nbsp;</span> questions (out of {{total_number}} total) have been answered. You are ready to submit.
 </div>
+
+<h3 style="color: red; text-align:center;">After submitting this HIT, do NOT submit another HIT with survey code <span class="blue">{{code}}</span>. You will not be paid for completing more than one survey with this code.</h3>
 
 <p><input type="hidden" name="numanswered" id="numanswered" /> <input type="hidden" name="useragent" id="useragent" /></p>
 
