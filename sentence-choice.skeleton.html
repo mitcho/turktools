@@ -40,14 +40,14 @@ label, input[type=radio], input[type=button] { cursor: pointer; }
 
 {{#items}}
 
-<div class="trial">
+<div class="trial count">
 
 	<span class="trial_number">{{number}}.</span>
 	
 	<p><strong>Context:</strong> {{field_1}}.</p>
 	
-	<p><label for='Choice{{number}}_1'><input class='count' type='radio' name='Choice{{number}}' id='Choice{{number}}_1' value='{{field_2}}'></input> {{field_2}}</label></p>
-	<p><label for='Choice{{number}}_2'><input class='count' type='radio' name='Choice{{number}}' id='Choice{{number}}_2' value='{{field_3}}'></input> {{field_3}}</label></p>
+	<p><label for='Choice{{number}}_1'><input type='radio' name='Choice{{number}}' id='Choice{{number}}_1' value='{{field_2}}'></input> {{field_2}}</label></p>
+	<p><label for='Choice{{number}}_2'><input type='radio' name='Choice{{number}}' id='Choice{{number}}_2' value='{{field_3}}'></input> {{field_3}}</label></p>
 
 </div>
 
@@ -70,6 +70,7 @@ label, input[type=radio], input[type=button] { cursor: pointer; }
 	<span>&nbsp;</span> questions (out of {{total_number}} total) have been answered. You are ready to submit.
 </div>
 
+<h3 style="color: red; text-align:center;">After submitting this HIT, do NOT submit another HIT with survey code <span class="blue">{{code}}</span>. You will not be paid for completing more than one survey with this code.</h3>
 <p><input type="hidden" name="numanswered" id="numanswered" /> <input type="hidden" name="useragent" id="useragent" /></p>
 
 <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
@@ -102,7 +103,7 @@ $(function() {
 });
 
 function highlight() {
-	$('div:has(.count)').each(function() {
+	$('.trial.count').each(function() {
 		if ($(this).find('input:checked').length != 1)
 			$(this).css('background', 'yellow');
 		else
