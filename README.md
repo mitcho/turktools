@@ -3,7 +3,7 @@ Turk Tools
 
 Tools to prepare linguistic surveys for Amazon Mechanical Turk.
 
-Copyright 2013 Michael Yoshitaka Erlewine <mitcho@mitcho.com>. All code licensed under the MIT license. See license block below and in individual files.
+Copyright 2013 Michael Yoshitaka Erlewine <mitcho@mitcho.com> and contributors. All code licensed under the MIT license. See license block below and in individual files.
 
 To download everything here, click on the "ZIP" button above.
 
@@ -18,6 +18,7 @@ The following tools are currently distributed in this repository:
 * `templater.py`
 * `simluator.py`
 * `decoder.py`
+* `analysis.r`: sample R analysis code
 
 The tool `turkolizer.py` is *not* included in this repository, due to an unclear software license. Contact mitcho to get the latest version of the turkolizer. In the near future, I will probably do a clean-room-rewrite of this tool so it can be released in the open without copyright constraints.
 
@@ -42,7 +43,7 @@ TODO
 
 ## The MIT License (MIT)
 
-Copyright (c) 2013 Michael Yoshitaka Erlewine
+Copyright (c) 2013 Michael Yoshitaka Erlewine and contributors
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
