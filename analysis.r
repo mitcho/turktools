@@ -1,9 +1,8 @@
-################################################################################
-## Sample analysis script for linguistic surveys run on Mechanical Turk       ##
-## For surveys cosntructed using the tools described in Erlewine&Kotek (2013) ##
-## May 2013 Hadas Kotek, licensed under the MIT license                       ## 
-################################################################################
-
+#####################################################################################
+##    Sample analysis script for linguistic surveys run on Mechanical Turk         ##
+##    For surveys cosntructed using the tools described in Erlewine&Kotek (2013)   ##
+##    May 2013 Hadas Kotek, licensed under the MIT license                         ##
+#####################################################################################
 
 # file prep ----
 
@@ -12,6 +11,9 @@ results <- read.csv("xxxxxxxxxxxxxx.decoded.csv",header=TRUE)
 
 # reject non-native speakers
 results <- subset(results, english == 1)
+
+# reject non mono-lingual speakers?
+#results <- subset(results, foreign == 1)
 
 
 # reject participants who completed more than one survey or did not finish the survey
@@ -35,31 +37,60 @@ didntDoEnough <- subset(howMany, x < NotEnough)$Group.1
 results <- subset(results, !(WorkerId %in% didTooMany))
 results <- subset(results, !(WorkerId %in% didntDoEnough))
 
+
 # reject participants with low accuracy. ----
 # compute accuracy for any question that had expected values such as filler items, comprehension questions and filler items
 # here: we assume that the correct response to the item was saved in a hidden field, field_5 
 # the field number should be modified according to its number in your items file
 results$isCorrect <- ifelse(is.na(results$field_5), NA, ifelse(results$field_5 == results$Choice, 1, 0))
-compAccuracy <- aggregate(results$isCorrect, list(WorkerId = results$WorkerId), mean, na.rm = T)
-lowAcc <- subset(compAccuracy, x < 0.75)$WorkerId
+Accuracy <- aggregate(results$isCorrect, by=list(results$WorkerId), mean, na.rm = T)
+lowAcc <- subset(Accuracy, x < 0.75)$WorkerId
 results <- subset(results, !(WorkerId %in% lowAcc))
+
+
+# create a dataframe for target items ---
+# here, assuming all non-fillers are target sections
+targets <- subset(results, results$Section != 'filler')
 
 
 # extract factor values out of the condition names and store them in separate columns ----
 # replace Factor1, Factor2, Factor3 etc.. with meaningful names based on the experiment
-results$Factor1 <- sub("^(.*)-(.*)-(.*)$", "\\1", results$Condition)
-results$Factor2 <- sub("^(.*)-(.*)-(.*)$", "\\2", results$Condition)
-results$Factor3 <- sub("^(.*)-(.*)-(.*)$", "\\3", results$Condition)
+targets$Factor1 <- sub("^(.*)-(.*)-(.*)$", "\\1", targets$Condition)
+targets$Factor2 <- sub("^(.*)-(.*)-(.*)$", "\\2", targets$Condition)
+targets$Factor3 <- sub("^(.*)-(.*)-(.*)$", "\\3", targets$Condition)
+
 
 # data visualization ----
 # plot histograms by the different factors in your experiment for each condition
 library(lattice)
-histogram(~ Choice | Factor1 * Factor2, data=results)
-histogram(~ Choice | Factor1, data=results)
-histogram(~ Choice | Factor2, data=results)
-histogram(~ Choice, data=results)
+histogram(~ Choice | Factor1 * Factor2, data=targets)
+histogram(~ Choice | Factor1, data=targets)
+histogram(~ Choice | Factor2, data=targets)
+histogram(~ Choice, data=targets)
 
-# basic aggregation ----
-aggregate(results$Choice, by=list(results$WorkerId), mean)
-aggregate(results$Choice, by=list(results$WorkerId, results$Factor1, results$Factor2), mean)
 
+# basic aggregation (for ratings or binary forced choice coded as 0-1)----
+aggregate(targets$Choice, by=list(targets$WorkerId), mean)
+aggregate(targets$Choice, by=list(targets$WorkerId, targets$Factor1, targets$Factor2), mean)
+
+# basic aggregation (for completions)
+aggregate(targets$WorkerId, by=list(targets$Choice), length)
+aggregate(targets$WorkerId, by=list(targets$Choice, targets$Factor1, targets$Factor2), length)
+
+
+# looking at individual items ----
+#target items (for ratings or binary forced choice coded as 0-1)
+aggregate(targets$Choice, by=list(targets$Item), mean)
+aggregate(targets$Choice, by=list(targets$Condition, targets$WorkerId), mean)
+
+# target items (for completions)
+aggregate(targets$WorkerId, by=list(targets$Choice, targets$Condition), length)
+
+# filler items with expected answers
+aggregate(results$isCorrect, by=list(results$Item), mean, na.rm = T)
+
+# slow vs. fast workers
+# perform analysis separately on these groups instead of on all of targets.
+meanTime <- mean(targets$WorkTimeInSeconds)
+fastWorkers <- subset(targets, targets$WorkTimeInSeconds < MeanTime)
+slowWorkers <- subset(targets, targets$WorkTimeInSeconds >= MeanTime)
