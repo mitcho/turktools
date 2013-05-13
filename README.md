@@ -43,6 +43,12 @@ The `templater.py` tool takes "skeletons" of templates and turns them into templ
 
 TODO
 
+## Testing
+
+[![Test Status](https://travis-ci.org/mitcho/turktools.png?branch=master)](https://travis-ci.org/mitcho/turktools)
+
+Turk Tools includes unit tests using the Python-standard `unittest` library. Tests can be run by running `python tests.py`.
+
 ## The MIT License (MIT)
 
 Copyright (c) 2013 Michael Yoshitaka Erlewine and contributors
