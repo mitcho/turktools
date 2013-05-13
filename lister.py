@@ -60,7 +60,7 @@ def graceful_write_csv(filename, data):
 		writer = DictWriter(f, keys, extrasaction = 'ignore')
 		writer.writeheader()
 		for row in data:
-			writer.writerow(row)
+			writer.writerow(row)	
 
 class Trial:
 	def __init__(self, section, number, condition):
@@ -88,6 +88,44 @@ class Trial:
 
 	def append_field(self, field):
 		self.__fields.append(field)
+
+class Experiment:
+	def __init__(self, trials):
+		self.__trials = trials
+	
+	def field_count(self):
+		# get the maximum number of fields
+		return max([len(t.fields()) for t in self.__trials])
+	
+	def sections(self):
+		return list(set([t.section for t in self.__trials]))
+
+	def verify(self):
+		for section_name in self.sections():
+			self.verify_section(section_name)
+
+	def verify_section(self, section_name):
+		# numbers should start with 1 and increase sequentially
+		section_trials = self.section_trials(section_name)
+		item_numbers = [t.number for t in section_trials]
+		item_count = len(item_numbers)
+		for i in range(1, item_count + 1):
+			# todo: do something with this assertion
+			assert i in item_numbers
+		# todo: each item has to have the same conditions
+
+	def section_trials(self, section_name):
+		return [t for t in self.__trials if t.section == section_name]
+
+	def section(self, section_name):
+		section_info = {}
+		
+		section_trials = self.section_trials(section_name)
+		
+		section_info['item_count'] = len([t.number for t in section_trials])
+		section_info['conditions'] = list(set([t.condition for t in section_trials]))
+		
+		return section_info
 
 def graceful_read_items(filename):
 	f = open(filename, 'r')
@@ -121,34 +159,21 @@ def graceful_read_items(filename):
 
 def main(items_file, lists):
 	trials = graceful_read_items(items_file)
+	experiment = Experiment(trials)
+	experiment.verify()
 	
-	# get the maximum number of fields
-	number_of_fields = max([len(t.fields()) for t in trials])
-	
-	# study the sections:
-	section_names = list(set([t.section for t in trials]))
+	# print experiment details:
 	print('-' * 20)
-	for section_name in section_names:
+	for section_name in experiment.sections():
 		print('Section name:', section_name)
-		
-		# numbers should start with 1 and increase sequentially
-		item_numbers = [t.number for t in trials if t.section == section_name]
-		item_count = len(item_numbers)
-		for i in range(1, item_count + 1):
-			# todo: do something with this assertion
-			assert i in item_numbers
-		
-		print('Item count:  ', item_count)
-		
-		conditions = list(set([t.condition for t in trials if t.section == section_name]))
-		
-		# each item has to have the same conditions
- 		print('Conditions:  ', len(conditions))
- 		for condition in conditions:
+		section = experiment.section(section_name)
+		print('Item count:  ', section['item_count'])
+ 		print('Conditions:  ', len(section['conditions']))
+ 		for condition in section['conditions']:
  			print('  -', condition)
 		print()
-	
-	print(section_names, number_of_fields, trials)
+
+	print('Field count:', experiment.field_count())
 
 	name_part, extension = splitext(items_file)
 
