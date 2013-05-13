@@ -1,9 +1,9 @@
 # coding: utf-8
 """
-turkolizer decoder
+Turk Tools Decoder
 mitcho (Michael Yoshitaka Erlewine), mitcho@mitcho.com, April 2013
 
-Uses a Turkolizer decode file to decode a Turk results file.
+Uses a decode file to decode a Turk results file.
 
 The MIT License (MIT)
 Copyright (c) 2013 Michael Yoshitaka Erlewine
@@ -156,7 +156,7 @@ if __name__ == '__main__':
 	from sys import argv
 
 	results = argv[1] if len(argv) > 2 else raw_input("Please enter the Turk results file name: ")
-	decode = argv[2] if len(argv) > 2 else raw_input("Please enter the Turkolizer decode file name: ")
+	decode = argv[2] if len(argv) > 2 else raw_input("Please enter the decode file name: ")
 	name_part, extension = splitext(results)
 
 	main( name_part, results, decode )

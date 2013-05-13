@@ -1,13 +1,13 @@
 # coding: utf-8
 """
-turk templater
+Turk Templater
 mitcho (Michael Yoshitaka Erlewine), mitcho@mitcho.com, March 2013
 
 Renders Mechanical Turk template "skeletons" using the "mustache" templating language:
   http://mustache.github.com/mustache.5.html
 
 Turk fields will be of the form ${trial_i_j}, where i is the trial number and j is 
-a unique integer. This is designed to work with a modified version of the Turkolizer.
+a unique integer. This matches the output of the Lister.
 
 The MIT License (MIT)
 Copyright (c) 2013 Michael Yoshitaka Erlewine

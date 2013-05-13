@@ -1,6 +1,6 @@
 # coding: utf-8
 """
-turk simulator
+Turk Simulator
 mitcho (Michael Yoshitaka Erlewine), mitcho@mitcho.com, March 2013
 
 Simulates Amazon Mechanical Turk's substitution of CSV file fields into an HTML template.
