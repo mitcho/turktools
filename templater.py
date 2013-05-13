@@ -35,6 +35,23 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 from __future__ import print_function
 import os, inspect
 from sys import path
+import atexit
+
+@atexit.register
+def graceful_exit():
+	from platform import system
+	if system() == 'Windows':
+		raw_input('Press enter to close the window...')
+
+# add tab completion to raw_input, for those platforms that support it
+try:
+	import readline
+	if 'libedit' in readline.__doc__:
+		readline.parse_and_bind("bind ^I rl_complete")
+	else:
+		readline.parse_and_bind("tab: complete")
+except ImportError:
+	pass
 
 # add pystache submodule to path
 cmd_subfolder = os.path.realpath(os.path.abspath(os.path.join('.', 'ext', 'pystache')))
@@ -42,18 +59,12 @@ if cmd_subfolder not in path:
 	path.insert(0, cmd_subfolder)
 from pystache import render
 
-def graceful_exit():
-	from platform import system
-	if system() == 'Windows':
-		raw_input('Press enter to close the window...')
-	exit()
-
 def graceful_read(filename):
 	try:
 		return open(filename, 'r').read()
 	except IOError as e:
-		print( "ERROR: ", e.strerror )
-		graceful_exit()
+		print( "ERROR:", e.strerror )
+		exit()
 
 maximum_number_of_fields = 100 # reasonable enough, I think.
 
@@ -82,8 +93,7 @@ def main(template, template_string, number, code):
 	output_file.write(render(template_string, obj))
 
 	print( 'Successfully wrote template to ' + filename )
-	graceful_exit()
-
+	exit()
 
 if __name__ == '__main__':
 	from sys import argv

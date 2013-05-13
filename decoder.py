@@ -29,13 +29,23 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
 
 from __future__ import print_function
-import re
+import re, atexit
 
+@atexit.register
 def graceful_exit():
 	from platform import system
 	if system() == 'Windows':
 		raw_input('Press enter to close the window...')
-	exit()
+
+# add tab completion to raw_input, for those platforms that support it
+try:
+	import readline
+	if 'libedit' in readline.__doc__:
+		readline.parse_and_bind("bind ^I rl_complete")
+	else:
+		readline.parse_and_bind("tab: complete")
+except ImportError:
+	pass
 
 def graceful_read_csv(filename):
 	from csv import DictReader
@@ -44,8 +54,8 @@ def graceful_read_csv(filename):
 	try:
 		f = open(filename, 'rb')
 	except IOError as e:
-		print( "ERROR: ", e.strerror )
-		graceful_exit()
+		print( "ERROR:", e.strerror )
+		exit()
 
 	csvreader = DictReader(f)
 	while True:
@@ -72,14 +82,14 @@ def main( name_part, results, decode ):
 
 	if len(decode_data) == 0:
 		print( "It looks like this decode file is not formatted correctly. Please try again." )
-		graceful_exit()
+		exit()
 
 	# todo: is there a better way to get the trial_numbers and check it?
 	trial_numbers = [int(re.sub(r'^Item(\d+)$', '\\1', key)) for key in decode_data[0].keys() if re.search(r'^Item(\d+)$', key)]
 	trial_numbers.sort()
 	if min(trial_numbers) != 1 or max(trial_numbers) != len(trial_numbers):
 		print( "It looks like this decode file is not formatted correctly. Please try again." )
-		graceful_exit()
+		exit()
 
 	# turn the decode_data into a hash, for lookup by list
 	decode_data_hash = {}
@@ -98,12 +108,12 @@ def main( name_part, results, decode ):
 
 	if len(results_data) == 0:
 		print( "It looks like this results file is missing data or is not formatted correctly. Please try again." )
-		graceful_exit()
+		exit()
 
 	for expected in ['Title', 'Description', 'Keywords', 'Reward']:
 		if expected not in results_data[0]:
 			print( "It looks like the results file is not formatted correctly (missing expected column {0}). Please try again.".format(expected) )
-			graceful_exit()
+			exit()
 
 	print( '-------------' )
 	print( 'Title:       ', results_data[0]['Title'] )
@@ -149,7 +159,7 @@ def main( name_part, results, decode ):
 	graceful_write_csv( filename, decoded_data )
 
 	print( 'Successfully wrote decoded results to ' + filename )
-	graceful_exit()
+	exit()
 
 if __name__ == '__main__':
 	from os.path import splitext

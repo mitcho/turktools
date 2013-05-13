@@ -36,7 +36,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
 
 from __future__ import print_function
-import re, atexit, readline
+import re, atexit
 
 @atexit.register
 def graceful_exit():
@@ -44,11 +44,15 @@ def graceful_exit():
 	if system() == 'Windows':
 		raw_input('Press enter to close the window...')
 
-# adds tab completion to raw_input, for those platforms that support it
-if 'libedit' in readline.__doc__:
-    readline.parse_and_bind("bind ^I rl_complete")
-else:
-    readline.parse_and_bind("tab: complete")
+# add tab completion to raw_input, for those platforms that support it
+try:
+	import readline
+	if 'libedit' in readline.__doc__:
+		readline.parse_and_bind("bind ^I rl_complete")
+	else:
+		readline.parse_and_bind("tab: complete")
+except ImportError:
+	pass
 
 def graceful_write_csv(filename, data):
 	from csv import DictWriter

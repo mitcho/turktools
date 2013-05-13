@@ -29,20 +29,30 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
 
 from __future__ import print_function
-import re
+import re, atexit
 
+@atexit.register
 def graceful_exit():
 	from platform import system
 	if system() == 'Windows':
 		raw_input('Press enter to close the window...')
-	exit()
+
+# add tab completion to raw_input, for those platforms that support it
+try:
+	import readline
+	if 'libedit' in readline.__doc__:
+		readline.parse_and_bind("bind ^I rl_complete")
+	else:
+		readline.parse_and_bind("tab: complete")
+except ImportError:
+	pass
 
 def graceful_read(filename):
 	try:
 		return open(filename, 'r').read()
 	except IOError as e:
-		print( "ERROR: ", e.strerror )
-		graceful_exit()
+		print( "ERROR:", e.strerror )
+		exit()
 
 def graceful_csv_list_read(csv):
 	from csv import DictReader
@@ -51,8 +61,8 @@ def graceful_csv_list_read(csv):
 	try:
 		f = open(csv, 'rb')
 	except IOError as e:
-		print( "ERROR: ", e.strerror )
-		graceful_exit()
+		print( "ERROR:", e.strerror )
+		exit()
 
 	csvreader = DictReader(f)
 	while True:
@@ -79,8 +89,8 @@ def main(data, list_number, template_string):
 	output_file.write("<h1>This is a simulation! Do not upload this file to Turk!</h1><hr/>")
 	output_file.write(output)
 
-	print( 'Successfully wrote simulation to ' + filename )
-	graceful_exit()
+	print( 'Successfully wrote simulation to', filename )
+	exit()
 
 if __name__ == '__main__':
 	from sys import argv
