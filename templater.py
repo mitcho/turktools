@@ -82,10 +82,9 @@ def item(i):
 		'number': i, 
 		'field': '${trial_' + i + '_1}',
 	}
-	fields = {
-		'field_' + str(j): '${trial_' + i + '_' + str(j) + '}'
-		for j in range(1, maximum_number_of_fields)
-	}
+	fields = {}
+	for j in range(1, maximum_number_of_fields):
+		fields[ 'field_' + str(j) ] = '${trial_' + i + '_' + str(j) + '}'
 
 	return dict( basic.items() + fields.items() )
 

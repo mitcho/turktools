@@ -74,17 +74,17 @@ if min(trial_numbers) != 1 or max(trial_numbers) != len(trial_numbers):
 	graceful_exit()
 
 # turn the decode_data into a hash, for lookup by list
-# todo: rewrite this so it's not a dict comprehension? maybe this is hard to read...
-decode_data = {int(row['list']):
-		{n:
-			{
+decode_data_hash = {}
+for row in decode_data:
+	entry = {}
+	for n in trial_numbers:
+		entry[n] = {
 				'Section': row['Section' + str(n)],
 				'Item': int(row['Item' + str(n)]),
 				'Condition': row['Condition' + str(n)],
 				'PresentationOrder': n
 			}
-		for n in trial_numbers}
-	for row in decode_data}
+	decode_data_hash[int(row['list'])] = entry
 
 results_data = graceful_read_csv(results)
 
@@ -115,7 +115,7 @@ for n in trial_numbers:
 		list_number = int(row['Input.list'])
 
 		# this line does the merge, basically:
-		data = decode_data[list_number][n].copy()
+		data = decode_data_hash[list_number][n].copy()
 		data['ListNumber'] = list_number
 		
 		# copy user/assignment meta		
