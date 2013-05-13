@@ -15,5 +15,6 @@ import tests.test_decoder
 runner = unittest.TextTestRunner(verbosity=1 + sys.argv.count('-v'))
 suite = unittest.TestLoader().loadTestsFromNames([
 	'tests.test_decoder',
+	'tests.test_lister',
 ])
 runner.run(suite)
