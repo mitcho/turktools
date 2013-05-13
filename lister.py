@@ -67,9 +67,27 @@ class Trial:
 		self.section = section
 		self.number = int(number)
 		self.condition = condition
-		self.fields = []
+		self.__fields = []
+
 	def __repr__(self):
-		return "[Trial {0.section} {0.number} {0.condition} ({1})]".format(self, len(self.fields))
+		return "[Trial {0.section} {0.number} {0.condition} ({1})]".format(self, len(self.fields()))
+
+	def fields(self, i = -1):
+		if i != -1:
+			if i < len(self.__fields):
+				return self.__fields[i]
+			else:
+				return ''
+		
+		# strip off empty lines at the end of the fields:
+		return_fields = self.__fields
+		while len(return_fields) > 0 and return_fields[len(return_fields) - 1] == '':
+			return_fields.pop()
+		
+		return return_fields
+
+	def append_field(self, field):
+		self.__fields.append(field)
 
 def graceful_read_items(filename):
 	f = open(filename, 'r')
@@ -81,16 +99,15 @@ def graceful_read_items(filename):
 	
 	current_trial = False
 	for line in f:
-		line = line.strip()
+		# strip off line endings:
+		line = line.rstrip(u'\r\n')
 		
-		if line == '':
-			continue
-	
 		matched = header_pattern.match(line)
 		
 		if matched is False and current_trial is False:
 			# skip these lines. todo: print an error?
 			print('weird')
+			continue
 		
 		if matched:
 			section, number, condition = matched.groups()
@@ -98,7 +115,7 @@ def graceful_read_items(filename):
 			current_trial = Trial(section, number, condition)
 			items.append(current_trial)
 		else:
-			current_trial.fields.append(line)
+			current_trial.append_field(line)
 	
 	return items
 

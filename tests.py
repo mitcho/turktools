@@ -8,6 +8,7 @@ Copyright (c) 2013 Michael Yoshitaka Erlewine
 See readme for license block
 """
 
+from __future__ import print_function
 import unittest, sys
 # todo: import doctest
 import tests.test_decoder
