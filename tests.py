@@ -10,7 +10,10 @@ See readme for license block
 
 import unittest, sys
 # todo: import doctest
+import tests.test_decoder
 
 runner = unittest.TextTestRunner(verbosity=1 + sys.argv.count('-v'))
-suite = unittest.TestLoader().discover('tests')
+suite = unittest.TestLoader().loadTestsFromNames([
+	'tests.test_decoder',
+])
 runner.run(suite)
