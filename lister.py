@@ -99,6 +99,9 @@ class Section:
 		self.conditions = list(set([t.condition for t in trials]))
 		self.item_count = len([t.number for t in trials])
 	
+	def __repr__(self):
+		return "[Section {0.name}]".format(self)
+	
 	def trials(self):
 		return self.__trials
 	
@@ -126,6 +129,9 @@ class Experiment:
 		for section in self.sections():
 			section_trials = [t for t in self.__trials if t.section == section]
 			self.__sections[section] = Section(section, section_trials)
+	
+	def __repr__(self):
+		return "[Experiment]"
 	
 	def field_count(self):
 		# get the maximum number of fields
