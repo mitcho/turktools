@@ -12,8 +12,8 @@ class TestDecoder(TestCase):
 			{'a':4,'b':5,'c':6},
 			{'a':7,'b':8,'c':9},
 		]
-		decoder.graceful_write_csv( 'tests/test.csv', data)
-		read_data = decoder.graceful_read_csv( 'tests/test.csv' )
+		decoder.graceful_write_csv( 'tests/tmp_test_numeric_csv.csv', data )
+		read_data = decoder.graceful_read_csv( 'tests/tmp_test_numeric_csv.csv' )
 		self.assertNotEqual(data, read_data)
 		
 	def test_text_csv(self):
@@ -22,8 +22,8 @@ class TestDecoder(TestCase):
 			{'a':'4','b':'5','c':'6'},
 			{'a':'7','b':'8','c':'9'},
 		]
-		decoder.graceful_write_csv( 'tests/test.csv', data)
-		read_data = decoder.graceful_read_csv( 'tests/test.csv' )
+		decoder.graceful_write_csv( 'tests/tmp_test_text_csv.csv', data )
+		read_data = decoder.graceful_read_csv( 'tests/tmp_test_text_csv.csv' )
 		self.assertEqual(data, read_data)
 	
 	
