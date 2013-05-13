@@ -8,9 +8,7 @@ Renders Mechanical Turk template "skeletons" using the "mustache" templating lan
 
 Turk fields will be of the form ${trial_i_j}, where i is the trial number and j is 
 a unique integer. This is designed to work with a modified version of the Turkolizer.
-"""
 
-"""
 The MIT License (MIT)
 Copyright (c) 2013 Michael Yoshitaka Erlewine
 
@@ -34,6 +32,7 @@ TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
 
+from __future__ import print_function
 import os, inspect
 from sys import argv, path
 from platform import system
@@ -53,7 +52,7 @@ def graceful_read(filename):
 	try:
 		return open(filename, 'r').read()
 	except IOError as e:
-		print "ERROR: ", e.strerror
+		print( "ERROR: ", e.strerror )
 		graceful_exit()
 
 maximum_number_of_fields = 100 # reasonable enough, I think.
@@ -65,7 +64,7 @@ if len(argv) > 1:
 
 while '{{' not in template_string:
 	if template_string != '':
-		print "This file doesn't look like a skeleton file!"
+		print( "This file doesn't look like a skeleton file!" )
 	template = raw_input("Please enter the skeleton file name: ")
 	template_string = graceful_read(template)
 
@@ -95,5 +94,5 @@ obj = {
 }
 output_file.write(render(template_string, obj))
 
-print 'Successfully wrote template to ' + filename
+print( 'Successfully wrote template to ' + filename )
 graceful_exit()

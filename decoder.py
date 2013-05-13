@@ -4,9 +4,7 @@ turkolizer decoder
 mitcho (Michael Yoshitaka Erlewine), mitcho@mitcho.com, April 2013
 
 Uses a Turkolizer decode file to decode a Turk results file.
-"""
 
-"""
 The MIT License (MIT)
 Copyright (c) 2013 Michael Yoshitaka Erlewine
 
@@ -30,6 +28,7 @@ TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
 
+from __future__ import print_function
 from os.path import splitext
 from sys import argv
 from csv import DictReader, DictWriter
@@ -46,7 +45,7 @@ def graceful_read_csv(filename):
 	try:
 		f = open(filename, 'rb')
 	except IOError as e:
-		print "ERROR: ", e.strerror
+		print( "ERROR: ", e.strerror )
 		graceful_exit()
 
 	csvreader = DictReader(f)
@@ -63,14 +62,14 @@ decode = argv[2] if len(argv) > 2 else raw_input("Please enter the Turkolizer de
 decode_data = graceful_read_csv(decode)
 
 if len(decode_data) == 0:
-	print "It looks like this decode file is not formatted correctly. Please try again."
+	print( "It looks like this decode file is not formatted correctly. Please try again." )
 	graceful_exit()
 
 # todo: is there a better way to get the trial_numbers and check it?
 trial_numbers = [int(re.sub(r'^Item(\d+)$', '\\1', key)) for key in decode_data[0].keys() if re.search(r'^Item(\d+)$', key)]
 trial_numbers.sort()
 if min(trial_numbers) != 1 or max(trial_numbers) != len(trial_numbers):
-	print "It looks like this decode file is not formatted correctly. Please try again."
+	print( "It looks like this decode file is not formatted correctly. Please try again." )
 	graceful_exit()
 
 # turn the decode_data into a hash, for lookup by list
@@ -89,20 +88,20 @@ for row in decode_data:
 results_data = graceful_read_csv(results)
 
 if len(results_data) == 0:
-	print "It looks like this results file is missing data or is not formatted correctly. Please try again."
+	print( "It looks like this results file is missing data or is not formatted correctly. Please try again." )
 	graceful_exit()
 
 for expected in ['Title', 'Description', 'Keywords', 'Reward']:
 	if expected not in results_data[0]:
-		print "It looks like the results file is not formatted correctly (missing expected column {0}). Please try again.".format(expected)
+		print( "It looks like the results file is not formatted correctly (missing expected column {0}). Please try again.".format(expected) )
 		graceful_exit()
 
-print '-------------'
-print 'Title:       ', results_data[0]['Title']
-print 'Description: ', results_data[0]['Description']
-print 'Keywords:    ', results_data[0]['Keywords']
-print 'Reward:      ', results_data[0]['Reward']
-print '-------------'
+print( '-------------' )
+print( 'Title:       ', results_data[0]['Title'] )
+print( 'Description: ', results_data[0]['Description'] )
+print( 'Keywords:    ', results_data[0]['Keywords'] )
+print( 'Reward:      ', results_data[0]['Reward'] )
+print( '-------------' )
 
 decoded_data = []
 
@@ -150,5 +149,5 @@ with open(filename, 'wb') as f:
 	for row in decoded_data:
 		writer.writerow(row)
 
-print 'Successfully wrote decoded results to ' + filename
+print( 'Successfully wrote decoded results to ' + filename )
 graceful_exit()

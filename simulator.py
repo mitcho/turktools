@@ -4,9 +4,7 @@ turk simulator
 mitcho (Michael Yoshitaka Erlewine), mitcho@mitcho.com, March 2013
 
 Simulates Amazon Mechanical Turk's substitution of CSV file fields into an HTML template.
-"""
 
-"""
 The MIT License (MIT)
 Copyright (c) 2013 Michael Yoshitaka Erlewine
 
@@ -30,6 +28,7 @@ TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
 
+from __future__ import print_function
 from os.path import splitext
 from sys import argv
 from csv import DictReader
@@ -45,7 +44,7 @@ def graceful_read(filename):
 	try:
 		return open(filename, 'r').read()
 	except IOError as e:
-		print "ERROR: ", e.strerror
+		print( "ERROR: ", e.strerror )
 		graceful_exit()
 
 template_string = ''
@@ -54,7 +53,7 @@ if len(argv) > 1:
 	template_string = graceful_read(template)
 while re.search(r'\$\{(\w+)\}', template_string) is None:
 	if template_string != '':
-		print "WARNING: This doesn't look like a template file!"
+		print( "WARNING: This doesn't look like a template file!" )
 	template = raw_input("Please enter the template file name: ")
 	template_string = graceful_read(template)
 
@@ -64,7 +63,7 @@ data = {}
 try:
 	f = open(csv, 'rb')
 except IOError as e:
-	print "ERROR: ", e.strerror
+	print( "ERROR: ", e.strerror )
 	graceful_exit()
 
 csvreader = DictReader(f)
@@ -88,5 +87,5 @@ output_file = open(filename, 'w')
 output_file.write("<h1>This is a simulation! Do not upload this file to Turk!</h1><hr/>")
 output_file.write(output)
 
-print 'Successfully wrote simulation to ' + filename
+print( 'Successfully wrote simulation to ' + filename )
 graceful_exit()
