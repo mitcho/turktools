@@ -22,6 +22,8 @@ The following tools are currently distributed in this repository:
 
 The tool `turkolizer.py` is *not* included in this repository, due to an unclear software license. Contact mitcho to get the latest version of the turkolizer. In the near future, I will probably do a clean-room-rewrite of this tool so it can be released in the open without copyright constraints.
 
+If you would like to host Mechanical Turk-style surveys on your own server instead of using Amazon Mechanical Turk, this can be done using Turk Tools' sister project, [Turk Server](https://github.com/mitcho/turkserver).
+
 ## Usage
 
 TODO
