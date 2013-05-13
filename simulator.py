@@ -29,13 +29,10 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
 
 from __future__ import print_function
-from os.path import splitext
-from sys import argv
-from csv import DictReader
 import re
-from platform import system
 
 def graceful_exit():
+	from platform import system
 	if system() == 'Windows':
 		raw_input('Press enter to close the window...')
 	exit()
@@ -47,45 +44,61 @@ def graceful_read(filename):
 		print( "ERROR: ", e.strerror )
 		graceful_exit()
 
-template_string = ''
-if len(argv) > 1:
-	template = argv[1]
-	template_string = graceful_read(template)
-while re.search(r'\$\{(\w+)\}', template_string) is None:
-	if template_string != '':
-		print( "WARNING: This doesn't look like a template file!" )
-	template = raw_input("Please enter the template file name: ")
-	template_string = graceful_read(template)
+def graceful_csv_list_read(csv):
+	from csv import DictReader
 
-csv = argv[2] if len(argv) > 2 else raw_input("Please enter the turk CSV file name: ")
+	data = {}
+	try:
+		f = open(csv, 'rb')
+	except IOError as e:
+		print( "ERROR: ", e.strerror )
+		graceful_exit()
 
-data = {}
-try:
-	f = open(csv, 'rb')
-except IOError as e:
-	print( "ERROR: ", e.strerror )
+	csvreader = DictReader(f)
+	while True:
+		try: row = csvreader.next()
+		except: break
+		data[row['list']] = row
+
+	return data
+
+def main(data, list_number, template_string):
+	from os.path import splitext
+
+	global substitution
+	substitution = data[str(list_number)]
+	def replacement(matchobj):
+		global substitution
+		return substitution[matchobj.group(1)]
+
+	output = re.sub(r'\$\{(\w+)\}', replacement, template_string)
+
+	name_part, extension = splitext(template)
+	filename = name_part + '-simulation' + extension
+	output_file = open(filename, 'w')
+	output_file.write("<h1>This is a simulation! Do not upload this file to Turk!</h1><hr/>")
+	output_file.write(output)
+
+	print( 'Successfully wrote simulation to ' + filename )
 	graceful_exit()
 
-csvreader = DictReader(f)
-while True:
-	try: row = csvreader.next()
-	except: break
-	data[row['list']] = row
+if __name__ == '__main__':
+	from sys import argv
 
-list_number = int(argv[3] if len(argv) > 3 else raw_input("Please enter the list number (0.." + str(len(data) - 1) + ") you want to simulate: "))
+	template_string = ''
+	if len(argv) > 1:
+		template = argv[1]
+		template_string = graceful_read(template)
+	while re.search(r'\$\{(\w+)\}', template_string) is None:
+		if template_string != '':
+			print( "WARNING: This doesn't look like a template file!" )
+		template = raw_input("Please enter the template file name: ")
+		template_string = graceful_read(template)
 
-substitution = data[str(list_number)]
-def replacement(matchobj):
-	global substitution
-	return substitution[matchobj.group(1)]
+	csv = argv[2] if len(argv) > 2 else raw_input("Please enter the turk CSV file name: ")
 
-output = re.sub(r'\$\{(\w+)\}', replacement, template_string)
+	data = graceful_csv_list_read(csv)
+	
+	list_number = int(argv[3] if len(argv) > 3 else raw_input("Please enter the list number (0.." + str(len(data) - 1) + ") you want to simulate: "))
 
-name_part, extension = splitext(template)
-filename = name_part + '-simulation' + extension
-output_file = open(filename, 'w')
-output_file.write("<h1>This is a simulation! Do not upload this file to Turk!</h1><hr/>")
-output_file.write(output)
-
-print( 'Successfully wrote simulation to ' + filename )
-graceful_exit()
+	main(data, list_number, template_string)

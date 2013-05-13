@@ -34,8 +34,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 from __future__ import print_function
 import os, inspect
-from sys import argv, path
-from platform import system
+from sys import path
 
 # add pystache submodule to path
 cmd_subfolder = os.path.realpath(os.path.abspath(os.path.join('.', 'ext', 'pystache')))
@@ -44,6 +43,7 @@ if cmd_subfolder not in path:
 from pystache import render
 
 def graceful_exit():
+	from platform import system
 	if system() == 'Windows':
 		raw_input('Press enter to close the window...')
 	exit()
@@ -57,42 +57,49 @@ def graceful_read(filename):
 
 maximum_number_of_fields = 100 # reasonable enough, I think.
 
-template_string = ''
-if len(argv) > 1:
-	template = argv[1]
-	template_string = graceful_read(template)
+def main(template, template_string, number, code):
+	name_part, extension = os.path.splitext(template)
+	filename = name_part.replace('.skeleton', '') + '-' + code + '-' + str(number) + extension
+	output_file = open(filename, 'w')
 
-while '{{' not in template_string:
-	if template_string != '':
-		print( "This file doesn't look like a skeleton file!" )
-	template = raw_input("Please enter the skeleton file name: ")
-	template_string = graceful_read(template)
+	def item(i):
+		i = str(i)
+		basic = {
+			'number': i, 
+			'field': '${trial_' + i + '_1}',
+		}
+		fields = {}
+		for j in range(1, maximum_number_of_fields):
+			fields[ 'field_' + str(j) ] = '${trial_' + i + '_' + str(j) + '}'
 
-number   = int(argv[2]) if len(argv) > 2 else int(raw_input("Please enter the number of items: "))
-code     = argv[3]      if len(argv) > 3 else raw_input("Please enter the survey code: ")
+		return dict( basic.items() + fields.items() )
 
-name_part, extension = os.path.splitext(template)
-filename = name_part.replace('.skeleton', '') + '-' + code + '-' + str(number) + extension
-output_file = open(filename, 'w')
-
-def item(i):
-	i = str(i)
-	basic = {
-		'number': i, 
-		'field': '${trial_' + i + '_1}',
+	obj = {
+		'total_number': number,
+		'code': code,
+		'items': [ item(i) for i in range(1, number + 1) ]
 	}
-	fields = {}
-	for j in range(1, maximum_number_of_fields):
-		fields[ 'field_' + str(j) ] = '${trial_' + i + '_' + str(j) + '}'
+	output_file.write(render(template_string, obj))
 
-	return dict( basic.items() + fields.items() )
+	print( 'Successfully wrote template to ' + filename )
+	graceful_exit()
 
-obj = {
-	'total_number': number,
-	'code': code,
-	'items': [ item(i) for i in range(1, number + 1) ]
-}
-output_file.write(render(template_string, obj))
 
-print( 'Successfully wrote template to ' + filename )
-graceful_exit()
+if __name__ == '__main__':
+	from sys import argv
+
+	template_string = ''
+	if len(argv) > 1:
+		template = argv[1]
+		template_string = graceful_read(template)
+
+	while '{{' not in template_string:
+		if template_string != '':
+			print( "This file doesn't look like a skeleton file!" )
+		template = raw_input("Please enter the skeleton file name: ")
+		template_string = graceful_read(template)
+
+	number   = int(argv[2]) if len(argv) > 2 else int(raw_input("Please enter the number of items: "))
+	code     = argv[3]      if len(argv) > 3 else raw_input("Please enter the survey code: ")
+
+	main(template, template_string, number, code)

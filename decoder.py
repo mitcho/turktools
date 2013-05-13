@@ -29,18 +29,17 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 """
 
 from __future__ import print_function
-from os.path import splitext
-from sys import argv
-from csv import DictReader, DictWriter
 import re
-from platform import system
 
 def graceful_exit():
+	from platform import system
 	if system() == 'Windows':
 		raw_input('Press enter to close the window...')
 	exit()
 
 def graceful_read_csv(filename):
+	from csv import DictReader
+
 	data = []
 	try:
 		f = open(filename, 'rb')
@@ -56,98 +55,108 @@ def graceful_read_csv(filename):
 
 	return data
 
-results = argv[1] if len(argv) > 2 else raw_input("Please enter the Turk results file name: ")
-decode = argv[2] if len(argv) > 2 else raw_input("Please enter the Turkolizer decode file name: ")
+def graceful_write_csv(filename, data):
+	from csv import DictWriter
 
-decode_data = graceful_read_csv(decode)
+	with open(filename, 'wb') as f:
+		keys = data[0].keys()
+		keys.sort()
+		# be smarter about key sort?
+		writer = DictWriter(f, keys, extrasaction = 'ignore')
+		writer.writeheader()
+		for row in data:
+			writer.writerow(row)
 
-if len(decode_data) == 0:
-	print( "It looks like this decode file is not formatted correctly. Please try again." )
-	graceful_exit()
+def main( name_part, results, decode ):
+	decode_data = graceful_read_csv(decode)
 
-# todo: is there a better way to get the trial_numbers and check it?
-trial_numbers = [int(re.sub(r'^Item(\d+)$', '\\1', key)) for key in decode_data[0].keys() if re.search(r'^Item(\d+)$', key)]
-trial_numbers.sort()
-if min(trial_numbers) != 1 or max(trial_numbers) != len(trial_numbers):
-	print( "It looks like this decode file is not formatted correctly. Please try again." )
-	graceful_exit()
-
-# turn the decode_data into a hash, for lookup by list
-decode_data_hash = {}
-for row in decode_data:
-	entry = {}
-	for n in trial_numbers:
-		entry[n] = {
-				'Section': row['Section' + str(n)],
-				'Item': int(row['Item' + str(n)]),
-				'Condition': row['Condition' + str(n)],
-				'PresentationOrder': n
-			}
-	decode_data_hash[int(row['list'])] = entry
-
-results_data = graceful_read_csv(results)
-
-if len(results_data) == 0:
-	print( "It looks like this results file is missing data or is not formatted correctly. Please try again." )
-	graceful_exit()
-
-for expected in ['Title', 'Description', 'Keywords', 'Reward']:
-	if expected not in results_data[0]:
-		print( "It looks like the results file is not formatted correctly (missing expected column {0}). Please try again.".format(expected) )
+	if len(decode_data) == 0:
+		print( "It looks like this decode file is not formatted correctly. Please try again." )
 		graceful_exit()
 
-print( '-------------' )
-print( 'Title:       ', results_data[0]['Title'] )
-print( 'Description: ', results_data[0]['Description'] )
-print( 'Keywords:    ', results_data[0]['Keywords'] )
-print( 'Reward:      ', results_data[0]['Reward'] )
-print( '-------------' )
+	# todo: is there a better way to get the trial_numbers and check it?
+	trial_numbers = [int(re.sub(r'^Item(\d+)$', '\\1', key)) for key in decode_data[0].keys() if re.search(r'^Item(\d+)$', key)]
+	trial_numbers.sort()
+	if min(trial_numbers) != 1 or max(trial_numbers) != len(trial_numbers):
+		print( "It looks like this decode file is not formatted correctly. Please try again." )
+		graceful_exit()
 
-decoded_data = []
+	# turn the decode_data into a hash, for lookup by list
+	decode_data_hash = {}
+	for row in decode_data:
+		entry = {}
+		for n in trial_numbers:
+			entry[n] = {
+					'Section': row['Section' + str(n)],
+					'Item': int(row['Item' + str(n)]),
+					'Condition': row['Condition' + str(n)],
+					'PresentationOrder': n
+				}
+		decode_data_hash[int(row['list'])] = entry
 
-re_extra = re.compile('^Answer\.(\D+)$');
-for n in trial_numbers:
-	re_input = re.compile('^Input\.trial_' + str(n) + '_(\d+)$');
-	re_answer = re.compile('^Answer\.(\w*?\D)_?' + str(n) + '$');
-	re_sample = re.compile('^Answer\.(\w*?\D)_?Sample' + str(n) + '$');
-	for row in results_data:
-		list_number = int(row['Input.list'])
+	results_data = graceful_read_csv(results)
 
-		# this line does the merge, basically:
-		data = decode_data_hash[list_number][n].copy()
-		data['ListNumber'] = list_number
+	if len(results_data) == 0:
+		print( "It looks like this results file is missing data or is not formatted correctly. Please try again." )
+		graceful_exit()
+
+	for expected in ['Title', 'Description', 'Keywords', 'Reward']:
+		if expected not in results_data[0]:
+			print( "It looks like the results file is not formatted correctly (missing expected column {0}). Please try again.".format(expected) )
+			graceful_exit()
+
+	print( '-------------' )
+	print( 'Title:       ', results_data[0]['Title'] )
+	print( 'Description: ', results_data[0]['Description'] )
+	print( 'Keywords:    ', results_data[0]['Keywords'] )
+	print( 'Reward:      ', results_data[0]['Reward'] )
+	print( '-------------' )
+
+	decoded_data = []
+
+	re_extra = re.compile('^Answer\.(\D+)$');
+	for n in trial_numbers:
+		re_input = re.compile('^Input\.trial_' + str(n) + '_(\d+)$');
+		re_answer = re.compile('^Answer\.(\w*?\D)_?' + str(n) + '$');
+		re_sample = re.compile('^Answer\.(\w*?\D)_?Sample' + str(n) + '$');
+		for row in results_data:
+			list_number = int(row['Input.list'])
+
+			# this line does the merge, basically:
+			data = decode_data_hash[list_number][n].copy()
+			data['ListNumber'] = list_number
 		
-		# copy user/assignment meta		
-		data['WorkerId'] = row['WorkerId']
-		data['AssignmentId'] = row['AssignmentId']
-		data['AssignmentStatus'] = row['AssignmentStatus']
-		data['WorkTimeInSeconds'] = row['WorkTimeInSeconds']
+			# copy user/assignment meta		
+			data['WorkerId'] = row['WorkerId']
+			data['AssignmentId'] = row['AssignmentId']
+			data['AssignmentStatus'] = row['AssignmentStatus']
+			data['WorkTimeInSeconds'] = row['WorkTimeInSeconds']
 
-		for field in row.keys():
-			if re_input.match(field) is not None:
-				data[re_input.sub('field_\\1', field)] = row[field]
-			if re_answer.match(field) is not None and re_sample.match(field) is None:
-				data[re_answer.sub('\\1', field)] = row[field]
-			if re_extra.match(field):
-				data[re_extra.sub('\\1', field)] = row[field]				
+			for field in row.keys():
+				if re_input.match(field) is not None:
+					data[re_input.sub('field_\\1', field)] = row[field]
+				if re_answer.match(field) is not None and re_sample.match(field) is None:
+					data[re_answer.sub('\\1', field)] = row[field]
+				if re_extra.match(field):
+					data[re_extra.sub('\\1', field)] = row[field]				
 
-		# todo: get sample/practice item answers?
-		decoded_data.append(data.copy())
+			# todo: get sample/practice item answers?
+			decoded_data.append(data.copy())
 
-# todo: check that each row has the same number of fields!
+	# todo: check that each row has the same number of fields!
 
-name_part, extension = splitext(results)
-filename = name_part + '.decoded.csv'
+	filename = name_part + '.decoded.csv'
+	graceful_write_csv( filename, decoded_data )
 
-import csv
-with open(filename, 'wb') as f:
-	keys = decoded_data[0].keys()
-	keys.sort()
-	# be smarter about key sort?
-	writer = DictWriter(f, keys, extrasaction = 'ignore')
-	writer.writeheader()
-	for row in decoded_data:
-		writer.writerow(row)
+	print( 'Successfully wrote decoded results to ' + filename )
+	graceful_exit()
 
-print( 'Successfully wrote decoded results to ' + filename )
-graceful_exit()
+if __name__ == '__main__':
+	from os.path import splitext
+	from sys import argv
+
+	results = argv[1] if len(argv) > 2 else raw_input("Please enter the Turk results file name: ")
+	decode = argv[2] if len(argv) > 2 else raw_input("Please enter the Turkolizer decode file name: ")
+	name_part, extension = splitext(results)
+
+	main( name_part, results, decode )
