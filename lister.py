@@ -89,9 +89,43 @@ class Trial:
 	def append_field(self, field):
 		self.__fields.append(field)
 
+class Section:
+	def __init__(self, section_name, trials):
+		self.name = section_name
+		self.__trials = trials
+
+		# todo: add checks for section_name
+
+		self.conditions = list(set([t.condition for t in trials]))
+		self.item_count = len([t.number for t in trials])
+	
+	def trials(self):
+		return self.__trials
+	
+	def verify(self):
+		# numbers should start with 1 and increase sequentially
+		item_numbers = [t.number for t in self.trials()]
+		item_count = len(item_numbers)
+		for i in range(1, item_count + 1):
+			# todo: do something with this assertion
+			assert i in item_numbers
+		# todo: each item has to have the same conditions
+
+	def report(self):
+		print('Section name:', self.name)
+		print('Item count:  ', self.item_count)
+ 		print('Conditions:  ', len(self.conditions))
+ 		for condition in self.conditions:
+ 			print('  -', condition)
+		print()
+
 class Experiment:
 	def __init__(self, trials):
 		self.__trials = trials
+		self.__sections = {}
+		for section in self.sections():
+			section_trials = [t for t in self.__trials if t.section == section]
+			self.__sections[section] = Section(section, section_trials)
 	
 	def field_count(self):
 		# get the maximum number of fields
@@ -101,31 +135,12 @@ class Experiment:
 		return list(set([t.section for t in self.__trials]))
 
 	def verify(self):
+		# todo: iterate better
 		for section_name in self.sections():
-			self.verify_section(section_name)
-
-	def verify_section(self, section_name):
-		# numbers should start with 1 and increase sequentially
-		section_trials = self.section_trials(section_name)
-		item_numbers = [t.number for t in section_trials]
-		item_count = len(item_numbers)
-		for i in range(1, item_count + 1):
-			# todo: do something with this assertion
-			assert i in item_numbers
-		# todo: each item has to have the same conditions
-
-	def section_trials(self, section_name):
-		return [t for t in self.__trials if t.section == section_name]
+			self.section(section_name).verify()
 
 	def section(self, section_name):
-		section_info = {}
-		
-		section_trials = self.section_trials(section_name)
-		
-		section_info['item_count'] = len([t.number for t in section_trials])
-		section_info['conditions'] = list(set([t.condition for t in section_trials]))
-		
-		return section_info
+		return self.__sections[section_name]
 
 def graceful_read_items(filename):
 	f = open(filename, 'r')
@@ -165,15 +180,9 @@ def main(items_file, lists):
 	# print experiment details:
 	print('-' * 20)
 	for section_name in experiment.sections():
-		print('Section name:', section_name)
-		section = experiment.section(section_name)
-		print('Item count:  ', section['item_count'])
- 		print('Conditions:  ', len(section['conditions']))
- 		for condition in section['conditions']:
- 			print('  -', condition)
-		print()
-
+		experiment.section(section_name).report()
 	print('Field count:', experiment.field_count())
+	print('-' * 20)
 
 	name_part, extension = splitext(items_file)
 
