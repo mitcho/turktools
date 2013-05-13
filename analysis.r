@@ -81,7 +81,7 @@ aggregate(targets$WorkerId, by=list(targets$Choice, targets$Factor1, targets$Fac
 # looking at individual items ----
 #target items (for ratings or binary forced choice coded as 0-1)
 aggregate(targets$Choice, by=list(targets$Item), mean)
-aggregate(targets$Choice, by=list(targets$Condition, targets$WorkerId), mean)
+aggregate(targets$Choice, by=list(targets$Condition, targets$Item), mean)
 
 # target items (for completions)
 aggregate(targets$WorkerId, by=list(targets$Choice, targets$Condition), length)
