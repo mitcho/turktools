@@ -120,8 +120,35 @@ def graceful_read_items(filename):
 	return items
 
 def main(items_file, lists):
-	items = graceful_read_items(items_file)
-	print(items)
+	trials = graceful_read_items(items_file)
+	
+	# get the maximum number of fields
+	number_of_fields = max([len(t.fields()) for t in trials])
+	
+	# study the sections:
+	section_names = list(set([t.section for t in trials]))
+	print('-' * 20)
+	for section_name in section_names:
+		print('Section name:', section_name)
+		
+		# numbers should start with 1 and increase sequentially
+		item_numbers = [t.number for t in trials if t.section == section_name]
+		item_count = len(item_numbers)
+		for i in range(1, item_count + 1):
+			# todo: do something with this assertion
+			assert i in item_numbers
+		
+		print('Item count:  ', item_count)
+		
+		conditions = list(set([t.condition for t in trials if t.section == section_name]))
+		
+		# each item has to have the same conditions
+ 		print('Conditions:  ', len(conditions))
+ 		for condition in conditions:
+ 			print('  -', condition)
+		print()
+	
+	print(section_names, number_of_fields, trials)
 
 	name_part, extension = splitext(items_file)
 
