@@ -134,7 +134,7 @@ def main( name_part, results, decode ):
 
 			# this line does the merge, basically:
 			data = decode_data_hash[list_number][n].copy()
-			data['ListNumber'] = list_number
+			data['List'] = list_number
 		
 			# copy user/assignment meta		
 			data['WorkerId'] = row['WorkerId']
