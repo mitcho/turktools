@@ -66,7 +66,7 @@ def graceful_write_csv(filename, data):
 		for row in data:
 			writer.writerow(row)	
 
-class Trial:
+class Item:
 	def __init__(self, section, number, condition):
 		self.section = section
 		self.number = int(number)
@@ -74,7 +74,7 @@ class Trial:
 		self.__fields = []
 
 	def __repr__(self):
-		return "[Trial {0.section} {0.number} {0.condition} ({1})]".format(self, len(self.fields()))
+		return "[Item {0.section} {0.number} {0.condition} ({1})]".format(self, len(self.fields()))
 
 	def fields(self, i = -1):
 		if i != -1:
@@ -94,24 +94,24 @@ class Trial:
 		self.__fields.append(field)
 
 class Section:
-	def __init__(self, section_name, trials):
+	def __init__(self, section_name, items):
 		self.name = section_name
-		self.__trials = trials
+		self.__items = items
 
 		# todo: add checks for section_name
 
-		self.conditions = list(set([t.condition for t in trials]))
-		self.item_count = len([t.number for t in trials])
+		self.conditions = list(set([t.condition for t in items]))
+		self.item_count = len([t.number for t in items])
 	
 	def __repr__(self):
 		return "[Section {0.name}]".format(self)
 	
-	def trials(self):
-		return self.__trials
+	def items(self):
+		return self.__items
 	
 	def verify(self):
 		# numbers should start with 1 and increase sequentially
-		item_numbers = [t.number for t in self.trials()]
+		item_numbers = [t.number for t in self.items()]
 		item_count = len(item_numbers)
 		for i in range(1, item_count + 1):
 			# todo: do something with this assertion
@@ -127,22 +127,22 @@ class Section:
 		print()
 
 class Experiment:
-	def __init__(self, trials):
-		self.__trials = trials
+	def __init__(self, items):
+		self.__items = items
 		self.__sections = {}
 		for section in self.sections():
-			section_trials = [t for t in self.__trials if t.section == section]
-			self.__sections[section] = Section(section, section_trials)
+			section_items = [t for t in self.__items if t.section == section]
+			self.__sections[section] = Section(section, section_items)
 	
 	def __repr__(self):
 		return "[Experiment]"
 	
 	def field_count(self):
 		# get the maximum number of fields
-		return max([len(t.fields()) for t in self.__trials])
+		return max([len(t.fields()) for t in self.__items])
 	
 	def sections(self):
-		return list(set([t.section for t in self.__trials]))
+		return list(set([t.section for t in self.__items]))
 
 	def verify(self):
 		# todo: iterate better
@@ -160,14 +160,14 @@ def graceful_read_items(filename):
 	# header lines must have: ^# section number condition$
 	header_pattern = re.compile(r'^#\s+(\S+)\s+(\d+)\s+(.*?)\s*$')
 	
-	current_trial = False
+	current_item = False
 	for line in f:
 		# strip off line endings:
 		line = line.rstrip(u'\r\n')
 		
 		matched = header_pattern.match(line)
 		
-		if matched is False and current_trial is False:
+		if matched is False and current_item is False:
 			# skip these lines. todo: print an error?
 			print('weird')
 			continue
@@ -175,16 +175,16 @@ def graceful_read_items(filename):
 		if matched:
 			section, number, condition = matched.groups()
 			# print(section, number, condition)
-			current_trial = Trial(section, number, condition)
-			items.append(current_trial)
+			current_item = Item(section, number, condition)
+			items.append(current_item)
 		else:
-			current_trial.append_field(line)
+			current_item.append_field(line)
 	
 	return items
 
 def main(items_file, lists):
-	trials = graceful_read_items(items_file)
-	experiment = Experiment(trials)
+	items = graceful_read_items(items_file)
+	experiment = Experiment(items)
 	experiment.verify()
 	
 	# print experiment details:
