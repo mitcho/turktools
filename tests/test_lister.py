@@ -101,3 +101,39 @@ class TestListerDifferentConditionNames(TestCase):
 
 		sys.stdout = sys.__stdout__
 		
+class TestListerLatinLists(TestCase):
+	def test_lister_trivial_latin_lists(self):
+		items = lister.graceful_read_items( 'tests/test_lister_items-1.txt' )
+		self.assertEqual(len(items), 2)
+
+		exp = lister.Experiment(items)
+		self.assertEqual(len(exp.sections()), 1)
+		self.assertEqual(exp.sections()[0], 'test')
+		sec = exp.section('test')
+
+		list0 = sec.latin_list(0)
+		self.assertEqual(len(list0), 2)
+		list1 = sec.latin_list(1)
+		self.assertEqual(len(list1), 2)
+		self.assertEqual(list0, list1)
+		
+	
+	def test_lister_latin_lists(self):
+		items = lister.graceful_read_items( 'tests/test_lister_different_condition_names-1.txt' )
+		self.assertEqual(len(items), 4)
+		
+		exp = lister.Experiment(items)
+		self.assertEqual(len(exp.sections()), 1)
+		self.assertEqual(exp.sections()[0], 'filler')
+		sec = exp.section('filler')
+		
+		list0 = sec.latin_list(0)
+		self.assertEqual(len(list0), 2)
+		list1 = sec.latin_list(1)
+		self.assertEqual(len(list1), 2)
+		list2 = sec.latin_list(2)
+		self.assertEqual(len(list2), 2)
+		
+		self.assertEqual(list0, list2)
+		self.assertNotEqual(list0, list1)
+		
