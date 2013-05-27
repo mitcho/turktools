@@ -172,10 +172,8 @@ class Section:
 		print()
 	
 	# offset is the list number, starting with 0 (though that doesn't actually matter much)
-	def latin_list(self, offset):
-		mod_base = self.condition_count
-		result = [self.item(n, (n + offset) % mod_base) for n in self.item_numbers]
-		return result
+	def latin_square_list(self, offset):
+		return [self.item(n, (n + offset) % self.condition_count) for n in self.item_numbers]
 
 class Experiment:
 	def __init__(self, items):
