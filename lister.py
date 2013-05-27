@@ -264,7 +264,10 @@ class Experiment(object):
 
 	@property
 	def filler_sections(self):
-		return self.__filler_sections
+		if self.has_fillers:
+			return self.__filler_sections
+		else:
+			return []
 	
 	@filler_sections.setter
 	def filler_sections(self, sections):
@@ -287,6 +290,72 @@ class Experiment(object):
 		return int(round(
 			(self.filler_count - (self.target_count - 1) * self.between_fillers)
 			/ 2))
+	
+	# Without the shuffle option, items will not be randomized within their section's
+	# latin square lists. This option exists for unit testing, in order to construct
+	# deterministic tests.
+	def list(self, list_number, shuffle=True):
+		target_items = [item
+			for sec in self.section_names if sec not in self.filler_sections
+			for item in self.section(sec).latin_square_list(list_number)]
+		filler_items = [item
+			for sec in self.section_names if sec in self.filler_sections
+			for item in self.section(sec).latin_square_list(list_number)]
+		
+		if shuffle:
+			from random import shuffle
+			shuffle(target_items)
+			shuffle(filler_items)
+		
+		# Start with the target items
+		list = target_items[:]
+		
+		if self.has_fillers:
+			# In general, when placing fillers systematically, loop over targets and 
+			# find that target in the current list. Mutate relative to that index.
+
+			# First, place between_fillers fillers between the targets:
+			if self.between_fillers > 0:
+				for i in range(len(target_items) - 1):
+					# place fillers after this target:
+					target_target = target_items[i]
+					target_index = list.index(target_target)
+					for j in range(self.between_fillers):
+						list.insert(target_index + 1, filler_items.pop())
+
+			# Second, place edge_fillers fillers at the edges:
+			if self.edge_fillers > 0:
+				for j in range(self.edge_fillers):
+					list.insert(0, filler_items.pop())
+					list.insert(len(list), filler_items.pop())
+			
+			# Third, if there are remaining fillers, place them randomly
+			print('Remaining fillers:',len(filler_items))
+			if len(filler_items) > 0:
+				bins = len(target_items) + 1
+				sample = multinomial(bins, len(filler_items))
+				print(bins, len(filler_items), sample)
+				# sample[0] will be a special case:
+				for j in range(sample[0]):
+					list.insert(0, filler_items.pop())
+				# for each other bin, find the corresponding target:
+				for i in range(len(target_items)):
+					# place fillers after this target:
+					target_target = target_items[i]
+					target_index = list.index(target_target)
+					for j in range(sample[i + 1]):
+						list.insert(target_index + 1, filler_items.pop())
+
+			# no fillers should be left here:
+			assert len(filler_items) == 0
+					
+		return list
+
+# placing pigeons into holes
+def multinomial(holes, pigeons):
+	from random import randrange
+	sample = [randrange(holes) for i in range(pigeons)]
+	return [sample.count(i) for i in range(holes)]
 
 def graceful_read_items(filename):
 	f = open(filename, 'rU')
@@ -358,7 +427,7 @@ def main(args):
 	# END EXPERIMENT REPORT
 
 	# todo: require multiple of the condition counts:
-	lists = args[1] if len(args) > 1 else raw_input("How many lists would you like to create: ")
+	number_of_lists = int(args[1]) if len(args) > 1 else int(raw_input("How many lists would you like to create: "))
 
 	# SET FILLER SECTIONS AND GUIDANCE
 	filler_sections_string = args[2] if len(args) > 2 else raw_input("Enter filler section names, separated by commas: ")
@@ -390,6 +459,9 @@ def main(args):
 			experiment.edge_fillers = 0
 
 	print(experiment.between_fillers, experiment.edge_fillers)
+	
+	for list_number in range(number_of_lists):
+		print(experiment.list(list_number))
 		
 	# END FILLER SETTINGS
 
