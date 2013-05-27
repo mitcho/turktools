@@ -82,17 +82,23 @@ class Item(object):
 	def __repr__(self):
 		return "[Item {0.section} {0.number} {0.condition_name} ({1})]".format(self, len(self.fields()))
 
-	def fields(self, i = -1):
-		if i != -1:
-			if i < len(self.__fields):
-				return self.__fields[i]
-			else:
-				return ''
+	def field(self, i = 0):
+		if i < len(self.__fields):
+			return self.__fields[i]
+		else:
+			return ''
 		
-		# strip off empty lines at the end of the fields:
+	def fields(self, number_of_fields = False):
 		return_fields = self.__fields
-		while len(return_fields) > 0 and return_fields[len(return_fields) - 1] == '':
-			return_fields.pop()
+		if number_of_fields is False:
+			# strip off empty lines at the end of the fields:
+			while len(return_fields) > 0 and return_fields[len(return_fields) - 1] == '':
+				return_fields.pop()
+			return return_fields
+		
+		return_fields = self.__fields[0:number_of_fields]
+		if len(return_fields) < number_of_fields:
+			return_fields = return_fields + [''] * (number_of_fields - len(return_fields))
 		
 		return return_fields
 

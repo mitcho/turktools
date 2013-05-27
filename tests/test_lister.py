@@ -39,13 +39,13 @@ class TestLister(TestCase):
 		self.assertEqual(len(items[0].fields()), 3)
 
 		# make sure we preserve whitespace, except for the line ending:
-		self.assertEqual(items[0].fields(0), u'  aaa  ')
+		self.assertEqual(items[0].field(0), u'  aaa  ')
 		
 		# second field should be blank
-		self.assertEqual(len(items[0].fields(1)), 0)
+		self.assertEqual(len(items[0].field(1)), 0)
 		
 		# make sure we preserve whitespace, except for the line ending:
-		self.assertEqual(items[0].fields(2), u'\tccc\t')
+		self.assertEqual(items[0].field(2), u'\tccc\t')
 
 class TestListerDifferentConditionNames(TestCase):
 	def test_lister_different_condition_names(self):
