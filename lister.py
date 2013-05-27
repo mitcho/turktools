@@ -357,6 +357,17 @@ class Experiment(object):
 					
 		return list
 
+	# list is a list of items
+	# return fields in a list with (key, value) entries
+	def fields_from_list(self, list):
+		fields = []
+		for i in range(len(list)):
+			item_fields = list[i].fields(self.field_count)
+			fields = fields + [ ('trial_{0}_{1}'.format(i + 1, j + 1), item_fields[j])
+				for j in range(self.field_count) ]
+
+		return fields
+
 # placing pigeons into holes
 def multinomial(holes, pigeons):
 	from random import randrange
@@ -467,7 +478,7 @@ def main(args):
 	print(experiment.between_fillers, experiment.edge_fillers)
 	
 	for list_number in range(number_of_lists):
-		print(experiment.list(list_number))
+		print(experiment.fields_from_list(experiment.list(list_number)))
 		
 	# END FILLER SETTINGS
 
