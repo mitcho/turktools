@@ -100,8 +100,26 @@ class Section:
 
 		# todo: add checks for section_name
 
-		self.conditions = list(set([t.condition for t in items]))
+		item_numbers = [t.number for t in self.items()]
+		condition_names = []
+		condition_names_set = set() # just a hack for getting the uniques as arrays are not hashable
+		for num in item_numbers:
+			conds = [i.condition for i in items if i.number == num]
+			conds.sort()
+			if conds not in condition_names:
+				condition_names.append(conds)
+		condition_counts = set([len(conds) for conds in condition_names])
+
+		if len(condition_counts) > 1:
+			print("ERROR: all item sets in a section must have the same number of conditions.")
+			print("Some item sets in section {0} have".format(section_name), ', some have '.join(condition_counts))
+			graceful_exit()
+
+		self.condition_count = max(condition_counts)
+		self.condition_names = condition_names
+		
 		self.item_count = len([t.number for t in items])
+		self.item_set_count = len(set([t.number for t in items]))
 	
 	def __repr__(self):
 		return "[Section {0.name}]".format(self)
@@ -121,10 +139,11 @@ class Section:
 
 	def report(self):
 		print('Section name:', self.name)
-		print('Item count:  ', self.item_count)
- 		print('Conditions:  ', len(self.conditions))
- 		# if there are multiple sets of condition names, figure that out and print here:
- 		print('  ', ', '.join(self.conditions))
+		print('Item sets:   ', self.item_set_count)
+ 		print('Conditions:  ', self.condition_count)
+		for cond_set in self.condition_names:
+	 		print('  ', ', '.join(cond_set))
+ 		
 		print()
 
 class Experiment:
