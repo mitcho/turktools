@@ -67,14 +67,19 @@ def graceful_write_csv(filename, data):
 			writer.writerow(row)	
 
 class Item:
-	def __init__(self, section, number, condition):
+	def __init__(self, section, number, condition_name):
 		self.section = section
 		self.number = int(number)
-		self.condition = condition
+		
+		# the condition name is an actual text label
+		self.condition_name = condition_name
+		# the condition attribute will be an integer. it will be set later.
+		self.condition = False
+		
 		self.__fields = []
 
 	def __repr__(self):
-		return "[Item {0.section} {0.number} {0.condition} ({1})]".format(self, len(self.fields()))
+		return "[Item {0.section} {0.number} {0.condition_name} ({1})]".format(self, len(self.fields()))
 
 	def fields(self, i = -1):
 		if i != -1:
@@ -102,9 +107,8 @@ class Section:
 
 		item_numbers = [t.number for t in self.items()]
 		condition_sets = []
-		condition_sets_set = set() # just a hack for getting the uniques as arrays are not hashable
 		for num in item_numbers:
-			conds = [i.condition for i in items if i.number == num]
+			conds = [i.condition_name for i in items if i.number == num]
 			conds.sort()
 			if conds not in condition_sets:
 				condition_sets.append(conds)
@@ -207,9 +211,9 @@ def graceful_read_items(filename):
 			continue
 		
 		if matched:
-			section, number, condition = matched.groups()
-			# print(section, number, condition)
-			current_item = Item(section, number, condition)
+			section, number, condition_name = matched.groups()
+			# print(section, number, condition_name)
+			current_item = Item(section, number, condition_name)
 			items.append(current_item)
 		else:
 			current_item.append_field(line)
@@ -239,7 +243,7 @@ def main(items_file, lists):
 					.format(items, ct, 's' if ct > 1 else ''))
 			else:
 				culprit = experiment.items_by_field_count(ct)
-				print("  - 1 item with {1} field{2}: {3.section} {3.number} {3.condition}"
+				print("  - 1 item with {1} field{2}: {3.section} {3.number} {3.condition_name}"
 					.format(items, ct, 's' if ct > 1 else '', culprit[0]))
 			if items < item_count * 0.1:
 				print("    Is that an error?")

@@ -9,12 +9,12 @@ class TestLister(TestCase):
 		
 		self.assertEqual(items[0].number, 1)
 		self.assertEqual(items[0].section, 'test')
-		self.assertEqual(items[0].condition, 'test condition')
+		self.assertEqual(items[0].condition_name, 'test condition')
 		self.assertEqual(len(items[0].fields()), 1)
 
 		self.assertEqual(items[1].number, 2)
 		self.assertEqual(items[1].section, 'test')
-		self.assertEqual(items[1].condition, 'another test condition')
+		self.assertEqual(items[1].condition_name, 'another test condition')
 		self.assertEqual(len(items[1].fields()), 2)
 
 	def test_items_file_whitespace(self):
@@ -23,7 +23,7 @@ class TestLister(TestCase):
 		
 		self.assertEqual(items[0].number, 1)
 		self.assertEqual(items[0].section, 'test')
-		self.assertEqual(items[0].condition, 'test condition')
+		self.assertEqual(items[0].condition_name, 'test condition')
 
 		# here is the tricky part: the item has three lines, the second of which
 		# is blank. need to make sure this comes out as three fields.
