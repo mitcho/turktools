@@ -66,7 +66,7 @@ def graceful_write_csv(filename, data):
 		for row in data:
 			writer.writerow(row)	
 
-class Item:
+class Item(object):
 	def __init__(self, section, number, condition_name):
 		self.section = section
 		self.number = int(number)
@@ -99,14 +99,14 @@ class Item:
 	def append_field(self, field):
 		self.__fields.append(field)
 
-class Section:
+class Section(object):
 	def __init__(self, section_name, items):
 		self.name = section_name
 		self.__items = items
 
 		# todo: add checks for section_name
 		condition_sets = []
-		self.item_numbers = list(set([item.number for item in self.items()]))
+		self.item_numbers = list(set([item.number for item in self.items]))
 		for num in self.item_numbers:
 			item_set = [item for item in items if item.number == num]
 			# sort item set by condition name:
@@ -130,12 +130,13 @@ class Section:
 	def __repr__(self):
 		return "[Section {0.name}]".format(self)
 	
+	@property
 	def items(self):
 		return self.__items
 	
 	# returns a single item, given an item number and condition number (not condition name!)
 	def item(self, item_number, condition_number):
-		matches = [item for item in self.items()
+		matches = [item for item in self.items
 			if item.number == item_number and item.condition == condition_number]
 
 		# todo: do something about this assert
@@ -157,7 +158,7 @@ class Section:
 			print("Some item sets in section {0} have" . format(self.name), ', some have '.join(condition_counts))
 			exit()
 		
-		for item in self.items():
+		for item in self.items:
 			if item.condition is False:
 				print("ERROR: {0} was not assigned a condition number".format(item))
 				exit()
@@ -175,7 +176,7 @@ class Section:
 	def latin_square_list(self, offset):
 		return [self.item(n, (n + offset) % self.condition_count) for n in self.item_numbers]
 
-class Experiment:
+class Experiment(object):
 	def __init__(self, items):
 		self.__original_items = items
 		self.section_names = list(set([t.section for t in items]))
@@ -183,29 +184,45 @@ class Experiment:
 		for section in self.sections():
 			section_items = [t for t in items if t.section == section]
 			self.__sections[section] = Section(section, section_items)
+
+		self.has_fillers = False
+		self.__filler_sections = []
 	
 	def __repr__(self):
 		return "[Experiment]"
 	
-	def field_counts(self):
+	@property
+	def field_count_counts(self):
 		# return a list of tuples (field count, number of items with that count)
-		field_counts = [len(i.fields()) for i in self.items()]
+		field_counts = [len(i.fields()) for i in self.items]
 		count = field_counts.count
 		result = [(ct, count(ct)) for ct in set(field_counts)]
 		result.sort()
 		return result
 
+	@property
 	def field_count(self):
-		return max(self.field_counts())[0]
+		return max(self.field_count_counts)[0]
 	
+	@property
 	def items(self):
-		return [i for section in self.__sections.values() for i in section.items()]
+		return [i for section in self.__sections.values() for i in section.items]
 	
 	def items_by_field_count(self, count):
-		return [i for i in self.items() if len(i.fields()) == count]
+		return [i for i in self.items if len(i.fields()) == count]
 	
 	def item_count(self):
-		return len(self.items())
+		return len(self.items)
+	
+	@property
+	def target_count(self):
+		return sum([self.section(sec).item_set_count
+			for sec in self.sections() if sec not in self.filler_sections])
+
+	@property
+	def filler_count(self):
+		return sum([self.section(sec).item_set_count
+			for sec in self.sections() if sec in self.filler_sections])
 	
 	# todo: rename this method?
 	def sections(self):
@@ -218,6 +235,40 @@ class Experiment:
 
 	def section(self, section_name):
 		return self.__sections[section_name]
+
+	def field_count_report(self):
+		item_count = self.item_count()
+	
+		fcc = self.field_count_counts
+		if len(fcc) == 1:
+			print('Field count: ', self.field_count)
+		else:
+			print('Maximum field count:', self.field_count)
+			for (ct, items) in fcc:
+				if items > 1:
+					print("  - {0} items with {1} field{2}"
+						.format(items, ct, 's' if ct > 1 else ''))
+				else:
+					culprit = self.items_by_field_count(ct)
+					print("  - 1 item with {1} field{2}: {3.section} {3.number} {3.condition_name}"
+						.format(items, ct, 's' if ct > 1 else '', culprit[0]))
+				if items < item_count * 0.1:
+					print("WARNING: Is that an error?")
+
+	@property
+	def filler_sections(self):
+		return self.__filler_sections
+	
+	@filler_sections.setter
+	def filler_sections(self, sections):
+		self.__filler_sections = [section for section in sections if section in self.sections()]
+		self.has_fillers = True
+		if len(self.__filler_sections) == len(self.sections()):
+			self.has_fillers = False
+			print("WARNING: All your sections are designated as fillers!")
+		if len(self.__filler_sections) == 0:
+			self.has_fillers = False
+			print("WARNING: You have no sections designated as fillers.")
 
 def graceful_read_items(filename):
 	f = open(filename, 'rU')
@@ -250,44 +301,38 @@ def graceful_read_items(filename):
 	
 	return items
 
-def main(items_file, lists):
+def main(args):
+	from os.path import splitext
+	
+	items_file = args[0] if len(args) > 0 else raw_input("Please enter the items file name: ")
 	items = graceful_read_items(items_file)
 	experiment = Experiment(items)
 	experiment.verify()
 	
-	# print experiment details:
+	# PRINT EXPERIMENT REPORT
 	print('-' * 20)
 	for section_name in experiment.sections():
 		experiment.section(section_name).report()
-	
-	item_count = experiment.item_count()
-	
-	fc = experiment.field_counts()
-	if len(fc) == 1:
-		print('Field count: ', experiment.field_count())
-	else:
-		print('Maximum field count:', experiment.field_count())
-		for (ct, items) in experiment.field_counts():
-			if items > 1:
-				print("  - {0} items with {1} field{2}"
-					.format(items, ct, 's' if ct > 1 else ''))
-			else:
-				culprit = experiment.items_by_field_count(ct)
-				print("  - 1 item with {1} field{2}: {3.section} {3.number} {3.condition_name}"
-					.format(items, ct, 's' if ct > 1 else '', culprit[0]))
-			if items < item_count * 0.1:
-				print("    Is that an error?")
-	
+	experiment.field_count_report()
 	print('-' * 20)
+	# END EXPERIMENT REPORT
+
+	# todo: require multiple of the condition counts:
+	lists = args[1] if len(args) > 1 else raw_input("How many lists would you like to create: ")
+
+	# SET FILLER SECTIONS AND GUIDANCE
+	filler_sections_string = args[2] if len(args) > 2 else raw_input("Enter filler section names, separated by commas: ")
+	experiment.filler_sections = re.split(', *', filler_sections_string)
+	if experiment.has_fillers:
+		print('Filler section{0}:'.format('s' if len(experiment.filler_sections) > 1 else ''),
+			', '.join(experiment.filler_sections))
+		print('Each list will have {0.target_count} target items and {0.filler_count} filler items'
+			.format(experiment))
+		
+	# END FILLER SETTINGS
 
 	name_part, extension = splitext(items_file)
 
 if __name__ == '__main__':
-	from os.path import splitext
 	from sys import argv
-
-	items_file = argv[1] if len(argv) > 1 else raw_input("Please enter the items file name: ")
-	lists = argv[2] if len(argv) > 2 else raw_input("How many lists would you like to create: ")
-
-	# todo: other parameters later?
-	main(items_file, lists)
+	main(argv[1:])
