@@ -73,7 +73,9 @@ def graceful_write_csv(filename, data):
 		keys.sort()
 		# be smarter about key sort?
 		writer = DictWriter(f, keys, extrasaction = 'ignore')
-		writer.writeheader()
+
+		# use this cumbersome line instead of writeheader() for python 2.6 compat:
+		writer.writerow(dict(zip(keys, keys)))
 		for row in data:
 			writer.writerow(row)
 

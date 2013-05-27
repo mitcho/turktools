@@ -134,7 +134,7 @@ class Section:
 		condition_counts = set([str(len(conds)) for conds in self.condition_sets])
 		if len(condition_counts) > 1:
 			print("ERROR: all item sets in a section must have the same number of conditions.")
-			print("Some item sets in section {} have" . format(self.name), ', some have '.join(condition_counts))
+			print("Some item sets in section {0} have" . format(self.name), ', some have '.join(condition_counts))
 			exit()
 
 	def report(self):
