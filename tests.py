@@ -17,6 +17,5 @@ runner = unittest.TextTestRunner(verbosity=1 + sys.argv.count('-v'))
 suite = unittest.TestLoader().loadTestsFromNames([
 	'tests.test_decoder',
 	'tests.test_lister',
-	'tests.test_lister_different_condition_names',
 ])
 runner.run(suite)
