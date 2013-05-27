@@ -106,8 +106,8 @@ class Section(object):
 
 		# todo: add checks for section_name
 		condition_sets = []
-		self.item_numbers = list(set([item.number for item in self.items]))
-		for num in self.item_numbers:
+		self.__item_numbers = list(set([item.number for item in self.items]))
+		for num in self.__item_numbers:
 			item_set = [item for item in items if item.number == num]
 			# sort item set by condition name:
 			item_set.sort(key=lambda x: x.condition_name)
@@ -123,9 +123,6 @@ class Section(object):
 		condition_counts = set([len(conds) for conds in condition_sets])
 		self.condition_count = max(condition_counts)
 		self.condition_sets = condition_sets
-		
-		self.item_count = len(items)
-		self.item_set_count = len(self.item_numbers)
 	
 	def __repr__(self):
 		return "[Section {0.name}]".format(self)
@@ -133,6 +130,14 @@ class Section(object):
 	@property
 	def items(self):
 		return self.__items
+
+	@property
+	def item_count(self):
+		return len(self.items())
+
+	@property
+	def item_set_count(self):
+		return len(self.__item_numbers)
 	
 	# returns a single item, given an item number and condition number (not condition name!)
 	def item(self, item_number, condition_number):
@@ -146,11 +151,11 @@ class Section(object):
 	
 	def verify(self):
 		# numbers should start with 1 and increase sequentially
-		item_count = len(self.item_numbers)
-# 		print(self.item_numbers)
+		item_count = len(self.__item_numbers)
+# 		print(self.__item_numbers)
 # 		for i in range(1, item_count + 1):
 # 			# todo: do something with this assertion
-# 			assert i in self.item_numbers
+# 			assert i in self.__item_numbers
 
 		condition_counts = set([str(len(conds)) for conds in self.condition_sets])
 		if len(condition_counts) > 1:
@@ -174,14 +179,14 @@ class Section(object):
 	
 	# offset is the list number, starting with 0 (though that doesn't actually matter much)
 	def latin_square_list(self, offset):
-		return [self.item(n, (n + offset) % self.condition_count) for n in self.item_numbers]
+		return [self.item(n, (n + offset) % self.condition_count) for n in self.__item_numbers]
 
 class Experiment(object):
 	def __init__(self, items):
 		self.__original_items = items
-		self.section_names = list(set([t.section for t in items]))
+		self.__section_names = list(set([item.section for item in items]))
 		self.__sections = {}
-		for section in self.sections():
+		for section in self.section_names:
 			section_items = [t for t in items if t.section == section]
 			self.__sections[section] = Section(section, section_items)
 
@@ -211,34 +216,33 @@ class Experiment(object):
 	def items_by_field_count(self, count):
 		return [i for i in self.items if len(i.fields()) == count]
 	
+	@property
 	def item_count(self):
 		return len(self.items)
 	
 	@property
 	def target_count(self):
 		return sum([self.section(sec).item_set_count
-			for sec in self.sections() if sec not in self.filler_sections])
+			for sec in self.section_names if sec not in self.filler_sections])
 
 	@property
 	def filler_count(self):
 		return sum([self.section(sec).item_set_count
-			for sec in self.sections() if sec in self.filler_sections])
+			for sec in self.section_names if sec in self.filler_sections])
 	
-	# todo: rename this method?
-	def sections(self):
-		return self.section_names
+	@property
+	def section_names(self):
+		return self.__section_names
 
 	def verify(self):
 		# todo: iterate better
-		for section_name in self.sections():
+		for section_name in self.section_names:
 			self.section(section_name).verify()
 
 	def section(self, section_name):
 		return self.__sections[section_name]
 
 	def field_count_report(self):
-		item_count = self.item_count()
-	
 		fcc = self.field_count_counts
 		if len(fcc) == 1:
 			print('Field count: ', self.field_count)
@@ -252,7 +256,7 @@ class Experiment(object):
 					culprit = self.items_by_field_count(ct)
 					print("  - 1 item with {1} field{2}: {3.section} {3.number} {3.condition_name}"
 						.format(items, ct, 's' if ct > 1 else '', culprit[0]))
-				if items < item_count * 0.1:
+				if items < self.item_count * 0.1:
 					print("WARNING: Is that an error?")
 
 	@property
@@ -261,9 +265,9 @@ class Experiment(object):
 	
 	@filler_sections.setter
 	def filler_sections(self, sections):
-		self.__filler_sections = [section for section in sections if section in self.sections()]
+		self.__filler_sections = [section for section in sections if section in self.section_names]
 		self.has_fillers = True
-		if len(self.__filler_sections) == len(self.sections()):
+		if len(self.__filler_sections) == len(self.section_names):
 			self.has_fillers = False
 			print("WARNING: All your sections are designated as fillers!")
 		if len(self.__filler_sections) == 0:
@@ -311,7 +315,7 @@ def main(args):
 	
 	# PRINT EXPERIMENT REPORT
 	print('-' * 20)
-	for section_name in experiment.sections():
+	for section_name in experiment.section_names:
 		experiment.section(section_name).report()
 	experiment.field_count_report()
 	print('-' * 20)

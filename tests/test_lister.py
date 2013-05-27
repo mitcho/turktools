@@ -53,8 +53,8 @@ class TestListerDifferentConditionNames(TestCase):
 		self.assertEqual(len(items), 4)
 		
 		exp = lister.Experiment(items)
-		self.assertEqual(len(exp.sections()), 1)
-		self.assertEqual(exp.sections()[0], 'filler')
+		self.assertEqual(len(exp.section_names), 1)
+		self.assertEqual(exp.section_names[0], 'filler')
 		sec = exp.section('filler')
 		
 		# two conditions at a time
@@ -77,8 +77,8 @@ class TestListerDifferentConditionNames(TestCase):
 		self.assertEqual(len(items), 5)
 		
 		exp = lister.Experiment(items)
-		self.assertEqual(len(exp.sections()), 1)
-		self.assertEqual(exp.sections()[0], 'filler')
+		self.assertEqual(len(exp.section_names), 1)
+		self.assertEqual(exp.section_names[0], 'filler')
 		sec = exp.section('filler')
 		
 		# condition count is three
@@ -107,8 +107,8 @@ class TestListerLatinSquareLists(TestCase):
 		self.assertEqual(len(items), 2)
 
 		exp = lister.Experiment(items)
-		self.assertEqual(len(exp.sections()), 1)
-		self.assertEqual(exp.sections()[0], 'test')
+		self.assertEqual(len(exp.section_names), 1)
+		self.assertEqual(exp.section_names[0], 'test')
 		sec = exp.section('test')
 
 		list0 = sec.latin_square_list(0)
@@ -123,8 +123,8 @@ class TestListerLatinSquareLists(TestCase):
 		self.assertEqual(len(items), 4)
 		
 		exp = lister.Experiment(items)
-		self.assertEqual(len(exp.sections()), 1)
-		self.assertEqual(exp.sections()[0], 'filler')
+		self.assertEqual(len(exp.section_names), 1)
+		self.assertEqual(exp.section_names[0], 'filler')
 		sec = exp.section('filler')
 		
 		list0 = sec.latin_square_list(0)
