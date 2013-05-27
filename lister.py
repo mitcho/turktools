@@ -74,6 +74,7 @@ class Item:
 		# the condition name is an actual text label
 		self.condition_name = condition_name
 		# the condition attribute will be an integer. it will be set later.
+		# todo: maybe this should be created on init instead, somehow
 		self.condition = False
 		
 		self.__fields = []
@@ -104,21 +105,27 @@ class Section:
 		self.__items = items
 
 		# todo: add checks for section_name
-
-		item_numbers = [t.number for t in self.items()]
 		condition_sets = []
-		for num in item_numbers:
-			conds = [i.condition_name for i in items if i.number == num]
-			conds.sort()
+		self.item_numbers = list(set([item.number for item in self.items()]))
+		for num in self.item_numbers:
+			item_set = [item for item in items if item.number == num]
+			# sort item set by condition name:
+			item_set.sort(key=lambda x: x.condition_name)
+			# pick out the condition names to add to the condition_sets:
+			conds = [item.condition_name for item in item_set]
 			if conds not in condition_sets:
 				condition_sets.append(conds)
+
+			# set the condition number attribute on each item in the set:
+			for i in range(len(conds)):
+				item_set[i].condition = i
 
 		condition_counts = set([len(conds) for conds in condition_sets])
 		self.condition_count = max(condition_counts)
 		self.condition_sets = condition_sets
 		
-		self.item_count = len([t.number for t in items])
-		self.item_set_count = len(set([t.number for t in items]))
+		self.item_count = len(items)
+		self.item_set_count = len(self.item_numbers)
 	
 	def __repr__(self):
 		return "[Section {0.name}]".format(self)
@@ -126,20 +133,34 @@ class Section:
 	def items(self):
 		return self.__items
 	
+	# returns a single item, given an item number and condition number (not condition name!)
+	def item(self, item_number, condition_number):
+		matches = [item for item in self.items()
+			if item.number == item_number and item.condition == condition_number]
+
+		# todo: do something about this assert
+		assert len(matches) == 1
+		
+		return matches[0]
+	
 	def verify(self):
 		# numbers should start with 1 and increase sequentially
-		item_numbers = [t.number for t in self.items()]
-		item_count = len(item_numbers)
-# 		print(item_numbers)
+		item_count = len(self.item_numbers)
+# 		print(self.item_numbers)
 # 		for i in range(1, item_count + 1):
 # 			# todo: do something with this assertion
-# 			assert i in item_numbers
+# 			assert i in self.item_numbers
 
 		condition_counts = set([str(len(conds)) for conds in self.condition_sets])
 		if len(condition_counts) > 1:
 			print("ERROR: all item sets in a section must have the same number of conditions.")
 			print("Some item sets in section {0} have" . format(self.name), ', some have '.join(condition_counts))
 			exit()
+		
+		for item in self.items():
+			if item.condition is False:
+				print("ERROR: {0} was not assigned a condition number".format(item))
+				exit()
 
 	def report(self):
 		print('Section name:', self.name)
@@ -149,13 +170,20 @@ class Section:
 	 		print('  ', ', '.join(cond_set))
  		
 		print()
+	
+	# offset is the list number, starting with 0 (though that doesn't actually matter much)
+	def latin_list(self, offset):
+		mod_base = self.condition_count
+		result = [self.item(n, (n + offset) % mod_base) for n in self.item_numbers]
+		return result
 
 class Experiment:
 	def __init__(self, items):
-		self.__items = items
+		self.__original_items = items
+		self.section_names = list(set([t.section for t in items]))
 		self.__sections = {}
 		for section in self.sections():
-			section_items = [t for t in self.__items if t.section == section]
+			section_items = [t for t in items if t.section == section]
 			self.__sections[section] = Section(section, section_items)
 	
 	def __repr__(self):
@@ -163,7 +191,7 @@ class Experiment:
 	
 	def field_counts(self):
 		# return a list of tuples (field count, number of items with that count)
-		field_counts = [len(i.fields()) for i in self.__items]
+		field_counts = [len(i.fields()) for i in self.items()]
 		count = field_counts.count
 		result = [(ct, count(ct)) for ct in set(field_counts)]
 		result.sort()
@@ -171,15 +199,19 @@ class Experiment:
 
 	def field_count(self):
 		return max(self.field_counts())[0]
-		
+	
+	def items(self):
+		return [i for section in self.__sections.values() for i in section.items()]
+	
 	def items_by_field_count(self, count):
-		return [i for i in self.__items if len(i.fields()) == count]
+		return [i for i in self.items() if len(i.fields()) == count]
 	
 	def item_count(self):
-		return len(self.__items)
+		return len(self.items())
 	
+	# todo: rename this method?
 	def sections(self):
-		return list(set([t.section for t in self.__items]))
+		return self.section_names
 
 	def verify(self):
 		# todo: iterate better
