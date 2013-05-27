@@ -113,17 +113,18 @@ class Section:
 		# numbers should start with 1 and increase sequentially
 		item_numbers = [t.number for t in self.items()]
 		item_count = len(item_numbers)
-		for i in range(1, item_count + 1):
-			# todo: do something with this assertion
-			assert i in item_numbers
+# 		print(item_numbers)
+# 		for i in range(1, item_count + 1):
+# 			# todo: do something with this assertion
+# 			assert i in item_numbers
 		# todo: each item has to have the same conditions
 
 	def report(self):
 		print('Section name:', self.name)
 		print('Item count:  ', self.item_count)
  		print('Conditions:  ', len(self.conditions))
- 		for condition in self.conditions:
- 			print('  -', condition)
+ 		# if there are multiple sets of condition names, figure that out and print here:
+ 		print('  ', ', '.join(self.conditions))
 		print()
 
 class Experiment:
@@ -137,9 +138,22 @@ class Experiment:
 	def __repr__(self):
 		return "[Experiment]"
 	
+	def field_counts(self):
+		# return a list of tuples (field count, number of items with that count)
+		field_counts = [len(i.fields()) for i in self.__items]
+		count = field_counts.count
+		result = [(ct, count(ct)) for ct in set(field_counts)]
+		result.sort()
+		return result
+
 	def field_count(self):
-		# get the maximum number of fields
-		return max([len(t.fields()) for t in self.__items])
+		return max(self.field_counts())[0]
+		
+	def items_by_field_count(self, count):
+		return [i for i in self.__items if len(i.fields()) == count]
+	
+	def item_count(self):
+		return len(self.__items)
 	
 	def sections(self):
 		return list(set([t.section for t in self.__items]))
@@ -153,7 +167,7 @@ class Experiment:
 		return self.__sections[section_name]
 
 def graceful_read_items(filename):
-	f = open(filename, 'r')
+	f = open(filename, 'rU')
 
 	items = []
 	
@@ -161,7 +175,8 @@ def graceful_read_items(filename):
 	header_pattern = re.compile(r'^#\s+(\S+)\s+(\d+)\s+(.*?)\s*$')
 	
 	current_item = False
-	for line in f:
+	for line in f.readlines():
+		line = unicode(line, 'utf8')
 		# strip off line endings:
 		line = line.rstrip(u'\r\n')
 		
@@ -191,7 +206,25 @@ def main(items_file, lists):
 	print('-' * 20)
 	for section_name in experiment.sections():
 		experiment.section(section_name).report()
-	print('Field count:', experiment.field_count())
+	
+	item_count = experiment.item_count()
+	
+	fc = experiment.field_counts()
+	if len(fc) == 1:
+		print('Field count:', experiment.field_count())
+	else:
+		print('Maximum field count:', experiment.field_count())
+		for (ct, items) in experiment.field_counts():
+			if items > 1:
+				print("  - {0} items with {1} field{2}"
+					.format(items, ct, 's' if ct > 1 else ''))
+			else:
+				culprit = experiment.items_by_field_count(ct)
+				print("  - 1 item with {1} field{2}: {3.section} {3.number} {3.condition}"
+					.format(items, ct, 's' if ct > 1 else '', culprit[0]))
+			if items < item_count * 0.1:
+				print("    Is that an error?")
+	
 	print('-' * 20)
 
 	name_part, extension = splitext(items_file)
@@ -200,7 +233,7 @@ if __name__ == '__main__':
 	from os.path import splitext
 	from sys import argv
 
-	items_file = argv[1] if len(argv) > 2 else raw_input("Please enter the items file name: ")
+	items_file = argv[1] if len(argv) > 1 else raw_input("Please enter the items file name: ")
 	lists = argv[2] if len(argv) > 2 else raw_input("How many lists would you like to create: ")
 
 	# todo: other parameters later?
