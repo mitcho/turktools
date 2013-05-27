@@ -190,8 +190,11 @@ class Experiment(object):
 			section_items = [t for t in items if t.section == section]
 			self.__sections[section] = Section(section, section_items)
 
+		# filler settings:
 		self.has_fillers = False
 		self.__filler_sections = []
+		self.between_fillers = 0
+		self.edge_fillers = 0
 	
 	def __repr__(self):
 		return "[Experiment]"
@@ -274,6 +277,17 @@ class Experiment(object):
 			self.has_fillers = False
 			print("WARNING: You have no sections designated as fillers.")
 
+	@property
+	def max_between_fillers(self):
+		from math import floor
+		return int(floor(self.filler_count / (self.target_count - 1)))
+	
+	@property
+	def max_edge_fillers(self):
+		return int(round(
+			(self.filler_count - (self.target_count - 1) * self.between_fillers)
+			/ 2))
+
 def graceful_read_items(filename):
 	f = open(filename, 'rU')
 
@@ -305,6 +319,28 @@ def graceful_read_items(filename):
 	
 	return items
 
+def get_in_range(max, label, given=False):
+	if given is not False:
+		value = int(given)
+		if value < 0:
+			print("Specified {0} ({1}) could not be used."
+				.format(label, value))
+			print("Using 0 instead.")
+			value = 0
+		if value > max:
+			print("Specified {0} ({1}) could not be used."
+				.format(label, value))
+			print("Using {0} instead.".format(max))
+			value = max
+	else:
+		value = -1
+		while value < 0 or value > max:
+			raw = raw_input("Minimum {0} [0-{1}]: ".format(label, max))
+			value = int(raw)
+			if value < 0 or value > max:
+				print("Please try again.")
+	return value
+
 def main(args):
 	from os.path import splitext
 	
@@ -327,11 +363,33 @@ def main(args):
 	# SET FILLER SECTIONS AND GUIDANCE
 	filler_sections_string = args[2] if len(args) > 2 else raw_input("Enter filler section names, separated by commas: ")
 	experiment.filler_sections = re.split(', *', filler_sections_string)
+
 	if experiment.has_fillers:
 		print('Filler section{0}:'.format('s' if len(experiment.filler_sections) > 1 else ''),
 			', '.join(experiment.filler_sections))
 		print('Each list will have {0.target_count} target items and {0.filler_count} filler items'
 			.format(experiment))
+		
+		# set between_fillers
+		if experiment.max_between_fillers > 0:
+			experiment.between_fillers = get_in_range(
+				experiment.max_between_fillers,
+				'number of fillers between targets',
+				args[3] if len(args) > 3 else False)
+		else:
+			print("WARNING: There are not enough fillers. There will be target items presented one after another.")
+			experiment.between_fillers = 0
+
+		# set edge_fillers
+		if experiment.max_edge_fillers > 0:
+			experiment.edge_fillers = get_in_range(
+				experiment.max_edge_fillers,
+				'number of fillers at the beginning and end of lists',
+				args[4] if len(args) > 4 else False)
+		else:
+			experiment.edge_fillers = 0
+
+	print(experiment.between_fillers, experiment.edge_fillers)
 		
 	# END FILLER SETTINGS
 
