@@ -174,8 +174,37 @@ class TestListerExperiments(TestCase):
 		self.assertFalse(exp.has_fillers)
 		self.assertEqual(exp.target_count, 2)
 		self.assertEqual(exp.filler_count, 0)
-
 		sys.stdout = sys.__stdout__
+		
+		# let's make sure that the field_count_report() doesn't give us a warning
+		silence = Silence()
+		sys.stdout = silence
+		exp.field_count_report()
+		sys.stdout = sys.__stdout__
+		found_warning = False
+		for line in silence():
+			if line.find('WARNING') > -1:
+				found_warning = True
+		self.assertFalse(found_warning)
+
+	def test_items_experiments_field_count_warning(self):
+		items = lister.graceful_read_items( 'tests/test_lister_items-5.txt' )
+		exp = lister.Experiment(items)
+		self.assertEqual(exp.field_count, 2)
+		self.assertEqual(set(exp.field_count_counts), set([(2,1), (1,10)]))
+		self.assertEqual(len(exp.items_by_field_count(1)), 10)
+		self.assertEqual(len(exp.items_by_field_count(2)), 1)
+
+		# let's make sure that the field_count_report() tells us something's off.
+		silence = Silence()
+		sys.stdout = silence
+		exp.field_count_report()
+		sys.stdout = sys.__stdout__
+		found_warning = False
+		for line in silence():
+			if line.find('WARNING') > -1:
+				found_warning = True
+		self.assertTrue(found_warning)
 
 class TestListerUtilities(TestCase):
 	def test_get_in_range(self):
