@@ -49,7 +49,7 @@ class TestLister(TestCase):
 
 class TestListerDifferentConditionNames(TestCase):
 	def test_lister_different_condition_names(self):
-		items = lister.graceful_read_items( 'tests/test_lister_different_condition_names-1.txt' )
+		items = lister.graceful_read_items( 'tests/test_lister_items-3.txt' )
 		self.assertEqual(len(items), 4)
 		
 		exp = lister.Experiment(items)
@@ -73,7 +73,7 @@ class TestListerDifferentConditionNames(TestCase):
 		self.assertFalse(excepted)
 	
 	def test_lister_mismatch_condition_counts(self):
-		items = lister.graceful_read_items( 'tests/test_lister_different_condition_names-2.txt' )
+		items = lister.graceful_read_items( 'tests/test_lister_items-4.txt' )
 		self.assertEqual(len(items), 5)
 		
 		exp = lister.Experiment(items)
@@ -116,10 +116,9 @@ class TestListerLatinSquareLists(TestCase):
 		list1 = sec.latin_square_list(1)
 		self.assertEqual(len(list1), 2)
 		self.assertEqual(list0, list1)
-		
 	
 	def test_lister_latin_square_lists(self):
-		items = lister.graceful_read_items( 'tests/test_lister_different_condition_names-1.txt' )
+		items = lister.graceful_read_items( 'tests/test_lister_items-3.txt' )
 		self.assertEqual(len(items), 4)
 		
 		exp = lister.Experiment(items)
@@ -136,4 +135,31 @@ class TestListerLatinSquareLists(TestCase):
 		
 		self.assertEqual(list0, list2)
 		self.assertNotEqual(list0, list1)
-		
+
+class TestListerExperiments(TestCase):
+	def test_items_experiments_basic(self):
+		items = lister.graceful_read_items( 'tests/test_lister_items-1.txt' )
+		exp = lister.Experiment(items)
+		self.assertEqual(exp.field_count, 2)
+		self.assertEqual(set(exp.field_count_counts), set([(2,1), (1,1)]))
+		self.assertEqual(exp.items_by_field_count(1), [items[0]])
+		self.assertEqual(exp.items_by_field_count(2), [items[1]])
+
+		self.assertFalse(exp.has_fillers)
+		self.assertEqual(exp.target_count, 2)
+		self.assertEqual(exp.filler_count, 0)
+
+	def test_items_experiments_only_filler(self):
+		items = lister.graceful_read_items( 'tests/test_lister_items-3.txt' )
+		exp = lister.Experiment(items)
+		self.assertEqual(exp.field_count, 1)
+		self.assertEqual(set(exp.field_count_counts), set([(1,4)]))
+		self.assertEqual(set(exp.items_by_field_count(1)), set(items))
+
+		exp.filler_sections = ['filler']
+		# there's only one section, so...
+		self.assertEqual(exp.filler_sections, [])
+		self.assertFalse(exp.has_fillers)
+		self.assertEqual(exp.target_count, 2)
+		self.assertEqual(exp.filler_count, 0)
+
