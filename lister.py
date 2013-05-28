@@ -62,9 +62,11 @@ def graceful_write_csv(filename, data):
 		keys.sort()
 		# be smarter about key sort?
 		writer = DictWriter(f, keys, extrasaction = 'ignore')
-		writer.writeheader()
+
+		# use this cumbersome line instead of writeheader() for python 2.6 compat:
+		writer.writerow(dict(zip(keys, keys)))
 		for row in data:
-			writer.writerow(row)	
+			writer.writerow(row)
 
 class Item(object):
 	def __init__(self, section, number, condition_name):
@@ -336,11 +338,11 @@ class Experiment(object):
 					list.insert(len(list), filler_items.pop())
 			
 			# Third, if there are remaining fillers, place them randomly
-			print('Remaining fillers:',len(filler_items))
+			# print('Remaining fillers:',len(filler_items))
 			if len(filler_items) > 0:
 				bins = len(target_items) + 1
 				sample = multinomial(bins, len(filler_items))
-				print(bins, len(filler_items), sample)
+				# print(bins, len(filler_items), sample)
 				# sample[0] will be a special case:
 				for j in range(sample[0]):
 					list.insert(0, filler_items.pop())
