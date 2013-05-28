@@ -5,10 +5,12 @@ import sys
 
 class Silence:
 	def __init__(self):
+		self.__log = []
 		return
 	def __call__(self):
-		return
+		return self.__log
 	def write(self, x):
+		self.__log.append(x)
 		return
 
 class TestLister(TestCase):
@@ -156,6 +158,9 @@ class TestListerExperiments(TestCase):
 		self.assertEqual(set(exp.field_count_counts), set([(1,4)]))
 		self.assertEqual(set(exp.items_by_field_count(1)), set(items))
 
+		silence = Silence()
+		sys.stdout = silence
+
 		exp.filler_sections = ['filler']
 		# there's only one section, so...
 		self.assertEqual(exp.filler_sections, [])
@@ -163,3 +168,47 @@ class TestListerExperiments(TestCase):
 		self.assertEqual(exp.target_count, 2)
 		self.assertEqual(exp.filler_count, 0)
 
+		exp.filler_sections = ['target']
+		# now nothing's a filler, so...
+		self.assertEqual(exp.filler_sections, [])
+		self.assertFalse(exp.has_fillers)
+		self.assertEqual(exp.target_count, 2)
+		self.assertEqual(exp.filler_count, 0)
+
+		sys.stdout = sys.__stdout__
+
+class TestListerUtilities(TestCase):
+	def test_get_in_range(self):
+		silence = Silence()
+		sys.stdout = silence
+
+		# we can't test the raw_input part of get_in_range
+		# but we can test the automated part.
+		self.assertEqual(lister.get_in_range(5, 'test', -1), 0)
+		self.assertEqual(lister.get_in_range(5, 'test', 0), 0)
+		self.assertEqual(lister.get_in_range(5, 'test', 1), 1)
+		self.assertEqual(lister.get_in_range(5, 'test', 5), 5)
+		self.assertEqual(lister.get_in_range(5, 'test', 6), 5)
+		
+		sys.stdout = sys.__stdout__
+
+	def test_multinomial(self):
+		def test_multinomial_function(holes, pigeons):
+			hit = lister.multinomial(holes, pigeons)
+			self.assertEqual(len(hit), holes)
+			self.assertEqual(sum(hit), pigeons)
+			self.assertTrue(min(hit) >= 0)
+			
+			if holes > 1:
+				# make sure the result isn't deterministic:
+				hit2 = []
+				while hit == hit2:
+					hit2 = lister.multinomial(holes, pigeons)
+				self.assertNotEqual(hit, hit2)
+			else:
+				hit2 = lister.multinomial(holes, pigeons)
+				self.assertEqual(hit, hit2)
+		
+		test_multinomial_function(5,2)
+		test_multinomial_function(10,20)
+		test_multinomial_function(1,20)
