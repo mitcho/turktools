@@ -54,13 +54,16 @@ try:
 except ImportError:
 	pass
 
-def graceful_write_csv(filename, data):
+def graceful_write_csv(filename, data, keys = False):
 	from csv import DictWriter
 
-	with open(filename, 'wb') as f:
+	if keys is False:
 		keys = data[0].keys()
-		keys.sort()
 		# be smarter about key sort?
+		keys.sort()
+
+	with open(filename, 'wb') as f:
+		# setting keys here fixes the order of columns
 		writer = DictWriter(f, keys, extrasaction = 'ignore')
 
 		# use this cumbersome line instead of writeheader() for python 2.6 compat:
@@ -365,9 +368,20 @@ class Experiment(object):
 	# return fields in a list with (key, value) entries
 	def fields_from_list(self, list):
 		fields = []
+
 		for i in range(len(list)):
-			item_fields = list[i].fields(self.field_count)
-			fields = fields + [ ('trial_{0}_{1}'.format(i + 1, j + 1), item_fields[j])
+			item = list[i]
+			# the display order starts with 1:
+			display_order = i + 1
+			item_fields = item.fields(self.field_count)
+			# add decode information:
+			fields = fields + [
+				('item_{0}_section'.format(display_order), item.section),
+				('item_{0}_condition'.format(display_order), item.condition_name),
+				('item_{0}_number'.format(display_order), item.number),
+			]
+			# add the fields:
+			fields = fields + [ ('trial_{0}_{1}'.format(display_order, j + 1), item_fields[j])
 				for j in range(self.field_count) ]
 
 		return fields
@@ -478,15 +492,17 @@ def main(args):
 				args[4] if len(args) > 4 else False)
 		else:
 			experiment.edge_fillers = 0
-
-	print(experiment.between_fillers, experiment.edge_fillers)
 	
-	for list_number in range(number_of_lists):
-		print(experiment.fields_from_list(experiment.list(list_number)))
-		
 	# END FILLER SETTINGS
 
 	name_part, extension = splitext(items_file)
+	data = []
+	for list_number in range(number_of_lists):
+		list = [('list', list_number)] + experiment.fields_from_list(experiment.list(list_number))
+		# todo: make sure that all the lists generate the same keys
+		keys = [entry[0] for entry in list]
+		data.append(dict(list))
+	graceful_write_csv(name_part + '.turk.csv', data, keys)
 
 if __name__ == '__main__':
 	from sys import argv
