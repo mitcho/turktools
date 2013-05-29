@@ -3,30 +3,29 @@ Turk Tools
 
 Tools to prepare linguistic surveys for Amazon Mechanical Turk.
 
-Copyright 2013 Michael Yoshitaka Erlewine <mitcho@mitcho.com> and contributors. All code licensed under the MIT license. See license block below and in individual files.
+## Features
 
-To download everything here, click on the "ZIP" button above.
-
-## Design goals
-
-TODO
-
-## Tools
-
-The following tools are currently distributed in this repository:
-
-* `templater.py`
-* `simluator.py`
-* `decoder.py`
-* `analysis.r`: sample R analysis code
-
-The tool `turkolizer.py` is *not* included in this repository, due to an unclear software license. Contact mitcho to get the latest version of the turkolizer. In the near future, I will probably do a clean-room-rewrite of this tool so it can be released in the open without copyright constraints.
-
-If you would like to host Mechanical Turk-style surveys on your own server instead of using Amazon Mechanical Turk, this can be done using Turk Tools' sister project, [Turk Server](https://github.com/mitcho/turkserver).
+* Simplifies the **full workflow** for Turk-style experiment construction: randomized counterbalanced lists, local experiment simulation, and results in a format optimized for analysis
+* **Template skeletons** which maximizes template reusability
+* **Cross-platform** (Windows, Mac, and Linux), requiring only Python (2.6 or 2.7)
+* **Simple tools** for non-programmers, with **command line options** for advanced users
+* Experiments can be used **without Mechanical Turk**, with the use of [Turk Server](https://github.com/mitcho/turkserver)
 
 ## Usage
 
-TODO
+To download everything here, click on the "ZIP" button above.
+
+The following tools are included:
+
+* `templater.py`
+* `simluator.py`
+* `lister.py`
+* `decoder.py`
+* `analysis.r`: sample R analysis code
+
+TODO: describe usage
+
+If you would like to host Mechanical Turk-style surveys on your own server instead of using Amazon Mechanical Turk, this can be done using Turk Tools' sister project, [Turk Server](https://github.com/mitcho/turkserver).
 
 ## Template skeletons
 
@@ -39,19 +38,15 @@ The `templater.py` tool takes "skeletons" of templates and turns them into templ
 * `binary-image.skeleton.html`: Truth value judgment paradigm with a sentence and an image presented. Forced choice true or false.
 * `sentence-choice.skeleton.html`: Forced choice between two variable options, given a context.
 
-## References
-
-TODO
-
 ## Testing
 
 [![Test Status](https://travis-ci.org/mitcho/turktools.png?branch=master)](https://travis-ci.org/mitcho/turktools)
 
-Turk Tools includes unit tests using the Python-standard `unittest` library. Tests can be run by running `python tests.py`.
+Turk Tools includes unit tests using the Python-standard `unittest` library. Tests can be run by running `python tests.py`. With the [`coverage`](http://nedbatchelder.com/code/coverage/) module installed, run `coverage run tests.py` and then use `coverage report -m` to see a code coverage report.
 
 ## The MIT License (MIT)
 
-Copyright (c) 2013 Michael Yoshitaka Erlewine and contributors
+Copyright (c) 2013 Michael Yoshitaka Erlewine <mitcho@mitcho.com> and contributors
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
