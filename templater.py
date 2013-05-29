@@ -6,8 +6,9 @@ mitcho (Michael Yoshitaka Erlewine), mitcho@mitcho.com, March 2013
 Renders Mechanical Turk template "skeletons" using the "mustache" templating language:
   http://mustache.github.com/mustache.5.html
 
-Turk fields will be of the form ${trial_i_j}, where i is the trial number and j is 
-a unique integer. This matches the output of the Lister.
+Turk fields will be of the form ${field_i_j}, where i is the item number in the list
+(not the original item set number) and j is a unique integer. This matches the
+output of the Lister.
 
 The MIT License (MIT)
 Copyright (c) 2013 Michael Yoshitaka Erlewine
@@ -77,11 +78,11 @@ def main(template, template_string, number, code):
 		i = str(i)
 		basic = {
 			'number': i, 
-			'field': '${trial_' + i + '_1}',
+			'field': '${field_' + i + '_1}',
 		}
 		fields = {}
 		for j in range(1, maximum_number_of_fields):
-			fields[ 'field_' + str(j) ] = '${trial_' + i + '_' + str(j) + '}'
+			fields[ 'field_' + str(j) ] = '${field_' + i + '_' + str(j) + '}'
 
 		return dict( basic.items() + fields.items() )
 

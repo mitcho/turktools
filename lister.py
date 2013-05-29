@@ -381,7 +381,7 @@ class Experiment(object):
 				('item_{0}_number'.format(display_order), item.number),
 			]
 			# add the fields:
-			fields = fields + [ ('trial_{0}_{1}'.format(display_order, j + 1), item_fields[j])
+			fields = fields + [ ('field_{0}_{1}'.format(display_order, j + 1), item_fields[j])
 				for j in range(self.field_count) ]
 
 		return fields
