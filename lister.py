@@ -377,8 +377,8 @@ class Experiment(object):
 			# add decode information:
 			fields = fields + [
 				('item_{0}_section'.format(display_order), item.section),
-				('item_{0}_condition'.format(display_order), item.condition_name),
 				('item_{0}_number'.format(display_order), item.number),
+				('item_{0}_condition'.format(display_order), item.condition_name),
 			]
 			# add the fields:
 			fields = fields + [ ('field_{0}_{1}'.format(display_order, j + 1), item_fields[j])
