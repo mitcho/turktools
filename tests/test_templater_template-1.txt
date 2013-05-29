@@ -1,0 +1,5 @@
+This is a sample template.
+Note how there's no complete {{#items}} block here.
+Code: {{code}}
+Number: {{total_number}}
+Extra: {{nonsense}}
