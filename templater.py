@@ -36,6 +36,7 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 from __future__ import print_function
 import os, inspect
 from sys import path
+from string import Template
 import atexit
 
 @atexit.register
@@ -54,11 +55,44 @@ try:
 except ImportError:
 	pass
 
-# add pystache submodule to path
-cmd_subfolder = os.path.realpath(os.path.abspath(os.path.join('.', 'ext', 'pystache')))
-if cmd_subfolder not in path:
-	path.insert(0, cmd_subfolder)
-from pystache import render
+# A Mustaches-style templater
+class FakeMustaches(Template):
+	delimiter = ''
+	pattern = r"""
+    (?:
+      \{\{(?P<named>(?P<braced>[_a-z][_a-z0-9]*))\}\} # named = braced
+      (?P<invalid>)              # Other ill-formed delimiter exprs
+      (?P<escaped>)              # Other ill-formed delimiter exprs
+    )
+    """
+
+# todo: write tests for FakeMustaches
+# print(FakeMustaches('Test {{test}} {{other}}').safe_substitute(test='rar', other='gar'))
+
+# The fake Mustaches renderer only allows looping over {{#items}}
+# Similarly, the only value of obj which can itself be a dict is "items"
+def render(template_string, obj):
+	import re
+	split_pattern = r'^(?P<pre>.*)\{\{#items\}\}(?P<items>.*)\{\{/items\}\}(?P<post>.*)$'
+	match = re.match(split_pattern, template_string, flags=re.DOTALL)
+	
+	items = obj['items']
+	del obj['items']
+	
+	if match is None:
+		result = FakeMustaches(template_string).safe_substitute(obj)
+	else:
+		result = FakeMustaches(match.group('pre')).safe_substitute(obj)
+		for i in range(len(items)):
+			item = items[i].copy()
+			item.update(obj)
+			result = result + FakeMustaches(match.group('items')).safe_substitute(item)
+		result = result + FakeMustaches(match.group('post')).safe_substitute(obj)
+
+	# get rid of any remaining mustaches:
+	result = re.sub(r'\{\{.*?\}\}', '', result)
+	
+	return result
 
 def graceful_read(filename):
 	try:
@@ -70,10 +104,6 @@ def graceful_read(filename):
 maximum_number_of_fields = 100 # reasonable enough, I think.
 
 def main(template, template_string, number, code):
-	name_part, extension = os.path.splitext(template)
-	filename = name_part.replace('.skeleton', '') + '-' + code + '-' + str(number) + extension
-	output_file = open(filename, 'w')
-
 	def item(i):
 		i = str(i)
 		basic = {
@@ -86,11 +116,16 @@ def main(template, template_string, number, code):
 
 		return dict( basic.items() + fields.items() )
 
+	# todo: rewrite this item()-generation into the renderer
 	obj = {
 		'total_number': number,
 		'code': code,
 		'items': [ item(i) for i in range(1, number + 1) ]
 	}
+	
+	name_part, extension = os.path.splitext(template)
+	filename = name_part.replace('.skeleton', '') + '-' + code + '-' + str(number) + extension
+	output_file = open(filename, 'w')
 	output_file.write(render(template_string, obj))
 
 	print( 'Successfully wrote template to ' + filename )
