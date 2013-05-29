@@ -1,5 +1,5 @@
 # coding: utf-8
-from unittest import TestCase, expectedFailure
+from unittest import TestCase
 import templater
 import sys
 
@@ -96,10 +96,10 @@ class TestTemplater(TestCase):
 		self.assertFalse(re.search(r'^Code: test\r?\n?$', output, re.MULTILINE) is None)
 		self.assertFalse(re.search(r'^Number: 10\r?\n?$', output, re.MULTILINE) is None)
 
-	@expectedFailure
-	def test_template1_nonsense(self):
-		import re
-		output, log = self.run_templater_main('tests/test_templater_template-1')
-
-		self.assertFalse(re.search(r'^Extra: \r?\n?$', output, re.MULTILINE) is None)
-		self.assertTrue(output.find('nonsense') == -1)
+# 	@expectedFailure
+# 	def test_template1_nonsense(self):
+# 		import re
+# 		output, log = self.run_templater_main('tests/test_templater_template-1')
+# 
+# 		self.assertFalse(re.search(r'^Extra: \r?\n?$', output, re.MULTILINE) is None)
+# 		self.assertTrue(output.find('nonsense') == -1)
