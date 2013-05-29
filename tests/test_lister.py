@@ -188,7 +188,12 @@ class TestListerExperiments(TestCase):
 		self.assertFalse(found_warning)
 
 	def test_items_experiments_field_count_warning(self):
-		items = lister.graceful_read_items( 'tests/test_lister_items-5.txt' )
+		# construct items with 10 @ 1 + 1 @ 2
+		items = []
+		items.append(lister.Item('test', 1, 'test', ['test', 'extra!']))
+		for i in range(10):
+			items.append(lister.Item('test', i + 2, 'test', ['test']))
+
 		exp = lister.Experiment(items)
 		self.assertEqual(exp.field_count, 2)
 		self.assertEqual(set(exp.field_count_counts), set([(2,1), (1,10)]))

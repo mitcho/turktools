@@ -69,7 +69,7 @@ def graceful_write_csv(filename, data):
 			writer.writerow(row)
 
 class Item(object):
-	def __init__(self, section, number, condition_name):
+	def __init__(self, section, number, condition_name, fields = False):
 		self.section = section
 		self.number = int(number)
 		
@@ -78,8 +78,10 @@ class Item(object):
 		# the condition attribute will be an integer. it will be set later.
 		# todo: maybe this should be created on init instead, somehow
 		self.condition = False
-		
+
 		self.__fields = []
+		if fields and type(fields) == list:
+			self.__fields = fields
 
 	def __repr__(self):
 		return "[Item {0.section} {0.number} {0.condition_name} ({1})]".format(self, len(self.fields()))
