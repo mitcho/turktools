@@ -89,17 +89,36 @@ class TestTemplater(TestCase):
 		import re
 		output, log = self.run_templater_main('tests/test_templater_template-1')
 
-		self.assertTrue(re.match(r'success', '\n'.join(log), re.IGNORECASE) is not None)
+		self.assertFalse(re.match(r'success', '\n'.join(log), re.IGNORECASE) is None)
 		# print(output, type(output))
 		self.assertTrue(output.find('{{') == -1)
 		self.assertTrue(re.search(r'\{\{.*\}\}', output) is None)
 		self.assertFalse(re.search(r'^Code: test\r?\n?$', output, re.MULTILINE) is None)
 		self.assertFalse(re.search(r'^Number: 10\r?\n?$', output, re.MULTILINE) is None)
+	def test_template2(self):
+		import re
+		output, log = self.run_templater_main('tests/test_templater_template-2')
 
+		self.assertFalse(re.match(r'success', '\n'.join(log), re.IGNORECASE) is None)
+		self.assertTrue(output.find('{{') == -1)
+		self.assertTrue(re.search(r'\{\{.*\}\}', output) is None)
+		self.assertFalse(re.search(r'^Code: test\r?\n?$', output, re.MULTILINE) is None)
+		self.assertFalse(re.search(r'^Total number: 10\r?\n?$', output, re.MULTILINE) is None)
+		for i in range(1,11):
+			self.assertFalse(re.search(r'^Code in item: test\r?\n?$', output, re.MULTILINE) is None)
+			self.assertFalse(re.search(r'^Total number in item: 10\r?\n?$', output, re.MULTILINE) is None)
+			self.assertFalse(re.search('^Item number: ' + str(i) + '\r?\n?$', output, re.MULTILINE) is None)
+			self.assertFalse(re.search('^Field 1: \$\{field_' + str(i) + '_1\}\r?\n?$', output, re.MULTILINE) is None)
+			self.assertFalse(re.search('^Field 2: \$\{field_' + str(i) + '_2\}\r?\n?$', output, re.MULTILINE) is None)
 # 	@expectedFailure
-# 	def test_template1_nonsense(self):
+# 	def test_template_nonsense(self):
 # 		import re
 # 		output, log = self.run_templater_main('tests/test_templater_template-1')
+# 
+# 		self.assertFalse(re.search(r'^Extra: \r?\n?$', output, re.MULTILINE) is None)
+# 		self.assertTrue(output.find('nonsense') == -1)
+# 
+# 		output, log = self.run_templater_main('tests/test_templater_template-2')
 # 
 # 		self.assertFalse(re.search(r'^Extra: \r?\n?$', output, re.MULTILINE) is None)
 # 		self.assertTrue(output.find('nonsense') == -1)

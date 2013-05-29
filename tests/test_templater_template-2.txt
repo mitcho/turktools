@@ -1,0 +1,15 @@
+This is a sample template.
+
+Code: {{code}}
+Total number: {{total_number}}
+Extra: {{nonsense}}
+
+{{#items}}
+
+Code in item: {{code}}
+Total number in item: {{total_number}}
+Item number: {{number}}
+Field 1: {{field_1}}
+Field 2: {{field_2}}
+
+{{/items}}
