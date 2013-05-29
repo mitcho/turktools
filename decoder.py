@@ -3,7 +3,7 @@
 Turk Tools Decoder
 mitcho (Michael Yoshitaka Erlewine), mitcho@mitcho.com, April 2013
 
-Uses a decode file to decode a Turk results file.
+Decode a Turk results file into a format optimized for analysis
 
 The MIT License (MIT)
 Copyright (c) 2013 Michael Yoshitaka Erlewine
@@ -79,96 +79,137 @@ def graceful_write_csv(filename, data):
 		for row in data:
 			writer.writerow(row)
 
-def main( name_part, results, decode ):
-	decode_data = graceful_read_csv(decode)
+class ResultsData(object):
+	__data = []
 
-	if len(decode_data) == 0:
-		print( "It looks like this decode file is not formatted correctly. Please try again." )
-		exit()
+	def __init__(self, data = False, file = False):
+		if data is not False:
+			self.__data = data
+		if file is not False:
+			self.readfile(file)
 
-	# todo: is there a better way to get the trial_numbers and check it?
-	trial_numbers = [int(re.sub(r'^Item(\d+)$', '\\1', key)) for key in decode_data[0].keys() if re.search(r'^Item(\d+)$', key)]
-	trial_numbers.sort()
-	if min(trial_numbers) != 1 or max(trial_numbers) != len(trial_numbers):
-		print( "It looks like this decode file is not formatted correctly. Please try again." )
-		exit()
+	@property
+	def data(self):
+		return self.__data
 
-	# turn the decode_data into a hash, for lookup by list
-	decode_data_hash = {}
-	for row in decode_data:
-		entry = {}
-		for n in trial_numbers:
-			entry[n] = {
-					'Section': row['Section' + str(n)],
-					'Item': int(row['Item' + str(n)]),
-					'Condition': row['Condition' + str(n)],
-					'PresentationOrder': n
-				}
-		decode_data_hash[int(row['list'])] = entry
+	def readfile(self, filename):
+		self.__data = graceful_read_csv(filename)
 
-	results_data = graceful_read_csv(results)
-
-	if len(results_data) == 0:
-		print( "It looks like this results file is missing data or is not formatted correctly. Please try again." )
-		exit()
-
-	for expected in ['Title', 'Description', 'Keywords', 'Reward']:
-		if expected not in results_data[0]:
-			print( "It looks like the results file is not formatted correctly (missing expected column {0}). Please try again.".format(expected) )
+	def verify(self):
+		if len(self.data) == 0:
+			print( "ERROR: It looks like this results file is missing data or is not formatted correctly (no data found). Please try again." )
 			exit()
 
-	print( '-------------' )
-	print( 'Title:       ', results_data[0]['Title'] )
-	print( 'Description: ', results_data[0]['Description'] )
-	print( 'Keywords:    ', results_data[0]['Keywords'] )
-	print( 'Reward:      ', results_data[0]['Reward'] )
-	print( '-------------' )
-
-	decoded_data = []
-
-	re_extra = re.compile('^Answer\.(\D+)$');
-	for n in trial_numbers:
-		re_input = re.compile('^Input\.trial_' + str(n) + '_(\d+)$');
-		re_answer = re.compile('^Answer\.(\w*?\D)_?' + str(n) + '$');
-		re_sample = re.compile('^Answer\.(\w*?\D)_?Sample' + str(n) + '$');
-		for row in results_data:
-			list_number = int(row['Input.list'])
-
-			# this line does the merge, basically:
-			data = decode_data_hash[list_number][n].copy()
-			data['List'] = list_number
+		for expected in ['Title', 'Description', 'Keywords', 'Reward']:
+			if expected not in self.data[0]:
+				print( "ERROR: It looks like the results file is not formatted correctly (missing expected column {0}). Please try again.".format(expected) )
+				exit()
 		
-			# copy user/assignment meta		
-			data['WorkerId'] = row['WorkerId']
-			data['AssignmentId'] = row['AssignmentId']
-			data['AssignmentStatus'] = row['AssignmentStatus']
-			data['WorkTimeInSeconds'] = row['WorkTimeInSeconds']
+		if 'Input.field_1_1' not in self.data[0] and 'Input.trial_1_1' in self.data[0]:
+			print( "ERROR: This results file is based on an older version of Turk Tools, which probably gave you a decode file." )
+			print( "In that case, please use the old decoder, available at https://github.com/mitcho/turktools/tree/old-decoder ." )
+			exit()
 
-			for field in row.keys():
-				if re_input.match(field) is not None:
-					data[re_input.sub('field_\\1', field)] = row[field]
-				if re_answer.match(field) is not None and re_sample.match(field) is None:
-					data[re_answer.sub('\\1', field)] = row[field]
-				if re_extra.match(field):
-					data[re_extra.sub('\\1', field)] = row[field]				
+		if 'Input.field_1_1' not in self.data[0] or 'Input.item_1_section' not in self.data[0]:
+			print( "ERROR: This results file looks like it was not constructed with Turk Tools, or there was a problem reading the results file." )
+			exit()
 
-			# todo: get sample/practice item answers?
-			decoded_data.append(data.copy())
+		item_numbers = self.item_numbers
+		if len(item_numbers) == 0 or \
+			min(item_numbers) != 1 or \
+			max(item_numbers) != len(item_numbers):
+			print( "ERROR: It looks like this results file is missing data or is not formatted correctly (display item numbers could not be read). Please try again." )
+			exit()
 
-	# todo: check that each row has the same number of fields!
+	def report(self):
+		print( '-' * 20 )
+		print( 'Title:       ', self.data[0]['Title'] )
+		print( 'Description: ', self.data[0]['Description'] )
+		print( 'Keywords:    ', self.data[0]['Keywords'] )
+		print( 'Reward:      ', self.data[0]['Reward'] )
+		print( '-' * 20 )
 
-	filename = name_part + '.decoded.csv'
-	graceful_write_csv( filename, decoded_data )
+	@property
+	def item_numbers(self):
+		# todo: is there a better way to get the item_numbers and check it?
+		keys = self.data[0].keys()
+		re_item_section = re.compile(r'^Input.item_(\d+)_section$')
+		numbers = [int(re_item_section.sub('\\1', key)) for key in keys if re_item_section.match(key)]
+		numbers.sort
+		return numbers
 
-	print( 'Successfully wrote decoded results to ' + filename )
+	def decode_map(self, row):
+		results = {}
+		for n in self.item_numbers:
+			results[n] = {
+				'PresentationOrder': n,
+				'Section': row['Input.item_{0}_section'.format(n)],
+				'Item': int(row['Input.item_{0}_number'.format(n)]),
+				'Condition': row['Input.item_{0}_condition'.format(n)],
+			}
+		return results
+
+	def assignment_data(self, row):
+		# copy user/assignment meta
+		data = {
+			'WorkerId': row['WorkerId'],
+			'AssignmentId': row['AssignmentId'],
+			'AssignmentStatus': row['AssignmentStatus'],
+			'WorkTimeInSeconds': row['WorkTimeInSeconds'],
+			'List': row['Input.list'],
+		}
+		return data
+
+	def decode(self):
+		decoded_data = []
+
+		re_extra = re.compile('^Answer\.(\D+)$');
+		for row in self.data:
+			decode_map = self.decode_map(row)
+			row_meta = self.assignment_data(row)
+
+			for n in self.item_numbers:
+				re_input = re.compile(r'^Input\.trial_{0}_(\d+)$'.format(n));
+				re_answer = re.compile(r'^Answer\.(.+)[_\-]{0}$'.format(n));
+				# re_sample = re.compile(r'^Answer\.(\w*?\D)_?Sample{0}$'.format(n));
+			
+				# this line does the merge:
+				data = decode_map[n].copy()
+				data.update(row_meta)
+
+				for field in row.keys():
+					if re_input.match(field) is not None:
+						data[re_input.sub('field_\\1', field)] = row[field]
+					# and re_sample.match(field) is None
+					if re_answer.match(field) is not None:
+						data[re_answer.sub('\\1', field)] = row[field]
+					if re_extra.match(field):
+						data[re_extra.sub('\\1', field)] = row[field]				
+				# todo: check that each row/item has the same number of fields!
+
+				# todo: get sample/practice item answers?
+				# todo: is the .copy() necessary here?
+				decoded_data.append(data.copy())
+		return decoded_data
+
+def main(filename):
+	
+	results = ResultsData(file = filename)
+	results.verify()
+	results.report()
+	decoded_data = results.decode()
+
+	from os.path import splitext
+	name_part, extension = splitext(filename)
+	decoded_filename = name_part + '.decoded.csv'
+	graceful_write_csv( decoded_filename, decoded_data )
+
+	print( 'Successfully wrote decoded results to ' + decoded_filename )
 	exit()
 
 if __name__ == '__main__':
-	from os.path import splitext
 	from sys import argv
 
-	results = argv[1] if len(argv) > 2 else raw_input("Please enter the Turk results file name: ")
-	decode = argv[2] if len(argv) > 2 else raw_input("Please enter the decode file name: ")
-	name_part, extension = splitext(results)
+	filename = argv[1] if len(argv) > 1 else raw_input("Please enter the Turk results file name: ")
 
-	main( name_part, results, decode )
+	main(filename)
