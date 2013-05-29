@@ -16,5 +16,6 @@ runner = unittest.TextTestRunner(verbosity=1 + sys.argv.count('-v'))
 suite = unittest.TestLoader().loadTestsFromNames([
 	'tests.test_csv',
 	'tests.test_lister',
+	'tests.test_templater',
 ])
 raise SystemExit(not runner.run(suite).wasSuccessful())

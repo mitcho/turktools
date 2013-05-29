@@ -66,9 +66,6 @@ class FakeMustaches(Template):
     )
     """
 
-# todo: write tests for FakeMustaches
-# print(FakeMustaches('Test {{test}} {{other}}').safe_substitute(test='rar', other='gar'))
-
 # The fake Mustaches renderer only allows looping over {{#items}}
 # Similarly, the only value of obj which can itself be a dict is "items"
 def render(template_string, obj):
@@ -127,6 +124,7 @@ def main(template, template_string, number, code):
 	filename = name_part.replace('.skeleton', '') + '-' + code + '-' + str(number) + extension
 	output_file = open(filename, 'w')
 	output_file.write(render(template_string, obj))
+	output_file.close()
 
 	print( 'Successfully wrote template to ' + filename )
 	exit()
