@@ -3,3 +3,4 @@
 *.pyc
 *.html
 *.txt
+.coverage
