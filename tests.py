@@ -18,4 +18,4 @@ suite = unittest.TestLoader().loadTestsFromNames([
 	'tests.test_decoder',
 	'tests.test_lister',
 ])
-runner.run(suite)
+raise SystemExit(not runner.run(suite).wasSuccessful())
