@@ -138,6 +138,29 @@ class TestListerLatinSquareLists(TestCase):
 		self.assertEqual(list0, list2)
 		self.assertNotEqual(list0, list1)
 
+# Create a sample experiment, based on an array with specifications of the "shape" of
+# sections. In the simplest case, item_specs can be an array of ints, which correspond
+# to item counts in each section. Alternatively, they can be dicts of the form:
+#   { items: ..., fields: ..., conditions: ... } // each of these being ints
+def sample_experiment(item_specs):
+	item_list = []
+	for i in range(len(item_specs)):
+		# the section specification could be a number or a dict
+		spec = item_specs[i]
+		if type(spec) is not dict:
+			spec = {}
+			spec.update(items = int(item_specs[i]))
+		spec.setdefault('fields', 1)
+		spec.setdefault('conditions', 1)
+
+		for j in range(spec.get('items')):
+			if spec.get('conditions') > 1:
+				for k in range(spec.get('conditions')):
+					item_list.append(lister.Item('section' + str(i), j, 'condition' + str(k), ['test'] * spec.get('fields')))
+			else:
+				item_list.append(lister.Item('section' + str(i), j, 'condition', ['test'] * spec.get('fields')))
+	return lister.Experiment(item_list)
+
 class TestListerExperiments(TestCase):
 	def test_items_experiments_basic(self):
 		items = lister.graceful_read_items( 'tests/test_lister_items-1.txt' )
@@ -188,13 +211,7 @@ class TestListerExperiments(TestCase):
 		self.assertFalse(found_warning)
 
 	def test_items_experiments_field_count_warning(self):
-		# construct items with 10 @ 1 + 1 @ 2
-		items = []
-		items.append(lister.Item('test', 1, 'test', ['test', 'extra!']))
-		for i in range(10):
-			items.append(lister.Item('test', i + 2, 'test', ['test']))
-
-		exp = lister.Experiment(items)
+		exp = sample_experiment([dict(items=10, fields=1, conditions=1), dict(items=1, fields=2, conditions=1)])
 		self.assertEqual(exp.field_count, 2)
 		self.assertEqual(set(exp.field_count_counts), set([(2,1), (1,10)]))
 		self.assertEqual(len(exp.items_by_field_count(1)), 10)
@@ -211,6 +228,64 @@ class TestListerExperiments(TestCase):
 				found_warning = True
 		self.assertTrue(found_warning)
 
+class TestListerLists(TestCase):
+	def test_lists(self):		
+		exp = sample_experiment([10,11])
+		exp.filler_sections = ['section0']
+		self.assertEqual(exp.filler_sections, ['section0'])
+		self.assertTrue(exp.has_fillers)
+
+		self.assertEqual(exp.between_fillers, 0)
+		self.assertEqual(exp.edge_fillers, 0)
+		self.assertEqual(exp.max_between_fillers, 1)
+		self.assertEqual(exp.max_edge_fillers, 5)
+		
+		list = exp.list(0, shuffle=False)
+		other_list = list
+		self.assertEqual(len(list), 10 + 11)
+		# make sure that we can get a different result:
+		while list == other_list:
+			other_list = exp.list(0, shuffle=False)
+
+
+		# change the filler settings
+		# put one filler in between targets; no fillers left
+		exp.between_fillers = 1
+		self.assertEqual(exp.between_fillers, 1)
+		self.assertEqual(exp.edge_fillers, 0)
+		self.assertEqual(exp.max_between_fillers, 1)
+		self.assertEqual(exp.max_edge_fillers, 0)
+
+		# this has to be the same:
+		list = exp.list(0, shuffle=False)
+		other_list = exp.list(0, shuffle=False)
+		self.assertEqual(len(list), 10 + 11)
+		self.assertEqual(list, other_list)
+		for i in range(1,20,2):
+			self.assertEqual(list[i].section, 'section0')
+		for i in range(0,21,2):
+			self.assertEqual(list[i].section, 'section1')
+		
+		
+		# change the filler settings:
+		# push all the fillers to the edges
+		exp.between_fillers = 0
+		exp.edge_fillers = 5
+		self.assertEqual(exp.between_fillers, 0)
+		self.assertEqual(exp.edge_fillers, 5)
+		self.assertEqual(exp.max_between_fillers, 1)
+		self.assertEqual(exp.max_edge_fillers, 5)
+
+		# this has to be the same:
+		list = exp.list(0, shuffle=False)
+		other_list = exp.list(0, shuffle=False)
+		self.assertEqual(len(list), 10 + 11)
+		self.assertEqual(list, other_list)
+		for i in range(5):
+			self.assertEqual(list[i].section, 'section0')
+		for i in range(5):
+			self.assertEqual(list[-i].section, 'section0')
+		
 class TestListerUtilities(TestCase):
 	def test_get_in_range(self):
 		silence = Silence()
