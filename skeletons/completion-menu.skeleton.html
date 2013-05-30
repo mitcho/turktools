@@ -1,4 +1,4 @@
-{{! Radio button completion template skeleton; use templater.py! }}
+{{! Drop-down menu completion template skeleton; use templater.py! }}
 
 <style type="text/css">
 label, input[type=radio], input[type=button] { cursor: pointer; }
@@ -25,10 +25,13 @@ label, input[type=radio], input[type=button] { cursor: pointer; }
 
 <div class="trial">
 
-	<p>The successful photographer was in need of&nbsp;<span class="gap">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>&nbsp;lens that the art student also was in order to have a good class project.</p>
-	
-	<p><label for='ChoiceSample1_1'><input type='radio' name='ChoiceSample1' id='ChoiceSample1_1' value='the same'></input> the same</label> <label for='ChoiceSample1_2'><input type='radio' name='ChoiceSample1' id='ChoiceSample1_2' value='few'></input> few</label></p>
-
+	<p>The successful photographer was in need of
+		<select name='ChoiceSample1'>
+		<option value='' class='unanswered'>--</option>
+		<option value='the same'> the same</option>
+		<option value='few'> few</option>
+		</select>
+	lens that the art student also was in order to have a good class project.</p>
 </div>
 
 <p>In the above example, "the same" sounds more natural than "few," because you can't say "few lens." Therefore, please choose "the same."</p>
@@ -36,9 +39,13 @@ label, input[type=radio], input[type=button] { cursor: pointer; }
 <p>Here is another example:</p>
 
 <div class="trial">
-	<p>During the important tie breaker match, the goalie was ready to block&nbsp;<span class="gap">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>&nbsp;shot that the defender deflected.</p>
-
-	<p><label for='ChoiceSample2_1'><input type='radio' name='ChoiceSample2' id='ChoiceSample2_1' value='the'></input> the</label> <label for='ChoiceSample2_2'><input type='radio' name='ChoiceSample2' id='ChoiceSample2_2' value='every'></input> every</label></p>
+	<p>During the important tie breaker match, the goalie was ready to block
+		<select name='ChoiceSample2'>
+		<option value='' class='unanswered'>--</option>
+		<option value='the'> the</option>
+		<option value='every'> every</option>
+		</select>
+	shot that the defender deflected.</p>
 </div>
 
 <p>In this example, both "the" and "every" are possible choices. In such cases, choose whichever option makes the sentence sound more natural to you.</p>
@@ -57,12 +64,13 @@ label, input[type=radio], input[type=button] { cursor: pointer; }
 
 	<span class="trial_number">{{number}}.</span>
 	
-	<p>{{field_1}}&nbsp;<span class="gap">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>&nbsp;{{field_2}}.</p>
-	
-	<p class='count'>
-		<label for='Choice{{number}}_1'><input type='radio' name='Choice{{number}}' id='Choice{{number}}_1' value='{{field_3}}'></input> {{field_3}}</label>
-		<label for='Choice{{number}}_2'><input type='radio' name='Choice{{number}}' id='Choice{{number}}_2' value='{{field_4}}'></input> {{field_4}}</label>
-	</p>
+	<p class='count'>{{field_1}}
+		<select name='Choice{{number}}'>
+		<option value='' class='unanswered'>--</option>
+		<option value='{{field_3}}'> {{field_3}}</option>
+		<option value='{{field_4}}'> {{field_4}}</option>
+		</select>
+	{{field_2}}.</p>
 </div>
 
 <hr noshade="noshade" />
@@ -94,10 +102,10 @@ label, input[type=radio], input[type=button] { cursor: pointer; }
 total_number = parseInt("{{total_number}}") || Infinity;
 
 function count() {
-	if ($(this).is('input') && $(this).closest('div').find('input:checked').length == 1)
+	if ($(this).is('select') && $(this).closest('div').find('option:not(.unanswered):selected').length == 1)
 		$(this).closest('div').css('background','transparent');
 
-	var num = $('.count input:checked').length;
+	var num = $('.count option:not(.unanswered):selected').length;
 
 	$('#unanswered span, #answered span').text(num);
 	$('#numanswered').val(num);
@@ -111,7 +119,7 @@ function count() {
 	}
 }
 $(count);
-$('input').bind('change', count);
+$('select').bind('change', count);
 
 $(function() {
 	$('#useragent').val(navigator.userAgent);
@@ -119,7 +127,7 @@ $(function() {
 
 function highlight() {
 	$('div:has(.count)').each(function() {
-		if ($(this).find('input:checked').length != 1)
+		if ($(this).find('option:not(.unanswered):selected').length != 1)
 			$(this).css('background', 'yellow');
 		else
 			$(this).css('background', 'transparent');			
