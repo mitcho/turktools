@@ -9,7 +9,7 @@ Tools for preparing linguistic surveys for Amazon Mechanical Turk.
 * **Template skeletons** which maximizes template reusability
 * **Cross-platform** (Windows, Mac, and Linux), requiring only Python (2.6 or 2.7)
 * **Simple tools** for non-programmers, with **command line options** for advanced users
-* Experiments can be used **without Mechanical Turk**, with the use of [Turk Server](https://github.com/mitcho/turkserver)
+* Experiments can be used **without Mechanical Turk**, with the use of [turkserver](https://github.com/mitcho/turkserver)
 
 ## Usage
 
