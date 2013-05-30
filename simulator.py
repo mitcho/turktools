@@ -54,12 +54,12 @@ def graceful_read(filename):
 		print( "ERROR:", e.strerror )
 		exit()
 
-def graceful_csv_list_read(csv):
+def graceful_read_csv(filename):
 	from csv import DictReader
 
-	data = {}
+	data = []
 	try:
-		f = open(csv, 'rb')
+		f = open(filename, 'rb')
 	except IOError as e:
 		print( "ERROR:", e.strerror )
 		exit()
@@ -68,9 +68,17 @@ def graceful_csv_list_read(csv):
 	while True:
 		try: row = csvreader.next()
 		except: break
-		data[row['list']] = row
+		data.append(row)
 
 	return data
+
+def graceful_read_csv_list(csv):
+	data = graceful_read_csv(csv)
+	result = {}
+	for row in data:
+		# todo: check that 'list' exists here!
+		result[row['list']] = row
+	return result
 
 def main(data, list_number, template_string):
 	from os.path import splitext
@@ -84,7 +92,7 @@ def main(data, list_number, template_string):
 	output = re.sub(r'\$\{(\w+)\}', replacement, template_string)
 
 	name_part, extension = splitext(template)
-	filename = name_part + '-simulation' + extension
+	filename = name_part + '.simulation' + extension
 	output_file = open(filename, 'w')
 	output_file.write("<h1>This is a simulation! Do not upload this file to Turk!</h1><hr/>")
 	output_file.write(output)
@@ -107,8 +115,8 @@ if __name__ == '__main__':
 
 	csv = argv[2] if len(argv) > 2 else raw_input("Please enter the turk CSV file name: ")
 
-	data = graceful_csv_list_read(csv)
+	data = graceful_read_csv_list(csv)
 	
-	list_number = int(argv[3] if len(argv) > 3 else raw_input("Please enter the list number (0.." + str(len(data) - 1) + ") you want to simulate: "))
+	list_number = int(argv[3] if len(argv) > 3 else raw_input("Please enter the list number (0..{0}) you want to simulate: ".format(len(data) - 1)))
 
 	main(data, list_number, template_string)
