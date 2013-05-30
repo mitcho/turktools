@@ -71,6 +71,10 @@ def graceful_write_csv(filename, data, keys = False):
 		for row in data:
 			writer.writerow(row)
 
+def lcm(numbers):
+	from fractions import gcd
+	return reduce(lambda x, y: (x*y)/gcd(x,y), numbers, 1)
+
 class Item(object):
 	def __init__(self, section, number, condition_name, fields = False):
 		self.section = section
@@ -250,6 +254,16 @@ class Experiment(object):
 	def section_names(self):
 		return self.__section_names
 
+	@property
+	def condition_counts(self):
+		return [section.condition_count for section in self.__sections.values()]
+
+	@property
+	def list_number_multiplier(self):
+		# the list number multiplier is the least-common-multiple of the
+		# condition names across all sections.
+		return lcm(self.condition_counts)
+	
 	def verify(self):
 		# todo: iterate better
 		for section_name in self.section_names:
@@ -439,7 +453,7 @@ def get_in_range(max, label, given=False):
 	else:
 		value = -1
 		while value < 0 or value > max:
-			raw = raw_input("Minimum {0} [0-{1}]: ".format(label, max))
+			raw = raw_input("Minimum {0} (0-{1}): ".format(label, max))
 			value = int(raw)
 			if value < 0 or value > max:
 				print("Please try again.")
@@ -461,11 +475,8 @@ def main(args):
 	print('-' * 20)
 	# END EXPERIMENT REPORT
 
-	# todo: require multiple of the condition counts:
-	number_of_lists = int(args[1]) if len(args) > 1 else int(raw_input("How many lists would you like to create: "))
-
 	# SET FILLER SECTIONS AND GUIDANCE
-	filler_sections_string = args[2] if len(args) > 2 else raw_input("Enter filler section names, separated by commas: ")
+	filler_sections_string = args[1] if len(args) > 1 else raw_input("Enter filler section names, separated by commas: ")
 	experiment.filler_sections = re.split(', *', filler_sections_string)
 
 	if experiment.has_fillers:
@@ -479,7 +490,7 @@ def main(args):
 			experiment.between_fillers = get_in_range(
 				experiment.max_between_fillers,
 				'number of fillers between targets',
-				args[3] if len(args) > 3 else False)
+				args[2] if len(args) > 2 else False)
 		else:
 			print("WARNING: There are not enough fillers. There will be target items presented one after another.")
 			experiment.between_fillers = 0
@@ -489,21 +500,68 @@ def main(args):
 			experiment.edge_fillers = get_in_range(
 				experiment.max_edge_fillers,
 				'number of fillers at the beginning and end of lists',
-				args[4] if len(args) > 4 else False)
+				args[3] if len(args) > 3 else False)
 		else:
 			experiment.edge_fillers = 0
 	
 	# END FILLER SETTINGS
 
+	# SET THE NUMBER OF LISTS
+	lnm = experiment.list_number_multiplier
+	number_of_lists = args[4] if len(args) > 4 else raw_input("How many lists would you like to create (enter a multiple of {0}): ".format(lnm))
+	
+	if number_of_lists.isdigit():
+		number_of_lists = int(number_of_lists)
+	else:
+		print("The value given, '{0}', could not be read. The minimum number, {0}, will be used instead.".format(number_of_lists, lnm))
+		number_of_lists = lnm
+
+	if number_of_lists < lnm:
+		print("The minimum number, {0}, will be used instead.".format(lnm))
+		number_of_lists = lnm
+	if number_of_lists % lnm != 0:
+		number_of_lists = int(round(number_of_lists / lnm, 0) * lnm)
+		print("The multiple of {0}, {1}, will be used instead.".format(lnm, number_of_lists))
+	# END THE NUMBER OF LISTS
+
+	# ASK ABOUT REVERSE LISTS
+	reverse = False
+	want_reverse = args[5] if len(args) > 5 else raw_input("Would you like reverse lists? [y] ")
+	if want_reverse == '' or want_reverse[0].lower() != 'y':
+		reverse = True
+	
+	if reverse:
+		print("Randomizing {0} lists and their reverses, for a total of {1} lists..."
+			.format(number_of_lists, number_of_lists * 2))
+	else:
+		print("Randomizing {0} lists...".format(number_of_lists))
+	# END REVERSE LISTS
+
 	name_part, extension = splitext(items_file)
 	data = []
 	for list_number in range(number_of_lists):
-		list = [('list', list_number)] + experiment.fields_from_list(experiment.list(list_number))
+		list = experiment.list(list_number)
+		if reverse:
+			entry = [('list', list_number * 2)] + experiment.fields_from_list(list)
+			data.append(dict(entry))
+			list.reverse()
+			entry = [('list', list_number * 2 + 1)] + experiment.fields_from_list(list)
+			data.append(dict(entry))
+		else:
+			entry = [('list', list_number)] + fields[:]
+			data.append(dict(entry))
+
 		# todo: make sure that all the lists generate the same keys
-		keys = [entry[0] for entry in list]
-		data.append(dict(list))
+		keys = [entry[0] for entry in entry]
+
 	graceful_write_csv(name_part + '.turk.csv', data, keys)
+	print( 'Successfully wrote randomized lists to ' + name_part + '.turk.csv' )
+	exit()
 
 if __name__ == '__main__':
 	from sys import argv
-	main(argv[1:])
+	try:
+		main(argv[1:])
+	except KeyboardInterrupt:
+		print()
+		exit()
