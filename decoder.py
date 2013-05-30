@@ -65,13 +65,16 @@ def graceful_read_csv(filename):
 
 	return data
 
-def graceful_write_csv(filename, data):
+def graceful_write_csv(filename, data, keys = False):
 	from csv import DictWriter
 
-	with open(filename, 'wb') as f:
+	if keys is False:
 		keys = data[0].keys()
-		keys.sort()
 		# be smarter about key sort?
+		keys.sort()
+
+	with open(filename, 'wb') as f:
+		# setting keys here fixes the order of columns
 		writer = DictWriter(f, keys, extrasaction = 'ignore')
 
 		# use this cumbersome line instead of writeheader() for python 2.6 compat:
@@ -135,29 +138,29 @@ class ResultsData(object):
 		keys = self.data[0].keys()
 		re_item_section = re.compile(r'^Input.item_(\d+)_section$')
 		numbers = [int(re_item_section.sub('\\1', key)) for key in keys if re_item_section.match(key)]
-		numbers.sort
+		numbers.sort()
 		return numbers
 
 	def decode_map(self, row):
 		results = {}
 		for n in self.item_numbers:
-			results[n] = {
-				'PresentationOrder': n,
-				'Section': row['Input.item_{0}_section'.format(n)],
-				'Item': int(row['Input.item_{0}_number'.format(n)]),
-				'Condition': row['Input.item_{0}_condition'.format(n)],
-			}
+			results[n] = [
+				('PresentationOrder', n),
+				('Section', row['Input.item_{0}_section'.format(n)]),
+				('Item', int(row['Input.item_{0}_number'.format(n)])),
+				('Condition', row['Input.item_{0}_condition'.format(n)]),
+			]
 		return results
 
 	def assignment_data(self, row):
 		# copy user/assignment meta
-		data = {
-			'WorkerId': row['WorkerId'],
-			'AssignmentId': row['AssignmentId'],
-			'AssignmentStatus': row['AssignmentStatus'],
-			'WorkTimeInSeconds': row['WorkTimeInSeconds'],
-			'List': row['Input.list'],
-		}
+		data = [
+			('WorkerId', row['WorkerId']),
+			('AssignmentId', row['AssignmentId']),
+			('AssignmentStatus', row['AssignmentStatus']),
+			('WorkTimeInSeconds', row['WorkTimeInSeconds']),
+			('List', row['Input.list']),
+		]
 		return data
 
 	def decode(self):
@@ -170,26 +173,29 @@ class ResultsData(object):
 
 			for n in self.item_numbers:
 				re_input = re.compile(r'^Input\.trial_{0}_(\d+)$'.format(n));
-				re_answer = re.compile(r'^Answer\.(.+)[_\-]{0}$'.format(n));
-				# re_sample = re.compile(r'^Answer\.(\w*?\D)_?Sample{0}$'.format(n));
+				re_answer = re.compile(r'^Answer\.(.*?\D)_?{0}$'.format(n));
+				re_sample = re.compile(r'^Answer\.(.*?\D)_?Sample{0}$'.format(n));
 			
 				# this line does the merge:
-				data = decode_map[n].copy()
-				data.update(row_meta)
+				data = row_meta[:]
+				data = data + decode_map[n][:]
 
 				for field in row.keys():
 					if re_input.match(field) is not None:
-						data[re_input.sub('field_\\1', field)] = row[field]
-					# and re_sample.match(field) is None
-					if re_answer.match(field) is not None:
-						data[re_answer.sub('\\1', field)] = row[field]
-					if re_extra.match(field):
-						data[re_extra.sub('\\1', field)] = row[field]				
+						data.append((re_input.sub('field_\\1', field), row[field]))
+						continue
+					
+					if re_answer.match(field) is not None and re_sample.match(field) is None:
+						data.append((re_answer.sub('\\1', field), row[field]))
+						continue
+					
+					if re_extra.match(field) is not None:
+						data.append((re_extra.sub('\\1', field), row[field]))
+				
 				# todo: check that each row/item has the same number of fields!
 
 				# todo: get sample/practice item answers?
-				# todo: is the .copy() necessary here?
-				decoded_data.append(data.copy())
+				decoded_data.append(data)
 		return decoded_data
 
 def main(filename):
@@ -202,7 +208,10 @@ def main(filename):
 	from os.path import splitext
 	name_part, extension = splitext(filename)
 	decoded_filename = name_part + '.decoded.csv'
-	graceful_write_csv( decoded_filename, decoded_data )
+	
+	data_dict = [dict(row) for row in decoded_data]
+	decoded_keys = [entry[0] for entry in decoded_data[0]]
+	graceful_write_csv(decoded_filename, data_dict, keys = decoded_keys)
 
 	print( 'Successfully wrote decoded results to ' + decoded_filename )
 	exit()
