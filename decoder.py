@@ -141,8 +141,22 @@ class ResultsData(object):
 		numbers.sort()
 		return numbers
 
+	@property
+	def condition_names(self):
+		conditions = []
+		keys = self.data[0].keys()
+		for key in keys:
+			if re.match(r'^Input\.item_(\d+)_condition$', key):
+				conditions = conditions + [row[key] for row in self.data]
+		return list(set(conditions))
+
+	@property
+	def factor_count(self):
+		return 1 + max([condition.count('-') for condition in self.condition_names])
+
 	def decode_map(self, row):
 		results = {}
+		fc = self.factor_count
 		for n in self.item_numbers:
 			results[n] = [
 				('PresentationOrder', n),
@@ -150,6 +164,13 @@ class ResultsData(object):
 				('Item', int(row['Input.item_{0}_number'.format(n)])),
 				('Condition', row['Input.item_{0}_condition'.format(n)]),
 			]
+			
+			factors = row['Input.item_{0}_condition'.format(n)].split('-')
+			
+			for i in range(fc):
+				column = 'Factor{0}'.format(i + 1)
+				value = factors[i] if i < len(factors) else ''
+				results[n].append((column, value))
 		return results
 
 	def assignment_data(self, row):
