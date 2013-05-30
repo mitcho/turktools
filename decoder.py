@@ -1,6 +1,6 @@
 # coding: utf-8
 """
-Turk Tools Decoder
+turktools decoder
 mitcho (Michael Yoshitaka Erlewine), mitcho@mitcho.com, April 2013
 
 Decode a Turk results file into a format optimized for analysis
@@ -109,12 +109,12 @@ class ResultsData(object):
 				exit()
 		
 		if 'Input.field_1_1' not in self.data[0] and 'Input.trial_1_1' in self.data[0]:
-			print( "ERROR: This results file is based on an older version of Turk Tools, which probably gave you a decode file." )
+			print( "ERROR: This results file is based on an older version of turktools, which probably gave you a decode file." )
 			print( "In that case, please use the old decoder, available at https://github.com/mitcho/turktools/tree/old-decoder ." )
 			exit()
 
 		if 'Input.field_1_1' not in self.data[0] or 'Input.item_1_section' not in self.data[0]:
-			print( "ERROR: This results file looks like it was not constructed with Turk Tools, or there was a problem reading the results file." )
+			print( "ERROR: This results file looks like it was not constructed with turktools, or there was a problem reading the results file." )
 			exit()
 
 		item_numbers = self.item_numbers

@@ -1,7 +1,7 @@
-Turk Tools
-==========
+turktools
+=========
 
-Tools to prepare linguistic surveys for Amazon Mechanical Turk.
+Tools for preparing linguistic surveys for Amazon Mechanical Turk.
 
 ## Features
 
@@ -25,7 +25,7 @@ The following tools are included:
 
 TODO: describe usage
 
-If you would like to host Mechanical Turk-style surveys on your own server instead of using Amazon Mechanical Turk, this can be done using Turk Tools' sister project, [Turk Server](https://github.com/mitcho/turkserver).
+If you would like to host Mechanical Turk-style surveys on your own server instead of using Amazon Mechanical Turk, this can be done using turktools' sister project, [turkserver](https://github.com/mitcho/turkserver).
 
 ## Template skeletons
 
@@ -42,7 +42,7 @@ The `templater.py` tool takes "skeletons" of templates and turns them into templ
 
 [![Test Status](https://travis-ci.org/mitcho/turktools.png?branch=master)](https://travis-ci.org/mitcho/turktools)
 
-Turk Tools includes unit tests using the Python-standard `unittest` library. Tests can be run by running `python tests.py`. With the [`coverage`](http://nedbatchelder.com/code/coverage/) module installed, run `coverage run tests.py` and then use `coverage report -m` to see a code coverage report.
+turktools includes unit tests using the Python-standard `unittest` library. Tests can be run by running `python tests.py`. With the [`coverage`](http://nedbatchelder.com/code/coverage/) module installed, run `coverage run tests.py` and then use `coverage report -m` to see a code coverage report.
 
 ## The MIT License (MIT)
 
