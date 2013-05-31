@@ -29,16 +29,58 @@ If you would like to host Mechanical Turk-style surveys on your own server inste
 
 ## Template skeletons
 
-The `templater.py` tool takes "skeletons" of templates and turns them into templates which are ready for use on Turk, with the right number of fields. The following template skeletons are currently included here:
+The `templater.py` tool takes "skeletons" of templates and turns them into templates which are ready for use on Turk, with the right number of fields. The following template skeletons are currently included in the `skeletons` directory:
 
-* `likert.skeleton.html`: Basic Likert scale template.
-* `image-choice.skeleton.html`: Forced choice between three images.
 * `binary.skeleton.html`: Basic forced choice between two options: natural or unnatural.
-* `completion.skeleton.html`: Sentence completion with a gap and two options presented.
 * `binary-image.skeleton.html`: Truth value judgment paradigm with a sentence and an image presented. Forced choice true or false.
+* `completion.skeleton.html`: Sentence completion with a gap and two options presented as radio buttons below.
+* `completion-menu.skeleton.html`: Sentence completion with a gap and two options presented as a drop-down menu *in-situ*.
+* `image-choice.skeleton.html`: Forced choice between three images. Can be used to generate covered-box experiments as well.
+* `likert.skeleton.html`: Basic Likert scale template.
 * `sentence-choice.skeleton.html`: Forced choice between two variable options, given a context.
 
-## Testing
+## Known issues
+
+* [Issue #1](https://github.com/mitcho/turktools/issues/1): Input files must be ASCII. Full Unicode support is planned.
+* [Issue #2](https://github.com/mitcho/turktools/issues/2): If the results CSV file from Turk is modified and saved in Excel, `decoder.py` will not be able to read it. This has to do with the line-endings which are used by Excel's CSV output.
+
+## Technical information
+
+### Design goals
+
+turktools is designed with the non-technical user in mind. Therefore, the following principles are adopted in its design and development:
+
+* **Be portable**: each tool is a stand-alone script, and can be moved or copied to a different filesystem location and continue to function.
+* **Be graceful**: catch failures and present useful warnings and errors to the user.
+* **No dependencies**: just Python, out of the box.
+
+The current development target is Python 2.6 and 2.7. Python 3 support [would be great in the future](https://github.com/mitcho/turktools/issues/3).
+
+Note that an unfortunate consequence of the portability goal is to explicitly eschew a shared code library, forcing code duplication across different scripts, in violation of [DRY](https://en.wikipedia.org/wiki/Don%27t_repeat_yourself). The current approach is to at least ensure the integrity of duplicated code across tools, by subjecting them to the exact same [tests](#testing). (Perhaps a build tool will be used in the future to cut down on such redundancies.) Note also that the no dependencies goal and Python 2.6 target means that nice libraries like `argparse` cannot be used.
+
+### Contributing
+
+Contributions are welcome! Bug reports, feedback, documentation improvements, and code changes are all welcome forms of contributions. Thank you (in advance) for making turktools better for everyone.
+
+_Bug reports and feature requests:_
+
+New bug reports and feature requests can be added [on the turktools issue tracker](https://github.com/mitcho/turktools/issues?state=open). Please check whether your issue is already reported by someone else before opening a new issue. You must be logged into GitHub to create an issue.
+
+_Documentation:_
+
+[The turktools wiki](https://github.com/mitcho/turktools/wiki) on GitHub is open for ancillary documentation. If you are logged into GitHub, you can edit and create pages in the wiki. Feel free to contribute any materials there that you think may be helpful to a broader audience.
+
+Changes to this main README file must be contributed as code changes, as described in the next section.
+
+_Contributing code:_
+
+turktools is developed [on GitHub](https://github.com/mitcho/turktools). You can hack on turktools using [the Fork & Pull model](https://help.github.com/articles/using-pull-requests#fork--pull). The best way to submit code is to then initiate a [*pull request*](https://help.github.com/articles/using-pull-requests).
+
+Within reason, pull requests should include their own [tests](#testing), in order to avoid later regressions.
+
+Contributors should be familiar with the [technical design goals](#design-goals) above.
+
+### Testing
 
 [![Test Status](https://travis-ci.org/mitcho/turktools.png?branch=master)](https://travis-ci.org/mitcho/turktools)
 
