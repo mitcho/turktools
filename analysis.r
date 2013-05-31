@@ -53,13 +53,6 @@ results <- subset(results, !(WorkerId %in% lowAcc))
 targets <- subset(results, results$Section != 'filler')
 
 
-# extract factor values out of the condition names and store them in separate columns ----
-# replace Factor1, Factor2, Factor3 etc.. with meaningful names based on the experiment
-targets$Factor1 <- sub("^(.*)-(.*)-(.*)$", "\\1", targets$Condition)
-targets$Factor2 <- sub("^(.*)-(.*)-(.*)$", "\\2", targets$Condition)
-targets$Factor3 <- sub("^(.*)-(.*)-(.*)$", "\\3", targets$Condition)
-
-
 # data visualization ----
 # plot histograms by the different factors in your experiment for each condition
 library(lattice)
