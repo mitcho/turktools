@@ -50,11 +50,12 @@ We recommend saving all of the files you create for a given experiment in the sa
 
 A `skeleton` is an `html` file that contains substitution tags that will be filled in by the `Templater` to create a `html template` that can be uploaded onto AMT. The following template skeletons, accommodating the experimental designs indicated here, are currently included in *turktools*:
 
-* `likert.skeleton.html`: Basic Likert scale template.
-* `image-choice.skeleton.html`: Forced choice between three images.
 * `binary.skeleton.html`: Basic forced choice between two options: natural or unnatural.
-* `completion.skeleton.html`: Sentence completion with a gap and two options presented.
 * `binary-image.skeleton.html`: Truth value judgment paradigm with a sentence and an image presented. Forced choice true or false.
+* `completion.skeleton.html`: Sentence completion with a gap and two options presented as radio buttons below.
+* `completion-menu.skeleton.html`: Sentence completion with a gap and two options presented as a drop-down menu *in-situ*.
+* `image-choice.skeleton.html`: Forced choice between three images. Can be used to generate covered-box experiments as well.
+* `likert.skeleton.html`: Basic Likert scale template.
 * `sentence-choice.skeleton.html`: Forced choice between two variable options, given a context.
 
 The substitution tags in the `skeleton`, all wrapped in double curly braces, i.e. `{{…}}`, will be filled in by the `Templater`. The skeletons all share the same basic structure: they include an experiment code, an instruction block with practice items, a consent statement, an items block, and demographic questions. At the bottom is a counter to help participants ensure that they have answered all the questions in the survey. The items block, beginning with `{{#items}}` and ending with `{{/items}}`, contains one sample item of the shape that all items in the survey will take. When a template is created out of the skeleton, this block will be duplicated as many times as there are items in your survey.
@@ -83,9 +84,46 @@ The `Templater` will replace fields with `{{code}}` with the experiment’s uniq
 
 
 
-## Testing
+## Known issues
 
-[![Test Status](https://travis-ci.org/mitcho/turktools.png?branch=master)](https://travis-ci.org/mitcho/turktools)
+* [Issue #1](https://github.com/mitcho/turktools/issues/1): Input files must be ASCII. Full Unicode support is planned.
+* [Issue #2](https://github.com/mitcho/turktools/issues/2): If the results CSV file from Turk is modified and saved in Excel, `decoder.py` will not be able to read it. This has to do with the line-endings which are used by Excel's CSV output.
+
+## Technical information
+
+### Design goals
+
+turktools is designed with the non-technical user in mind. Therefore, the following principles are adopted in its design and development:
+
+* **Be portable**: each tool is a stand-alone script, and can be moved or copied to a different filesystem location and continue to function.
+* **Be graceful**: catch failures and present useful warnings and errors to the user.
+* **No dependencies**: just Python, out of the box.
+
+The current development target is Python 2.6 and 2.7. Python 3 support [would be great in the future](https://github.com/mitcho/turktools/issues/3).
+
+Note that an unfortunate consequence of the portability goal is to explicitly eschew a shared code library, forcing code duplication across different scripts, in violation of [DRY](https://en.wikipedia.org/wiki/Don%27t_repeat_yourself). The current approach is to at least ensure the integrity of duplicated code across tools, by subjecting them to the exact same [tests](#testing). (Perhaps a build tool will be used in the future to cut down on such redundancies.) Note also that the no dependencies goal and Python 2.6 target means that nice libraries like `argparse` cannot be used.
+
+### Contributing
+
+Contributions are welcome! Bug reports, feedback, documentation improvements, and code changes are all welcome forms of contributions. Thank you (in advance) for making turktools better for everyone.
+
+#### Bug reports and feature requests:
+
+New bug reports and feature requests can be added [on the turktools issue tracker](https://github.com/mitcho/turktools/issues?state=open). Please check whether your issue is already reported by someone else before opening a new issue. You must be logged into GitHub to create an issue.
+
+#### Documentation:
+
+[The turktools wiki](https://github.com/mitcho/turktools/wiki) on GitHub is open for ancillary documentation. If you are logged into GitHub, you can edit and create pages in the wiki. Feel free to contribute any materials there that you think may be helpful to a broader audience.
+
+Changes to this main README file must be contributed as code changes, as described in the next section.
+
+#### Contributing code:
+
+turktools is developed [on GitHub](https://github.com/mitcho/turktools). The best way to hack on turktools is to open a GitHub account, [*fork* this repository](https://help.github.com/articles/fork-a-repo), and modify your own "fork" of the turktools. To submit changes, you can then initiate a [*pull request*](https://help.github.com/articles/using-pull-requests). Within reason, pull requests should include new [test cases](#testing), in order to avoid later regressions.
+
+Contributors should be familiar with the [technical design goals](#design-goals) above.
+
+### Testing [![Test Status](https://travis-ci.org/mitcho/turktools.png?branch=master)](https://travis-ci.org/mitcho/turktools)
 
 turktools includes unit tests using the Python-standard `unittest` library. Tests can be run by running `python tests.py`. With the [`coverage`](http://nedbatchelder.com/code/coverage/) module installed, run `coverage run tests.py` and then use `coverage report -m` to see a code coverage report.
 
