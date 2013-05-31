@@ -52,6 +52,11 @@ results <- subset(results, !(WorkerId %in% lowAcc))
 # here, assuming all non-fillers are target sections
 targets <- subset(results, results$Section != 'filler')
 
+#remane factors, give columns meaningful names
+#code below assumes two factors, change as needed
+library(plyr)
+targets <- rename(targets, c("Factor1"="XXXX", "Factor2"="YYYY"))
+
 
 # data visualization ----
 # plot histograms by the different factors in your experiment for each condition
