@@ -193,26 +193,30 @@ class ResultsData(object):
 			row_meta = self.assignment_data(row)
 
 			for n in self.item_numbers:
-				re_input = re.compile(r'^Input\.trial_{0}_(\d+)$'.format(n));
+				re_input = re.compile(r'^Input\.field_{0}_(\d+)$'.format(n));
 				re_answer = re.compile(r'^Answer\.(.*?\D)_?{0}$'.format(n));
 				re_sample = re.compile(r'^Answer\.(.*?\D)_?Sample{0}$'.format(n));
 			
 				# this line does the merge:
 				data = row_meta[:]
 				data = data + decode_map[n][:]
-
+				fields = []
+				answers = []
+				extras = []
+				
 				for field in row.keys():
 					if re_input.match(field) is not None:
-						data.append((re_input.sub('field_\\1', field), row[field]))
+						fields.append((re_input.sub('field_\\1', field), row[field]))
 						continue
 					
 					if re_answer.match(field) is not None and re_sample.match(field) is None:
-						data.append((re_answer.sub('\\1', field), row[field]))
+						answers.append((re_answer.sub('\\1', field), row[field]))
 						continue
 					
 					if re_extra.match(field) is not None:
-						data.append((re_extra.sub('\\1', field), row[field]))
+						extras.append((re_extra.sub('\\1', field), row[field]))
 				
+				data = data + fields + answers + extras
 				# todo: check that each row/item has the same number of fields!
 
 				# todo: get sample/practice item answers?
