@@ -62,27 +62,23 @@ Note that an unfortunate consequence of the portability goal is to explicitly es
 
 Contributions are welcome! Bug reports, feedback, documentation improvements, and code changes are all welcome forms of contributions. Thank you (in advance) for making turktools better for everyone.
 
-_Bug reports and feature requests:_
+#### Bug reports and feature requests:
 
 New bug reports and feature requests can be added [on the turktools issue tracker](https://github.com/mitcho/turktools/issues?state=open). Please check whether your issue is already reported by someone else before opening a new issue. You must be logged into GitHub to create an issue.
 
-_Documentation:_
+#### Documentation:
 
 [The turktools wiki](https://github.com/mitcho/turktools/wiki) on GitHub is open for ancillary documentation. If you are logged into GitHub, you can edit and create pages in the wiki. Feel free to contribute any materials there that you think may be helpful to a broader audience.
 
 Changes to this main README file must be contributed as code changes, as described in the next section.
 
-_Contributing code:_
+#### Contributing code:
 
-turktools is developed [on GitHub](https://github.com/mitcho/turktools). You can hack on turktools using [the Fork & Pull model](https://help.github.com/articles/using-pull-requests#fork--pull). The best way to submit code is to then initiate a [*pull request*](https://help.github.com/articles/using-pull-requests).
-
-Within reason, pull requests should include their own [tests](#testing), in order to avoid later regressions.
+turktools is developed [on GitHub](https://github.com/mitcho/turktools). The best way to hack on turktools is to open a GitHub account, [*fork* this repository](https://help.github.com/articles/fork-a-repo), and modify your own "fork" of the turktools. To submit changes, you can then initiate a [*pull request*](https://help.github.com/articles/using-pull-requests). Within reason, pull requests should include new [test cases](#testing), in order to avoid later regressions.
 
 Contributors should be familiar with the [technical design goals](#design-goals) above.
 
-### Testing
-
-[![Test Status](https://travis-ci.org/mitcho/turktools.png?branch=master)](https://travis-ci.org/mitcho/turktools)
+### Testing [![Test Status](https://travis-ci.org/mitcho/turktools.png?branch=master)](https://travis-ci.org/mitcho/turktools)
 
 turktools includes unit tests using the Python-standard `unittest` library. Tests can be run by running `python tests.py`. With the [`coverage`](http://nedbatchelder.com/code/coverage/) module installed, run `coverage run tests.py` and then use `coverage report -m` to see a code coverage report.
 
