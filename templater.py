@@ -127,7 +127,7 @@ def main(template, template_string, number, code):
 	output_file.close()
 
 	print( 'Successfully wrote template to ' + filename )
-	exit()
+	graceful_exit()
 
 if __name__ == '__main__':
 	from sys import argv

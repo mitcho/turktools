@@ -98,7 +98,7 @@ def main(data, list_number, template_string):
 	output_file.write(output)
 
 	print( 'Successfully wrote simulation to', filename )
-	exit()
+	graceful_exit()
 
 if __name__ == '__main__':
 	from sys import argv

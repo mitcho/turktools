@@ -556,7 +556,7 @@ def main(args):
 
 	graceful_write_csv(name_part + '.turk.csv', data, keys)
 	print( 'Successfully wrote randomized lists to ' + name_part + '.turk.csv' )
-	exit()
+	graceful_exit()
 
 if __name__ == '__main__':
 	from sys import argv

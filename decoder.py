@@ -235,7 +235,7 @@ def main(filename):
 	graceful_write_csv(decoded_filename, data_dict, keys = decoded_keys)
 
 	print( 'Successfully wrote decoded results to ' + decoded_filename )
-	exit()
+	graceful_exit()
 
 if __name__ == '__main__':
 	from sys import argv
