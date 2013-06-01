@@ -88,7 +88,12 @@ Each item must specify information for at least as many fields as there are in t
 
 ### Lister
 
-`lister.py`
+`lister.py` takes a *raw input file* and turns it into a `xxxxx.turk.csv` items file that can be uploaded onto AMT. The *Lister* takes care of creating Latin-Squared, counterbalanced randomized lists from the raw input that it is given. 
+
+Once it is run, `lister.py` will ask for (a) the name of your raw items file, (b)  which sections should be treated as fillers, (c) how many filler items you would like placed between each target item, (d) how many filler items you would like placed in the beginning and end of the experiment, (e) how many lists you would like to create, and (f) whether or not you would like the reverse of each list to also be created, to help reduce any ordering effects that may occur. 
+
+Note that as a default, no section is singled out to be used as fillers. You may to designate one or more Section as fillers and all the other Sections will be treated as targets. Fillers and Targets will be randomized separately and then combined according to the conditions you specified. 
+   
 
 ### Simulator
 
