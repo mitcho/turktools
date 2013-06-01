@@ -1,7 +1,7 @@
 turktools
 =========
 
-Tools for preparing linguistic surveys for Amazon Mechanical Turk (AMT), as described in [Erlewine and Kotek (2013)](link to lingbuzz submission here).
+Tools for preparing linguistic surveys for Amazon Mechanical Turk (AMT), as described in [Erlewine and Kotek (2013)](http://ling.auf.net/lingbuzz/001802/current.pdf?_s=LiLdL09ykzKwmSOX).
 
 ## Features
 
@@ -34,7 +34,7 @@ We recommend saving all of the files you create for a given experiment in the sa
 
 In the remainder of this section, we will describe the usage of these tools. For a more detailed description of the tools and a proposed workflow, please read:
 
-> Erlewine, Michael Yoshitaka and Hadas Kotek (2013). [*A streamlined approach to online linguistic surveys*](lingbuzz submission link here). Submitted.
+> Erlewine, Michael Yoshitaka and Hadas Kotek (2013). [*A streamlined approach to online linguistic surveys*](http://ling.auf.net/lingbuzz/001802/current.pdf?_s=LiLdL09ykzKwmSOX). Submitted.
 
 ### Skeletons
 
@@ -162,9 +162,11 @@ Contributors should be familiar with the [technical design goals](#design-goals)
 
 turktools includes unit tests using the Python-standard `unittest` library. Tests can be run by running `python tests.py`. With the [`coverage`](http://nedbatchelder.com/code/coverage/) module installed, run `coverage run tests.py` and then use `coverage report -m` to see a code coverage report.
 
-## Citations
+## Citation
 
-If you use *turktools* or *turkserver* we ask that you cite Erlewine and Kotek (2013), [*A streamlined approach to online linguistic surveys*](link to lingbuzz submission here).    
+If you use turktools or [turkserver](http://github.com/mitcho/turkserver) we ask that you cite the following paper:
+
+> Erlewine, Michael Yoshitaka and Hadas Kotek (2013). [*A streamlined approach to online linguistic surveys*](http://ling.auf.net/lingbuzz/001802/current.pdf?_s=LiLdL09ykzKwmSOX). Submitted.
 
 ## The MIT License (MIT)
 
