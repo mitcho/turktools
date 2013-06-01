@@ -1,7 +1,7 @@
 *Turktools*
 =========
 
-Tools for preparing linguistic surveys for Amazon Mechanical Turk.
+Tools for preparing linguistic surveys for Amazon Mechanical Turk, as described in Erlewine and Kotek (2013), [*A streamlined approach to online linguistic surveys*](link to lingbuzz submission here).
 
 ## Features
 
@@ -69,9 +69,26 @@ The *Templater* will ask for (a) the file name of your *skeleton*, (b) the total
 
 The *Templater* will replace fields with `{{code}}` with the experiment’s unique code, `{{total_number}}` with the number of items presented in the experiment, and `{{number}}` with the item number in the experiment. The number will also appear in `{{field_n}}` tags. For example, for an item with two fields, the template will contain `field_n_1` and `field_n_2`, with *n* replaced by the appropriate number. 
 
+### Raw items file
+
+`lister.py` creates randomized items lists out of a raw items file that must be formatted a certain way. 
+
+Each item in the raw items file has two parts, each beginning on a new line. 
+
+* The item header. The item header consists of four components, separated by space
+	* the symbol #;
+	* the name of the section (e.g., target, filler);
+	* the item set number within the section (we recommend 1, 2, 3, …);
+	* the condition name
+* the item body. The item body consists of fields, each on its own line.  Line *n* corresponds to the text that will be substituted for the text `{{field_n}}` in your html template. A field may specify a sentence to be judged, choices for completions, a picture, an audio file, a context, a comprehension question, etc.
+
+Condition names are not constrained in any way, but we recommend a naming convention where the values for each of your experimental factors is listed and separated from other values by a hyphen: `<factor 1 value>-<factor 2 value>-<factor 3 value>-...`. The *Decoder* tool will create separate factors from the Condition names once it is run. Note that all items in a given experimental section must have the same number of conditions, but it is not necessary to keep the same names. As long as each item block has the same number of conditions, you can use different names across different item blocks. The *Lister* will produce a warning when it is run, but you may choose to proceed.
+
+Each item must specify information for at least as many fields as there are in the html template that you'll be using. It is possible to have *hidden fields* that do not correspond to fields in the template. Those fields will not be shown to participants but they will be carried over to the randomized file and to the results file. You can use *hidden fields* to specify expected correct answers to fillers to comprehension questions, and once you have a results file it will be easy to calculate accuracy for your participants.  
+
 ### Lister
 
-
+`lister.py`
 
 ### Simulator
 
