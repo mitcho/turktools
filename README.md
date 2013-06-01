@@ -1,21 +1,21 @@
-*Turktools*
+turktools
 =========
 
-Tools for preparing linguistic surveys for Amazon Mechanical Turk, as described in Erlewine and Kotek (2013), [*A streamlined approach to online linguistic surveys*](link to lingbuzz submission here).
+Tools for preparing linguistic surveys for Amazon Mechanical Turk (AMT), as described in [Erlewine and Kotek (2013)](link to lingbuzz submission here).
 
 ## Features
 
 * Simplifies the **full workflow** for Turk-style experiment construction: randomized counterbalanced lists, local experiment simulation, and results in a format optimized for analysis
 * **Template skeletons** which maximizes template reusability
 * **Cross-platform** (Windows, Mac, and Linux), requiring only Python (2.6 or 2.7)
-* **Simple tools** for non-programmers, with **command line options** for advanced users
+* **Easy-to-use tools** designed for non-programmers
 * Experiments can be used **without Mechanical Turk**, with the use of [turkserver](https://github.com/mitcho/turkserver)
 
 ## Usage
 
 To download everything here, click on the "ZIP" button above. The following tools are included:
 
-* `html skeletons`
+* Sample HTML skeletons
 * `templater.py`
 * `simluator.py`
 * `lister.py`
@@ -24,29 +24,21 @@ To download everything here, click on the "ZIP" button above. The following tool
 
 If you would like to host Mechanical Turk-style surveys on your own server instead of using Amazon Mechanical Turk, this can be done using turktools' sister project, [turkserver](https://github.com/mitcho/turkserver).
 
-The python tools described here require Python 2.6.x or 2.7.x, available [here](http://python.org). Here is how to execute a Python script (here `templater.py`) in different platforms:
+The Python tools described here require Python 2.6.x or 2.7.x, available [here](http://python.org). Here is how to execute a Python script (here `templater.py`) in different platforms:
 
-* **UNIX shell**: Move (cd) to the directory that contains the script and execute `python templater.py`.
-* **Mac OS X**: Right-click on the file in the Finder and choose Open With… > `Python Launcher`.
+* **UNIX shell**: Move (`cd`) to the directory that contains the script and execute `python templater.py`.
+* **Mac OS X**: Right-click on the file in the Finder and choose Open With… > Python Launcher.
 * **Windows**: Double-click on the file.
 
+We recommend saving all of the files you create for a given experiment in the same folder, dedicated to that experiment.
 
-## Setting up an experiment
+In the remainder of this section, we will describe the usage of these tools. For a more detailed description of the tools and a proposed workflow, please read:
 
-We recommend saving all of the files you create for a given experiment in the same folder, dedicated to that experiment. By the time you're done preparing, running and analyzing an experiment, your folder for that experiment should include:
- 
-* a *html skeleton* (an edited version of the *html skeletons* provided here, or created on your own), 
-* an *html template* (created by the `templater.py`), 
-* a raw items file
-* a `xxxxxx.turk.csv` randomized items file (created by the `lister.py`), 
-* a simulation of one or more of your lists (created by `simulator.py`),
-* a raw results file (downloaded from AMT or from [turkserver](https://github.com/mitcho/turkserver)), 
-* a decoded `xxxxxx.decoded.csv` results file (created by the `decoder.py`), and 
-* an R analysis script (based on the sample `analysis.r` code provided here).
+> Erlewine, Michael Yoshitaka and Hadas Kotek (2013). [*A streamlined approach to online linguistic surveys*](lingbuzz submission link here). Submitted.
 
 ### Skeletons
 
-A *skeleton* is an *html* file that contains substitution tags that will be filled in by the *Templater* to create a *html template* that can be uploaded onto AMT. The following template skeletons, accommodating the experimental designs indicated here, are currently included in *turktools*:
+A *skeleton* is an HTML file that contains substitution tags that will be filled in by the *Templater* to create an *HTML template* that can be uploaded onto AMT. The following template skeletons are currently included in *turktools*, each corresponding to a different experimental design:
 
 * `binary.skeleton.html`: Basic forced choice between two options: natural or unnatural.
 * `binary-image.skeleton.html`: Truth value judgment paradigm with a sentence and an image presented. Forced choice true or false.
@@ -54,68 +46,78 @@ A *skeleton* is an *html* file that contains substitution tags that will be fill
 * `completion-menu.skeleton.html`: Sentence completion with a gap and two options presented as a drop-down menu *in-situ*.
 * `image-choice.skeleton.html`: Forced choice between three images. Can be used to generate covered-box experiments as well.
 * `likert.skeleton.html`: Basic Likert scale template.
-* `sentence-choice.skeleton.html`: Forced choice between two variable options, given a context.
+* `sentence-choice.skeleton.html`: Forced choice between two options, given a context.
 
-The substitution tags in the *skeleton*, wrapped in double curly braces, i.e. `{{…}}`, will be filled in by the *Templater*. The skeletons all share the same basic structure: they include an experiment code, an instruction block with practice items, a consent statement, an items block, and demographic questions. At the bottom is a counter to help participants ensure that they have answered all the questions in the survey. The items block, beginning with `{{#items}}` and ending with `{{/items}}`, contains one sample item of the shape that all items in the survey will take. The items in your experiment can contain as many *fields* as necessary for your experiment. When a template is created out of the skeleton, the items block will be duplicated as many times as there are items in your survey.
+The skeleton contains substitution tags, wrapped in double curly braces, i.e. `{{…}}`, will be filled in by the *Templater*. A description of supported substitution tags is [on the turktools wiki](https://github.com/mitcho/turktools/wiki/Substitution-tags).
 
-Choose an appropriate *skeleton* for your experiment and edit it in a text editor such as [Notepad++](http://notepad-plus-plus.org/) (for Windows) [TextWrangler](http://www.barebones.com/products/textwrangler/) (for Mac), or create your own *skeleton* to accommodate a new type of experiment now supported by the *skeletons* above. Change the instructions, including any practice items, and add your consent statement and contact information for the experimenters. It is possible to add or remove questions and to change the order in which questions appear in your survey.  
+The provided skeletons all share the same basic structure: they include an experiment code, an instruction block with practice items, a consent statement, an items block, and demographic questions. At the bottom is a JavaScript counter to help participants ensure that they have answered all the questions in the survey. The items block, beginning with `{{#items}}` and ending with `{{/items}}`, contains one sample item of the shape that all items in the survey will take. The item block will contain `{{field_n}}` tags, corresponding to different *fields* in your items. (See the items file section below for more on fields.) When a template is created out of the skeleton, the items block will be duplicated as many times as there are items in your survey.
 
+Choose an appropriate skeleton for your experiment and edit it in a text editor such as [Notepad++](http://notepad-plus-plus.org/) (for Windows) or [TextWrangler](http://www.barebones.com/products/textwrangler/) (for Mac), or create your own to accommodate a different type of experiment. Change the instructions, including any practice items, and add your consent statement and contact information for the experimenters. Everything about the experiment's layout, design, and presentation can be changed by modifying the skeleton.
 
 ### Templater
 
-The *Templater* will take the skeleton you have edited and turn it into an *html template* that can be uploaded onto AMT.  
+The *Templater* will take the skeleton you have edited and turn it into an HTML *template* that can be uploaded onto AMT.  
 
-The *Templater* will ask for (a) the file name of your *skeleton*, (b) the total the number of items in your survey (including all experimental and filler items but not practice items, which are coded in the *skeleton*), and (c) a survey code: any letter-number combination you choose. 
+The *Templater* will ask for (a) the file name of your *skeleton*, (b) the total number of items in your survey (including all experimental and filler items but not practice items, which are coded in the skeleton), and (c) a survey code: any letter-number combination you choose. The *Templater* will then generate a template from your skeleton.
 
-The *Templater* will replace fields with `{{code}}` with the experiment’s unique code, `{{total_number}}` with the number of items presented in the experiment, and `{{number}}` with the item number in the experiment. The number will also appear in `{{field_n}}` tags. For example, for an item with two fields, the template will contain `field_n_1` and `field_n_2`, with *n* replaced by the appropriate number. 
+### The items file
 
-### Raw items file
-
-`lister.py` creates randomized items lists out of a raw items file that must be formatted a certain way. 
+*Lister* creates randomized items lists out of an *items file* that must be formatted a certain way.
 
 Each item in the raw items file has two parts, each beginning on a new line. 
 
-* The item header. The item header consists of four components, separated by space
+* **The item header.** The item header consists of four components, separated by space:
 	* the symbol #;
 	* the name of the section (e.g., target, filler);
 	* the item set number within the section (we recommend 1, 2, 3, …);
 	* the condition name
-* the item body. The item body consists of fields, each on its own line.  Line *n* corresponds to the text that will be substituted for the text `{{field_n}}` in your html template. A field may specify a sentence to be judged, choices for completions, a picture, an audio file, a context, a comprehension question, etc.
+* **The item body.** The item body consists of fields, each on its own line. Line *n* corresponds to the text that will be substituted for the text `{{field_n}}` in your HTML template. A field may specify a sentence to be judged, choices for completions, a picture, an audio file, a context, a comprehension question, etc.
 
-Condition names are not constrained in any way, but we recommend a naming convention where the values for each of your experimental factors is listed and separated from other values by a hyphen: `<factor 1 value>-<factor 2 value>-<factor 3 value>-...`. The *Decoder* tool will create separate factors from the Condition names once it is run. Note that all items in a given experimental section must have the same number of conditions, but it is not necessary to keep the same names. As long as each item block has the same number of conditions, you can use different names across different item blocks. The *Lister* will produce a warning when it is run, but you may choose to proceed.
+Condition names are not constrained in any way, but we recommend a naming convention where the values for each of your experimental factors is listed and separated from other values by a hyphen:
 
-Each item must specify information for at least as many fields as there are in the html template that you'll be using. It is possible to have *hidden fields* that do not correspond to fields in the template. Those fields will not be shown to participants but they will be carried over to the randomized file and to the results file. You can use *hidden fields* to specify expected correct answers to fillers to comprehension questions, and once you have a results file it will be easy to calculate accuracy for your participants.  
+> `<factor 1 value>-<factor 2 value>-<factor 3 value>-...`
+
+The *Decoder* tool will create separate factors from the Condition names when it is run. Note that all items in a given experimental section must have the same number of conditions, but it is not necessary to keep the same names. As long as each item set has the same number of conditions, you can use different names across different item sets. The *Lister* will produce a warning when it is run, but you may choose to proceed.
+
+Each item must specify information for at least as many fields as there are in the HTML template that you'll be using. It is possible to have *hidden fields* that do not correspond to fields in the template. Those fields will not be shown to participants but they will be carried over to the randomized file and to the results file. You can use hidden fields to specify expected correct answers to fillers or comprehension questions, and once you have a results file it will be easy to calculate accuracy for your participants.
 
 ### Lister
 
-`lister.py` takes a *raw input file* and turns it into a `xxxxx.turk.csv` items file that can be uploaded onto AMT. The *Lister* takes care of creating Latin-Squared, counterbalanced randomized lists from the raw input that it is given. 
+`lister.py` takes an *items file* and turns it into a `xxxxxx.turk.csv` file with randomized lists of items, that can be uploaded onto AMT. The *Lister* creates Latin Square counterbalanced randomized lists from the items that it is given.
 
-Once it is run, `lister.py` will ask for (a) the name of your raw items file, (b)  which sections should be treated as fillers, (c) how many filler items you would like placed between each target item, (d) how many filler items you would like placed in the beginning and end of the experiment, (e) how many lists you would like to create, and (f) whether or not you would like the reverse of each list to also be created, to help reduce any ordering effects that may occur. 
+Once it is run, `lister.py` will ask for (a) the name of your raw items file, (b) which sections should be treated as fillers, (c) how many filler items you would like placed between each target item, (d) how many filler items you would like placed in the beginning and end of the experiment, (e) how many lists you would like to create, and (f) whether or not you would like the reverse of each list to also be created, to help reduce any ordering effects that may occur.
 
-Note that as a default, no section is singled out to be used as fillers. You may to designate one or more Section as fillers and all the other Sections will be treated as targets. Fillers and Targets will be randomized separately and then combined according to the conditions you specified. 
+Note that as a default, no section is singled out to be used as fillers. You may to designate one or more sections as fillers and all the other sections will be treated as targets. Fillers and targets will be randomized separately and then combined according to the conditions you specified.
    
 
 ### Simulator
 
-Once you have created a *html template* and a randomized `xxxx.turk.csv` items tile for your experiment, you are in principle ready to upload your experiment onto AMT. However, before doing so, we recommend simulating at least one of the lists in your experiment using `simulator.py`. The *Simulator* will ask you for (a) the file name of your *template*, (b) the file name of your `xxxx.turk.csv` items tile, and (c) which list you would like to simulate. It will create an *html* file that can be opened using any browser and will contain the experiment as it will be seen by participants who will participate in the list you chose. 
+Once you have created an HTML template and a randomized `xxxxxx.turk.csv` items list file for your experiment, you are in principle ready to upload your experiment onto AMT. However, before doing so, we recommend simulating at least one of the lists in your experiment using `simulator.py`. The *Simulator* will ask you for (a) the file name of your *template*, (b) the file name of your `xxxxxx.turk.csv` items list file, and (c) which list you would like to simulate. It will create a *simulation* HTML file that can be opened using your web browser and will contain the experiment as it will be seen by your participants.
 
-We recommend testing that the survey contain no errors: that the buttons or menus in the items work properly, that the counter is working, that all fields are shown properly and that *hidden fields* are *not* shown. We also recommend completing your own study at least once. This will give you a good idea of how long it takes to complete your study (that will also help determine payment on AMT) and whether you can detect other strategies for completing your study that are compatible with *satisfycing* behavior - that is, a strategy for solving the questions you are asking that does not involve performing the linguistic task that you are interested in.      
+We recommend simulating the survey to verify that it does not contain any errors: that the buttons or menus in the items work properly, that the counter is working, that all fields are shown properly and that *hidden fields* are *not* showing. We also recommend completing your own study at least once. This will give you a good idea of how long it takes to complete your study (which will also help determine payment on AMT) and whether you can detect other strategies for completing your study that are compatible with [*satisfycing*](https://en.wikipedia.org/wiki/Satisficing) behavior - that is, a strategy for solving the questions you are asking that does not involve performing the linguistic task that you are interested in.
 
 ### Decoder
 
-After uploading and running your survey, AMT will produce a *raw results file* which you can download from the `Manage` tab. The file will have a name like `Batch_999999_result.csv`. Save that file in your experiment's folder and then run `decoder.py` to convert this file into a format that can be read by statistical software such as *R*. 
+After uploading and running your survey, AMT will produce a *raw results file* which you can download from the `Manage` tab. The file will have a name like `Batch_999999_result.csv`. Save that file in your experiment's folder and then run `decoder.py` to convert this file into a format that can be easily read and analyzed in statistical software such as [R](http://www.r-project.org/).
 
-The *Decoder* will ask for the file name and will produce a decoded `xxxxx.decoded.csv` results file that contains one row for each item in each survey that was submitted by any participant. The meta-data about the submission (including `AssignmentId`, `SubmissionStatus`, `WorkerId`, `WorkTimeInSeconds` and answers to demographic questions will be duplicated for each individual assignment, so you should have as many rows with this unique information as there were items in your experiment. For each item, information about the `Section`, `Condition`, `Item`, `List`, `PresentationOrder` and and ratings or answers to questions are logged. The *Decoder* also creates columns for *Factors* in the analysis based on your condition names, following the convention described above.  
+The *Decoder* will ask for the results file name and will produce a decoded `xxxxxx.decoded.csv` results file that contains one row for each item in each submission. The metadata about the submission (including `AssignmentId`, `SubmissionStatus`, `WorkerId`, `WorkTimeInSeconds` and answers to demographic questions) will be duplicated across all rows within an individual assignment, so each of these values will be in as many rows as there were items in your experiment. For each item, information about the `Section`, `Condition`, `Item`, `List`, `PresentationOrder` and and ratings or answers to questions are logged. The *Decoder* also creates columns for *factors* in the analysis based on your condition names, following the convention described above.
 
-### Analysis.R
+### analysis.r
 
-As past of *turktools* we have provided a sample *R* analysis script that is able to take care of basic data filtering and preparation for statistical testing. The script implements several exclusion criteria and assists in basic data visualization. It also produces aggregate count data for your results. The script does not attempt to implement statistical tests, as those depend on the experimental design that you are using and on your research questions.   
+As past of *turktools* we have provided a sample analysis script  for [R](http://www.r-project.org/) that takes care of basic data filtering and preparation for statistical testing. The script implements several exclusion criteria and assists in basic data visualization. It also produces aggregate count data for your results. The script does not attempt to implement statistical tests, as those depend on the experimental design that you are using and on your research questions.
 
-### Additional reading
+### At the end of the day...
 
-For a more detailed description of the tools and a proposed workflow for using them, please read: 
-
-Erlewine, Michael Yoshitaka and Hadas Kotek (2013). [*A streamlined approach to online linguistic surveys*](lingbuzz submission link here). Submitted.
+By the time you're done preparing, running, and analyzing an experiment, your folder for that experiment will include:
+ 
+* an *HTML skeleton* (an edited version of the HTML skeletons provided here, or created on your own), 
+* an *HTML template* (created by `templater.py` from your skeleton), 
+* a text file with your raw items
+* a `xxxxxx.turk.csv` randomized item lists file (created by `lister.py`),
+* a simulation of one or more of your lists (created by `simulator.py`),
+* a raw results file (downloaded from AMT or from [turkserver](https://github.com/mitcho/turkserver)), 
+* a decoded `xxxxxx.decoded.csv` results file (created by `decoder.py`), and 
+* an analysis script (possibly based on the sample `analysis.r` code provided here).
 
 ## Known issues
 
