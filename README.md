@@ -22,6 +22,8 @@ To download everything here, click on the "ZIP" button above. The following tool
 * `decoder.py`
 * `analysis.r`: sample R analysis code
 
+We have additionally provided sample item files for three of the skeletons in the Examples folder. 
+
 If you would like to host Mechanical Turk-style surveys on your own server instead of using Amazon Mechanical Turk, this can be done using turktools' sister project, [turkserver](https://github.com/mitcho/turkserver).
 
 The Python tools described here require Python 2.6.x or 2.7.x, available [here](http://python.org). Here is how to execute a Python script (here `templater.py`) in different platforms:
@@ -80,6 +82,8 @@ Condition names are not constrained in any way, but we recommend a naming conven
 The *Decoder* tool will create separate factors from the Condition names when it is run. Note that all items in a given experimental section must have the same number of conditions, but it is not necessary to keep the same names. As long as each item set has the same number of conditions, you can use different names across different item sets. The *Lister* will produce a warning when it is run, but you may choose to proceed.
 
 Each item must specify information for at least as many fields as there are in the HTML template that you'll be using. It is possible to have *hidden fields* that do not correspond to fields in the template. Those fields will not be shown to participants but they will be carried over to the randomized file and to the results file. You can use hidden fields to specify expected correct answers to fillers or comprehension questions, and once you have a results file it will be easy to calculate accuracy for your participants.
+
+You can find sample items file that match the `binary.skeleton.html`, the `binary-image.skeleton.html` and the `completion.skeleton.html` in the Examples folder. 
 
 ### Lister
 
