@@ -1,0 +1,59 @@
+# target 1 most
+Most of the dots are blue. 
+http://web.mit.edu/hkotek/www/experimentpictures/gradientYN/2C-1.png
+
+# target 1 more-than-half
+More than half of the dots are blue. 
+http://web.mit.edu/hkotek/www/experimentpictures/gradientYN/2C-1.png
+
+# target 2 most
+Most of the dots are blue. 
+http://web.mit.edu/hkotek/www/experimentpictures/gradientYN/2C-2.png
+
+# target 2 more-than-half
+More than half of the dots are blue. 
+http://web.mit.edu/hkotek/www/experimentpictures/gradientYN/2C-2.png
+
+# target 3 most
+Most of the dots are blue. 
+http://web.mit.edu/hkotek/www/experimentpictures/gradientYN/2C-3.png
+
+# target 3 more-than-half
+More than half of the dots are blue. 
+http://web.mit.edu/hkotek/www/experimentpictures/gradientYN/2C-3.png
+
+# target 4 most
+Most of the dots are blue. 
+http://web.mit.edu/hkotek/www/experimentpictures/gradientYN/2C-4.png
+
+# target 4 more-than-half
+More than half of the dots are blue. 
+http://web.mit.edu/hkotek/www/experimentpictures/gradientYN/2C-4.png
+
+# target 5 most
+Most of the dots are blue. 
+http://web.mit.edu/hkotek/www/experimentpictures/gradientYN/2C-5.png
+
+# target 5 more-than-half
+More than half of the dots are blue. 
+http://web.mit.edu/hkotek/www/experimentpictures/gradientYN/2C-5.png
+
+# filler 1 filler
+Many of the dots are blue. 
+http://web.mit.edu/hkotek/www/experimentpictures/gradientYN/Many-t01.png
+
+# filler 2 filler
+Many of the dots are blue. 
+http://web.mit.edu/hkotek/www/experimentpictures/gradientYN/Many-t02.png
+
+# filler 3 filler
+Many of the dots are blue. 
+http://web.mit.edu/hkotek/www/experimentpictures/gradientYN/Many-t03.png
+
+# filler 4 filler
+Many of the dots are blue. 
+http://web.mit.edu/hkotek/www/experimentpictures/gradientYN/Many-t04.png
+
+# filler 5 filler
+Many of the dots are blue. 
+http://web.mit.edu/hkotek/www/experimentpictures/gradientYN/Many-t05.png

@@ -1,0 +1,75 @@
+# filler 1 filler 
+That's the girl that the teacher played with the doll.
+
+# filler 2 filler 
+That's the student that the councilor made skip the road.
+
+# filler 3 filler 
+That's the film that the assistant developed in the darkroom.
+
+# filler 4 filler 
+That's the wall that the carpenter broke into several pieces.
+
+# filler 5 filler 
+That's the rabbit that the magician made vanish into thin air.
+
+# target 1 inanimate-make-v 
+That's the book that the girl made balance on her head.
+
+# target 1 inanimate-v
+That's the book that the girl balanced on her head.
+
+# target 1 animate-make-v
+That's the gymnast that the coach made balance on the beam.
+
+# target 1 animate-v
+That's the gymnast that the coach balanced on the beam.
+
+# target 2 inanimate-make-v
+That's the ladder that the worker made lean against the door.
+
+# target 2 inanimate-v
+That's the ladder that the worker leaned against the wall.
+
+# target 2 animate-make-v
+That's the gang that the officer made lean against the wall.
+
+# target 2 animate-v
+That's the gang that the officer leaned against the wall.
+
+# target 3 inanimate-make-v
+That's the book that the student made return to the library.
+
+# target 3 inanimate-v
+That's the book that the student returned to the library.
+
+# target 3 animate-make-v
+That's the intern that the supervisor made return for another shift.
+
+# target 3 animate-v
+That's the intern that the supervisor returned for another shift.
+
+# target 4 inanimate-make-v
+That's the engine that the mechanic made run idle for 2 hours.
+
+# target 4 inanimate-v
+That's the engine that the mechanic ran idle for 2 hours.
+
+# target 4 animate-make-v
+That's the sprinter that the coach made run for 2 hours.
+
+# target 4 animate-v
+That's the sprinter that the coach ran for 2 hours.
+
+# target 5 inanimate-make-v
+That's the idea that the team made float at the meeting.
+
+# target 5 inanimate-v
+That's the idea that the team floated at the meeting.
+
+# target 5 animate-make-v
+That's the boy that the instructor made float in the pool.
+
+# target 5 animate-v
+That's the boy that the instructor floated in the pool.
+

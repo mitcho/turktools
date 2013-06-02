@@ -1,0 +1,110 @@
+# target 1 there-at
+There is&nbsp; 
+&nbsp;boy in the room.
+a
+the
+
+# target 1 no.there-at
+ 
+&nbsp;boy in the room.
+A
+The
+
+# target 1 there-ta
+There is&nbsp; 
+&nbsp;boy in the room.
+the
+a
+
+# target 1 no.there-ta
+ 
+&nbsp;boy in the room.
+The
+A
+
+# target 2 there-at
+There is&nbsp; 
+&nbsp;cat in the garden.
+a
+the
+
+# target 2 no.there-at
+ 
+&nbsp;cat in the garden.
+A
+The
+
+# target 2 there-ta
+There is&nbsp; 
+&nbsp;cat in the garden.
+the
+a
+
+# target 2 no.there-ta
+ 
+&nbsp;cat in the garden.
+The
+A
+
+# target 3 there-at
+There is&nbsp; 
+&nbsp;llama in the picture.
+a
+the
+
+# target 3 no.there-at
+ 
+&nbsp;llama is in the picture.
+A
+The
+
+# target 3 there-ta
+There is&nbsp; 
+&nbsp;llama in the picture.
+the
+a
+
+# target 3 no.there-ta
+ 
+&nbsp;llama is in the picture.
+The
+A
+
+# filler 1 catch
+ 
+&nbsp;guard is standing outside of every building.
+A
+Two
+A
+
+# filler 2 catch
+John said&nbsp;
+&nbsp;lizzard was green.
+most
+the
+the
+
+# filler 3 catch
+There are&nbsp;
+&nbsp;books that I like.
+a
+some
+some
+
+# filler 4 filler
+ 
+&nbsp;horse is a horse, of course of course.
+A
+Every
+
+# filler 5 filler
+Mary had&nbsp;  
+&nbsp;little lamb.
+the
+a
+
+# filler 6 filler
+Shall I compare thee to&nbsp;  
+&nbsp;summer's day.
+a
+the
