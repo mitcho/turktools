@@ -13,7 +13,7 @@ Tools for preparing linguistic surveys for Amazon Mechanical Turk (AMT), as desc
 
 ## Usage
 
-To download everything here, click on the "ZIP" button above. The following tools are included:
+To download everything here, click on the "Download ZIP" button on the right sidebar. The following tools are included:
 
 * Sample HTML skeletons
 * `templater.py`
