@@ -23,17 +23,15 @@ Contributions are welcome! Bug reports, feedback, documentation improvements, an
 
 New bug reports and feature requests can be added [on the turktools issue tracker](https://github.com/mitcho/turktools/issues?state=open). Please check whether your issue is already reported by someone else before opening a new issue. You must be logged into GitHub to create an issue.
 
-### Documentation:
-
-[The turktools wiki](https://github.com/mitcho/turktools/wiki) on GitHub is open for ancillary documentation. If you are logged into GitHub, you can edit and create pages in the wiki. Feel free to contribute any materials there that you think may be helpful to a broader audience.
-
-Changes to this main README file must be contributed as code changes, as described in the next section.
-
-### Contributing code:
+### Code:
 
 turktools is developed [on GitHub](https://github.com/mitcho/turktools). The best way to hack on turktools is to open a GitHub account, [*fork* this repository](https://help.github.com/articles/fork-a-repo), and modify your own "fork" of the turktools. To submit changes, you can then initiate a [*pull request*](https://help.github.com/articles/using-pull-requests). Within reason, pull requests should include new [test cases](#testing), in order to avoid later regressions.
 
 Contributors should be familiar with the [technical design goals](#design-goals) above.
+
+### Documentation:
+
+[The turktools website](http://turktools.net) is where we post additional documentation. The code for this site is [on the `gh-pages` branch of our GitHub repository](https://github.com/mitcho/turktools/tree/gh-pages) and therefore can be edited via pull request, described above. Feel free to contribute any materials there that you think may be helpful to a broader audience.
 
 ## Testing
 
