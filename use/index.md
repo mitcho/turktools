@@ -1,5 +1,5 @@
 ---
-title: Usage
+title: Instructions
 layout: default
 ---
 
@@ -40,7 +40,7 @@ A *skeleton* is an HTML file that contains substitution tags that will be filled
 * `likert.skeleton.html`: Basic Likert scale template.
 * `sentence-choice.skeleton.html`: Forced choice between two options, given a context.
 
-The skeleton contains substitution tags, wrapped in double curly braces, i.e. `{% raw %}{{…}}{% endraw %}`, will be filled in by the *Templater*. [Read more about the supported substitution tags](/tags.html).
+The skeleton contains substitution tags, wrapped in double curly braces, i.e. `{% raw %}{{…}}{% endraw %}`, will be filled in by the *Templater*. [Read more about the supported substitution tags](tags.html).
 
 The provided skeletons all share the same basic structure: they include an experiment code, an instruction block with practice items, a consent statement, an items block, and demographic questions. At the bottom is a JavaScript counter to help participants ensure that they have answered all the questions in the survey. The items block, beginning with `{% raw %}{{#items}}{% endraw %}` and ending with `{% raw %}{{/items}}{% endraw %}`, contains one sample item of the shape that all items in the survey will take. The item block will contain `{% raw %}{{field_n}}{% endraw %}` tags, corresponding to different *fields* in your items. (See the items file section below for more on fields.) When a template is created out of the skeleton, the items block will be duplicated as many times as there are items in your survey.
 
