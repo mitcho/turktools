@@ -1,7 +1,7 @@
 turktools
 =========
 
-Tools for preparing linguistic surveys for Amazon Mechanical Turk (AMT), as described in [Erlewine and Kotek (2013)](http://ling.auf.net/lingbuzz/001802/current.pdf?_s=LiLdL09ykzKwmSOX).
+Tools for preparing linguistic surveys for Amazon Mechanical Turk (AMT), as described in [Erlewine and Kotek (2013)](http://ling.auf.net/lingbuzz/001802/current.pdf). New website: [turktools.net](http://turktools.net)
 
 ## Features
 
@@ -36,7 +36,7 @@ We recommend saving all of the files you create for a given experiment in the sa
 
 In the remainder of this section, we will describe the usage of these tools. For a more detailed description of the tools and a proposed workflow, please read:
 
-> Erlewine, Michael Yoshitaka and Hadas Kotek (2013). [*A streamlined approach to online linguistic surveys*](http://ling.auf.net/lingbuzz/001802/current.pdf?_s=LiLdL09ykzKwmSOX). Submitted.
+> Erlewine, Michael Yoshitaka and Hadas Kotek (2013). [*A streamlined approach to online linguistic surveys*](http://ling.auf.net/lingbuzz/001802/current.pdf). Manuscript, MIT.
 
 ### Skeletons
 
@@ -50,7 +50,7 @@ A *skeleton* is an HTML file that contains substitution tags that will be filled
 * `likert.skeleton.html`: Basic Likert scale template.
 * `sentence-choice.skeleton.html`: Forced choice between two options, given a context.
 
-The skeleton contains substitution tags, wrapped in double curly braces, i.e. `{{…}}`, will be filled in by the *Templater*. A description of supported substitution tags is [on the turktools wiki](https://github.com/mitcho/turktools/wiki/Substitution-tags).
+The skeleton contains substitution tags, wrapped in double curly braces, i.e. `{{…}}`, will be filled in by the *Templater*. [Read more about supported substitution tags](http://turktools.net/use/tags).
 
 The provided skeletons all share the same basic structure: they include an experiment code, an instruction block with practice items, a consent statement, an items block, and demographic questions. At the bottom is a JavaScript counter to help participants ensure that they have answered all the questions in the survey. The items block, beginning with `{{#items}}` and ending with `{{/items}}`, contains one sample item of the shape that all items in the survey will take. The item block will contain `{{field_n}}` tags, corresponding to different *fields* in your items. (See the items file section below for more on fields.) When a template is created out of the skeleton, the items block will be duplicated as many times as there are items in your survey.
 
@@ -150,17 +150,17 @@ Contributions are welcome! Bug reports, feedback, documentation improvements, an
 
 New bug reports and feature requests can be added [on the turktools issue tracker](https://github.com/mitcho/turktools/issues?state=open). Please check whether your issue is already reported by someone else before opening a new issue. You must be logged into GitHub to create an issue.
 
-#### Documentation:
-
-[The turktools wiki](https://github.com/mitcho/turktools/wiki) on GitHub is open for ancillary documentation. If you are logged into GitHub, you can edit and create pages in the wiki. Feel free to contribute any materials there that you think may be helpful to a broader audience.
-
-Changes to this main README file must be contributed as code changes, as described in the next section.
-
 #### Contributing code:
 
 turktools is developed [on GitHub](https://github.com/mitcho/turktools). The best way to hack on turktools is to open a GitHub account, [*fork* this repository](https://help.github.com/articles/fork-a-repo), and modify your own "fork" of the turktools. To submit changes, you can then initiate a [*pull request*](https://help.github.com/articles/using-pull-requests). Within reason, pull requests should include new [test cases](#testing), in order to avoid later regressions.
 
 Contributors should be familiar with the [technical design goals](#design-goals) above.
+
+#### Documentation:
+
+[The turktools website](http://turktools.net) is where we post additional documentation. The code for this site is [on the `gh-pages` branch of our GitHub repository](https://github.com/mitcho/turktools/tree/gh-pages) and therefore can be edited via pull request, described above. Feel free to contribute any materials there that you think may be helpful to a broader audience.
+
+Changes to this README file can also be made as code changes.
 
 ### Testing [![Test Status](https://travis-ci.org/mitcho/turktools.png?branch=master)](https://travis-ci.org/mitcho/turktools)
 
@@ -170,7 +170,7 @@ turktools includes unit tests using the Python-standard `unittest` library. Test
 
 If you use turktools or [turkserver](http://github.com/mitcho/turkserver) we ask that you cite the following paper:
 
-> Erlewine, Michael Yoshitaka and Hadas Kotek (2013). [*A streamlined approach to online linguistic surveys*](http://ling.auf.net/lingbuzz/001802/current.pdf?_s=LiLdL09ykzKwmSOX). Submitted.
+> Erlewine, Michael Yoshitaka and Hadas Kotek (2013). [*A streamlined approach to online linguistic surveys*](http://ling.auf.net/lingbuzz/001802/current.pdf). Manuscript, MIT.
 
 ## The MIT License (MIT)
 
