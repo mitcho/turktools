@@ -5,6 +5,11 @@
 	<meta http-equiv="X-UA-Compatible" content="chrome=1">
 	<title>{{ page.title }}</title>
 
+	<script>
+		if ( window.location.host == 'mitcho.github.io' )
+			window.location = window.location.toString().replace('mitcho.github.io/turktools/','turktools.net/');
+	</script>
+
 	<link rel="stylesheet" href="/stylesheets/styles.css">
 	<link rel="stylesheet" href="/stylesheets/pygment_trac.css">
 	<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
