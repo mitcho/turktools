@@ -15,7 +15,7 @@
 <body>
 	<div class="wrapper">
 		<header>
-			<h1>Turktools</h1>
+			<h1><a href='/'>Turktools</a></h1>
 			<p>Tools to prepare linguistic surveys for Amazon Mechanical Turk</p>
 
 			<ul class='buttons'>
@@ -25,9 +25,13 @@
 			</ul>
 			
 			<h2><a href="/use">How to use</a></h2>
-			<ul>{% for item in site.pages.use %}
+			{% if page.path contains 'use' %}
+			<ul>{% for item in site.pages %}
+			{% if (item.path contains 'use') and (item.path != 'use/index.md') %}
 				<li><a href="{{ item.url }}">{{ item.title }}</a></li>
-			{% endfor %}</ul>
+			{% endif %}{% endfor %}</ul>
+			{% endif %}
+			
 			<h2><a href="/contribute">How to contribute</a></h2>
 			
 			<h2><a href="http://ling.auf.net/lingbuzz/001802/current.pdf">Paper</a></h2>
@@ -37,12 +41,14 @@
 		</header>
 		<section>
 
+{% if (page.path != 'index.md') %}<h1>{{ page.title }}</h1>{% endif %}
+
 {{ content }}
 
 		</section>
 		<footer>
 		
-			<p class="view"><a href="https://github.com/mitcho/turktools">View the Project on GitHub</a></p>
+			<p class="view"><a href="https://github.com/mitcho/turktools">View the project on GitHub</a></p>
 
 			<p><small>&copy; 2013 <a href='http://mitcho.com'>Michael Yoshitaka Erlewine</a> and <a href='http://web.mit.edu/hkotek/www/'>Hadas Kotek</a></small></p>
 
