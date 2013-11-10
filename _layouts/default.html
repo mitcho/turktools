@@ -18,13 +18,21 @@
 			<h1>Turktools</h1>
 			<p>Tools to prepare linguistic surveys for Amazon Mechanical Turk</p>
 
-			<p class="view"><a href="https://github.com/mitcho/turktools">View the Project on GitHub <small>mitcho/turktools</small></a></p>
-
-
-			<ul>
+			<ul class='buttons'>
 				<li><a href="https://github.com/mitcho/turktools/zipball/master">Download <strong>ZIP File</strong></a></li>
-				<li><a href="http://ling.auf.net/lingbuzz/001802/current.pdf">Read <strong>The Paper</strong></a></li>
-				<li><a href="https://github.com/mitcho/turktools">View On <strong>GitHub</strong></a></li>
+				<!-- <li><a href="http://ling.auf.net/lingbuzz/001802/current.pdf">Read <strong>The Paper</strong></a></li> -->
+				<!-- <li><a href="https://github.com/mitcho/turktools">View On <strong>GitHub</strong></a></li> -->
+			</ul>
+			
+			<h2><a href="/use">How to use</a></h2>
+			<ul>{% for item in site.pages.use %}
+				<li><a href="{{ item.url }}">{{ item.title }}</a></li>
+			{% endfor %}</ul>
+			<h2><a href="/contribute">How to contribute</a></h2>
+			
+			<h2><a href="http://ling.auf.net/lingbuzz/001802/current.pdf">Paper</a></h2>
+			<p><em>Please cite the paper when using the tools</em></p>
+			
 			</ul>
 		</header>
 		<section>
@@ -33,6 +41,11 @@
 
 		</section>
 		<footer>
+		
+			<p class="view"><a href="https://github.com/mitcho/turktools">View the Project on GitHub</a></p>
+
+			<p><small>&copy; 2013 <a href='http://mitcho.com'>Michael Yoshitaka Erlewine</a> and <a href='http://web.mit.edu/hkotek/www/'>Hadas Kotek</a></small></p>
+
 		</footer>
 	</div>
 	<script src="/javascripts/scale.fix.js"></script>
