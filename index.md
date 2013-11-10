@@ -13,11 +13,6 @@ layout: default
 * **Easy-to-use tools** designed for non-programmers
 * Experiments can be used **without Mechanical Turk**, with the use of [turkserver](https://github.com/mitcho/turkserver)
 
-## Learn more
-
-* [Learn how to use turktools](/learn)
-* [Learn how you can contribute](/contribute)
-
 ## Citation and license
 
 If you use turktools or [turkserver](http://github.com/mitcho/turkserver) we ask that you cite the following paper:
