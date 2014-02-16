@@ -527,7 +527,7 @@ def main(args):
 	# ASK ABOUT REVERSE LISTS
 	reverse = False
 	want_reverse = args[5] if len(args) > 5 else raw_input("Would you like reverse lists? [y] ")
-	if want_reverse == '' or want_reverse[0].lower() != 'y':
+	if want_reverse == '' or want_reverse[0].lower() == 'y':
 		reverse = True
 	
 	if reverse:

@@ -4,3 +4,5 @@
 *.html
 *.txt
 .coverage
+_site
+Gemfile.lock
