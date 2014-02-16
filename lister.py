@@ -548,7 +548,7 @@ def main(args):
 			entry = [('list', list_number * 2 + 1)] + experiment.fields_from_list(list)
 			data.append(dict(entry))
 		else:
-			entry = [('list', list_number)] + fields[:]
+			entry = [('list', list_number)] + experiment.fields_from_list(list)
 			data.append(dict(entry))
 
 		# todo: make sure that all the lists generate the same keys
