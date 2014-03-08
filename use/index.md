@@ -22,6 +22,8 @@ The Python tools described here require Python 2.6.x or 2.7.x, available [here](
 * **Mac OS X**: Right-click on the file in the Finder and choose Open With… > Python Launcher.
 * **Windows**: Double-click on the file.
 
+**Note:** Python on Mac OS X 10.9 (Mavericks) has a bug whereby using these scripts may unexpectedly die with "Segmentation Fault: 11". This is fixed by upgrading to Python 2.7.6.
+
 We recommend saving all of the files you create for a given experiment in the same folder, dedicated to that experiment.
 
 In the remainder of this section, we will describe the usage of these tools. For a more detailed description of the tools and a proposed workflow, please read:
