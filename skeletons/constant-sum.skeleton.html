@@ -1,4 +1,4 @@
-{{! Radio button completion template skeleton; use templater.py! }}
+{{! Constant sum template skeleton; use templater.py! }}
 
 <style type="text/css">
 label, input[type=radio], input[type=button] { cursor: pointer; }
@@ -23,15 +23,15 @@ input[readonly="readonly"] {width:3em; margin-left:10em; background-color: red;}
 
 <p class="red"><strong>PLEASE COMPLETE AT MOST ONE <span class="blue">{{code}}</span> SURVEY. YOU WILL NOT BE PAID FOR COMPLETING MORE THAN ONE SURVEY WITH THIS CODE.</strong></p>
 
+<p><strong>This survey requires that your browser have <span class="red">JavaScript</span> enabled.</strong></p>
+
 <h3>Instructions</h3>
 
 	<p>This questionnaire presents {{total_number}} English sentences. Each sentence contains a gap and 
 	   there are two options below the sentence for what should go in that gap. Your task is to evaluate 
 	   these options by giving them points. For each sentence, you have 100 points to distribute between 
 	   the two options. The better an option sounds compared to the other, the more points you should give 
-	   it. If you have Javascript enabled, this will be shown in the gray box on the right. 
-		<strong>It is recommended that you <span class="red">turn on Javascript</span> to help in 
-		completing the study properly.</strong> Here is an example:</p>
+	   it. Here is an example:</p>
 
 	<div class="trial">
 		<p>There is&nbsp;<span class="gap">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>&nbsp;cat in the garden.</p>
@@ -77,11 +77,7 @@ input[readonly="readonly"] {width:3em; margin-left:10em; background-color: red;}
 
 	<p><strong>Consent Statement:</strong>...</p>
 
-	<p>If your browser has JavaScript turned on, a counter will be displayed at the 
-		bottom of the page indicating how many questions have been answered. 
-		<strong>It is highly recommended that you <span class="red">turn on JavaScript</span> 
-		and use this tool before submitting to ensure that all questions have been 
-		answered and you can receive payment.</strong></p>
+<p>A counter will be displayed at the bottom of the page indicating how many questions have been answered. Please use this tool before submitting to ensure that all questions have been answered and you can receive payment.</p>
 
 <hr noshade="noshade" />
 
