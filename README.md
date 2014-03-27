@@ -42,13 +42,16 @@ In the remainder of this section, we will describe the usage of these tools. For
 
 A *skeleton* is an HTML file that contains substitution tags that will be filled in by the *Templater* to create an *HTML template* that can be uploaded onto AMT. The following template skeletons are currently included in *turktools*, each corresponding to a different experimental design:
 
-* `binary.skeleton.html`: Basic forced choice between two options: natural or unnatural.
-* `binary-image.skeleton.html`: Truth value judgment paradigm with a sentence and an image presented. Forced choice true or false.
-* `completion.skeleton.html`: Sentence completion with a gap and two options presented as radio buttons below.
-* `completion-menu.skeleton.html`: Sentence completion with a gap and two options presented as a drop-down menu *in-situ*.
-* `image-choice.skeleton.html`: Forced choice between three images. Can be used to generate covered-box experiments as well.
-* `likert.skeleton.html`: Basic Likert scale template.
-* `sentence-choice.skeleton.html`: Forced choice between two options, given a context.
+* `binary.skeleton.html`: grammaticality judgment, yes-no task
+* `slider.skeleton.html`: grammaticality judgment, gradient judgment task
+* `likert.skeleton.html`: grammaticality judgment, Likert scale task
+* `magnitude-estimation.skeleton.html`: grammaticality judgment, magnitude estimation task
+* `constant-sum.skeleton.html`: grammaticality judgment, constant-sum scale task
+* `image-choice.skeleton.html`: picture selection task
+* `binary-image.skeleton.html`: picture judgment, yes-no task
+* `completion.skeleton.html`: word-completion task
+* `sentence-choice.skeleton.html`: sentence-completion task
+* `completion-menu.skeleton.html`: completion task with drop-down menu
 
 The skeleton contains substitution tags, wrapped in double curly braces, i.e. `{{…}}`, will be filled in by the *Templater*. [Read more about supported substitution tags](http://turktools.net/use/tags).
 
@@ -193,3 +196,8 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
+
+## Code contributors
+
+* Hadas Kotek
+* Erin Olson
