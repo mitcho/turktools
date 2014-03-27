@@ -2,7 +2,7 @@
 
 <style type="text/css">
 label, input[type=radio], input[type=button] { cursor: pointer; }
-input[type=text] {width:3em; margin-right:0.5em;}
+input[type=text] {width:3em; margin-right:0.5em; font-size: 14px;}
 input[readonly="readonly"] {width:3em; margin-left:10em; background-color:silver;}
 .blue { color: blue; }
 .red { color: red; }
@@ -10,7 +10,7 @@ input[readonly="readonly"] {width:3em; margin-left:10em; background-color:silver
 .trial p, .trial table { padding-left: 50px; margin: 3px; }
 .trial label { padding-right: 20px; }
 .trial table { width: 400px; }
-.trial tr:first-child td { width: 50%; text-align: center; }
+.trial td { min-width: 150px; }
 .trial_number { float: left; font-size: 1.5em; font-weight: bold; display:inline-block; min-width:50px; }
 #unanswered { font-weight: bold; font-size: 2em; color: black; background-color: red; margin: 0 auto; width: 500px; border: black 1px solid; padding: 10px; display:none; }
 #answered { margin: 0 auto; width: 500px; border: black 1px solid; padding: 10px; display:none; }
@@ -35,15 +35,15 @@ input[readonly="readonly"] {width:3em; margin-left:10em; background-color:silver
 	<div class="trial">
 		<p>There is&nbsp;<span class="gap">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>&nbsp;cat in the garden.</p>
 	
-		<p>
-			<label for='ChoiceSample1_1'>
-				<input type='text' name='ChoiceSample1_1_Value' id='ChoiceSample1_1_Value' value="10"></input> the
-			</label>
-			<label for='ChoiceSample1_2'>
-				<input type='text' name='ChoiceSample1_2_Value' id='ChoiceSample1_2_Value' value="90"></input> a
-			</label>
-			<input readonly='readonly' name='ChoiceSample1_Total' id='ChoiceSample1_Total' value=""></input>
-		</p>
+		<table><tr>
+			<td><label for='ChoiceSample1_1'>
+				<input type='text' name='ChoiceSample1_Value1' id='ChoiceSample1_Value1' value="10"></input> the
+			</label></td>
+			<td><label for='ChoiceSample1_2'>
+				<input type='text' name='ChoiceSample1_Value2' id='ChoiceSample1_Value2' value="90"></input> a
+			</label></td>
+			<td><input type='text' readonly='readonly' tabindex='-1' name='ChoiceSample1_Total' id='ChoiceSample1_Total' value=""></input></td>
+		</tr></table>
 	</div>
 
 	<p>In the above example, "a" sounds more natural than "the." Therefore, please rate "a" higher than 
@@ -55,15 +55,15 @@ input[readonly="readonly"] {width:3em; margin-left:10em; background-color:silver
 	<div class="trial">
 		<p><span class="gap">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>&nbsp;boy is playing outside.</p>
 
-		<p>
-			<label for='ChoiceSample2_1'>
-				<input type='text' name='ChoiceSample2_1_Value' id='ChoiceSample2_1_Value'></input> Some
-			</label>
-			<label for='ChoiceSample2_2'>
-				<input type='text' name='ChoiceSample2_2_Value' id='ChoiceSample2_2_Value'></input> Every
-			</label>
-			<input readonly='readonly' name='ChoiceSample2_Total' id='ChoiceSample2_Total' value=""></input>
-		</p>
+		<table><tr>
+			<td><label for='ChoiceSample2_1'>
+				<input type='text' name='ChoiceSample2_Value1' id='ChoiceSample2_Value1' value=""></input> Some
+			</label></td>
+			<td><label for='ChoiceSample1_2'>
+				<input type='text' name='ChoiceSample2_Value2' id='ChoiceSample2_Value2' value=""></input> Every
+			</label></td>
+			<td><input type='text' readonly='readonly' tabindex='-1' name='ChoiceSample2_Total' id='ChoiceSample2_Total' value=""></input></td>
+		</tr></table>
 	</div>
 
 	<p>In this example, both "some" and "every" are possible choices. In such cases, rate the options 
@@ -92,15 +92,15 @@ input[readonly="readonly"] {width:3em; margin-left:10em; background-color:silver
 	
 	<p>{{field_1}}&nbsp;<span class="gap">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>&nbsp;{{field_2}}.</p>
 	
-	<p class='count'>
-		<label for='Choice{{number}}_1'>
-			<input type='text' name='Choice{{number}}_1_Value' id='Choice{{number}}_1_Value'></input> {{field_3}}
-		</label>
-		<label for='Choice{{number}}_2'>
-			<input type='text' name='Choice{{number}}_2_Value' id='Choice{{number}}_2_Value'></input> {{field_4}}
-		</label>
-		<input readonly='readonly' name='Choice{{number}}_Total' id='Choice{{number}}_Total' value=""></input>
-	</p>
+	<table class="count"><tr>
+		<td><label for='ChoiceSample{{number}}_1'>
+			<input type='text' name='ChoiceSample{{number}}_Value1' id='ChoiceSample{{number}}_Value1' value=""></input> {{field_3}}
+		</label></td>
+		<td><label for='ChoiceSample1_2'>
+			<input type='text' name='ChoiceSample{{number}}_Value2' id='ChoiceSample{{number}}_Value2' value=""></input> {{field_4}}
+		</label></td>
+		<td><input type='text' readonly='readonly' tabindex='-1' name='ChoiceSample{{number}}_Total' id='ChoiceSample{{number}}_Total' value=""></input></td>
+	</tr></table>
 </div>
 
 <hr noshade="noshade" />
@@ -143,13 +143,17 @@ input[readonly="readonly"] {width:3em; margin-left:10em; background-color:silver
 <script type="text/javascript" src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
 <script type='text/javascript'>
 <!--
+	$('label').click(function() {
+		$('input',this).focus();
+	});
+	
 	// addition function
 	function totalCount() {
 		$('input[readonly]').each(function(){
 			// get number
 			var n = $(this).attr('name').slice(0,-6);
-			var ch1 = parseInt($('[name="' + n + '_1_Value"]').val());
-			var ch2 = parseInt($('[name="' + n + '_2_Value"]').val());
+			var ch1 = parseInt($('[name="' + n + '_Value1"]').val());
+			var ch2 = parseInt($('[name="' + n + '_Value2"]').val());
 			
 			// show value
 			if (isNaN(ch1) === false & isNaN(ch2) === false) {
