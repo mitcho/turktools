@@ -16,7 +16,6 @@ https://github.com/leongersen/noUiSlider/
 -->
 
 <style type="text/css">
-/* begin noUiSlider css, licensed under WTFPL (see above) */
 label, input[type=radio], input[type=button] { cursor: pointer; }
 .blue { color: blue; }
 .red { color: red; }
@@ -25,11 +24,12 @@ label, input[type=radio], input[type=button] { cursor: pointer; }
 .trial_number { float: left; font-size: 1.5em; font-weight: bold; display:inline-block; min-width:50px; }
 #unanswered { font-weight: bold; font-size: 2em; color: black; background-color: red; margin: 0 auto; width: 500px; border: black 1px solid; padding: 10px; display:none; }
 #answered { margin: 0 auto; width: 500px; border: black 1px solid; padding: 10px; display:none; }
-.slider { width: 300px; }
+.slider { width: 300px; margin: 0 10px; }
 </style>
 
 <style type="text/css">
-.noUi-target,.noUi-target *{-webkit-touch-callout:none;-webkit-user-select:none;-ms-touch-action:none;-ms-user-select:none;-moz-user-select:none;-moz-box-sizing:border-box;box-sizing:border-box}.noUi-base{width:100%;height:100%;position:relative}.noUi-origin{position:absolute;right:0;top:0;left:0;bottom:0}.noUi-handle{position:relative;z-index:1}.noUi-stacking .noUi-handle{z-index:10}.noUi-stacking+.noUi-origin{*z-index:-1}.noUi-state-tap .noUi-origin{-webkit-transition:left .3s,top .3s;transition:left .3s,top .3s}.noUi-state-drag *{cursor:inherit!important}.noUi-horizontal{height:18px}.noUi-horizontal .noUi-handle{width:34px;height:28px;left:-17px;top:-6px}.noUi-horizontal.noUi-extended{padding:0 15px}.noUi-horizontal.noUi-extended .noUi-origin{right:-15px}.noUi-vertical{width:18px}.noUi-vertical .noUi-handle{width:28px;height:34px;left:-6px;top:-17px}.noUi-vertical.noUi-extended{padding:15px 0}.noUi-vertical.noUi-extended .noUi-origin{bottom:-15px}.noUi-background{background:#FAFAFA;box-shadow:inset 0 1px 1px #f0f0f0}.noUi-connect{background:#3FB8AF;box-shadow:inset 0 0 3px rgba(51,51,51,.45);-webkit-transition:background 450ms;transition:background 450ms}.noUi-origin{border-radius:2px}.noUi-target{border-radius:4px;border:1px solid #D3D3D3;box-shadow:inset 0 1px 1px #F0F0F0,0 3px 6px -5px #BBB}.noUi-target.noUi-connect{box-shadow:inset 0 0 3px rgba(51,51,51,.45),0 3px 6px -5px #BBB}.noUi-dragable{cursor:w-resize}.noUi-vertical .noUi-dragable{cursor:n-resize}.noUi-handle{border:1px solid #D9D9D9;border-radius:3px;background:#FFF;cursor:default;box-shadow:inset 0 0 1px #FFF,inset 0 1px 7px #EBEBEB,0 3px 6px -3px #BBB}.noUi-active{box-shadow:inset 0 0 1px #FFF,inset 0 1px 7px #DDD,0 3px 6px -3px #BBB}.noUi-handle:after,.noUi-handle:before{content:"";display:block;position:absolute;height:14px;width:1px;background:#E8E7E6;left:14px;top:6px}.noUi-handle:after{left:17px}.noUi-vertical .noUi-handle:after,.noUi-vertical .noUi-handle:before{width:14px;height:1px;left:6px;top:14px}.noUi-vertical .noUi-handle:after{top:17px}[disabled] .noUi-connect,[disabled].noUi-connect{background:#B8B8B8}[disabled] .noUi-handle{cursor:not-allowed}
+/* begin noUiSlider css, licensed under WTFPL (see above) and modified */
+.noUi-target,.noUi-target *{-webkit-touch-callout:none;-webkit-user-select:none;-ms-touch-action:none;-ms-user-select:none;-moz-user-select:none;-moz-box-sizing:border-box;box-sizing:border-box}.noUi-base{width:100%;height:100%;position:relative}.noUi-origin{position:absolute;right:0;top:0;left:0;bottom:0}.noUi-handle{position:relative;z-index:1}.noUi-stacking .noUi-handle{z-index:10}.noUi-stacking+.noUi-origin{*z-index:-1}.noUi-state-tap .noUi-origin{-webkit-transition:left .3s,top .3s;transition:left .3s,top .3s}.noUi-state-drag *{cursor:inherit!important}.noUi-horizontal{height:18px}.noUi-horizontal .noUi-handle{width:20px;height:28px;left:-10px;top:-6px}.noUi-horizontal.noUi-extended{padding:0 15px}.noUi-horizontal.noUi-extended .noUi-origin{right:-15px}.noUi-background{background:#FAFAFA;box-shadow:inset 0 1px 1px #f0f0f0;}.noUi-connect{background:red;box-shadow:inset 0 0 3px rgba(51,51,51,.45);}.noUi-origin{border-radius:0px 2px 2px 0px}.noUi-target{border-radius:4px;border:1px solid #666;box-shadow:inset 0 1px 1px #F0F0F0,0 3px 6px -5px #BBB}.noUi-target.noUi-connect{box-shadow:inset 0 0 3px rgba(51,51,51,.20),0 3px 6px -5px #BBB}.noUi-dragable{cursor:col-resize}.noUi-handle{background:transparent;cursor:col-resize;}.noUi-active{background:transparent;}[disabled] .noUi-connect,[disabled].noUi-connect{background:#B8B8B8}[disabled] .noUi-handle{cursor:not-allowed}
 /* end noUiSlider js */
 </style>
 
@@ -73,7 +73,7 @@ label, input[type=radio], input[type=button] { cursor: pointer; }
 
 {{#items}}
 
-<div class="trial count untouched">
+<div class="trial count">
 	
 	<span class="trial_number">{{number}}.</span>
 	
@@ -140,9 +140,9 @@ total_number = parseInt("{{total_number}}") || Infinity;
 
 function count() {
 	if ($(this).is('div'))
-		$(this).closest('.count').removeClass('untouched').css('background','transparent');
+		$(this).closest('.count').addClass('touched').css('background','transparent');
 
-	var num = $('.count:not(.untouched)').length;
+	var num = $('.count.touched').length;
 
 	$('#unanswered span, #answered span').text(num);
 	$('#numanswered').val(num);
@@ -162,24 +162,20 @@ $(function() {
 });
 
 function highlight() {
-	$('.count').css('background', 'transparent');
-	$('.count.untouched').css('background', 'yellow');
+	$('.count').css('background', 'yellow');
+	$('.count.touched').css('background', 'transparent');
 }
 $('#highlight-button').click(highlight);
 
-var Link = $.noUiSlider.Link;
-$(".slider").each(function() {
-	var input = $(this).siblings('input');
-	$(this).noUiSlider({
-		range: { min: [0], max: [100] },
-		start: [50],
-		handles: 1,
-		connect: "lower",
-		serialization: {
-			lower: [new Link({target: input})],
-			format: {decimals: 0}
-		},
-		slide: count
-	});
-});
+var link = new $.noUiSlider.Link({target: function(val) {$(this).siblings('input').val(val);}});
+$(".slider").noUiSlider({
+	range: { min: [0], max: [100] },
+	start: [50],
+	handles: 1,
+	connect: "lower",
+	serialization: {
+		lower: [link],
+		format: {decimals: 0}
+	}
+}).on('slide', count);
 </script>
