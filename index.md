@@ -11,7 +11,7 @@ layout: default
 * **Template skeletons** which maximizes template reusability
 * **Cross-platform** (Windows, Mac, and Linux), requiring only Python (2.6 or 2.7)
 * **Easy-to-use tools** designed for non-programmers
-* Experiments can be used **without Mechanical Turk**, with the use of [turkserver](https://github.com/mitcho/turkserver)
+* Experiments can be used **without Mechanical Turk**, with the use of [**turkserver**](https://github.com/mitcho/turkserver)
 
 ## Citation and license
 
