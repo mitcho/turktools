@@ -1,0 +1,214 @@
+{{! Radio button completion template skeleton; use templater.py! }}
+
+<style type="text/css">
+label, input[type=radio], input[type=button] { cursor: pointer; }
+input[type=text] {width:3em; margin-right:0.5em;}
+input[readonly="readonly"] {width:3em; margin-left:10em; background-color:silver;}
+.blue { color: blue; }
+.red { color: red; }
+.trial { padding: 15px 10px; }
+.trial p, .trial table { padding-left: 50px; margin: 3px; }
+.trial label { padding-right: 20px; }
+.trial table { width: 400px; }
+.trial tr:first-child td { width: 50%; text-align: center; }
+.trial_number { float: left; font-size: 1.5em; font-weight: bold; display:inline-block; min-width:50px; }
+#unanswered { font-weight: bold; font-size: 2em; color: black; background-color: red; margin: 0 auto; width: 500px; border: black 1px solid; padding: 10px; display:none; }
+#answered { margin: 0 auto; width: 500px; border: black 1px solid; padding: 10px; display:none; }
+
+.gap { text-decoration: underline; width: 15px; }
+</style>
+
+<p>Survey Code: <span class="blue">{{code}}</span></p>
+
+<p class="red"><strong>PLEASE COMPLETE AT MOST ONE <span class="blue">{{code}}</span> SURVEY. YOU WILL NOT BE PAID FOR COMPLETING MORE THAN ONE SURVEY WITH THIS CODE.</strong></p>
+
+<h3>Instructions</h3>
+
+	<p>This questionnaire presents {{total_number}} English sentences. Each sentence contains a gap and 
+	   there are two options below the sentence for what should go in that gap. Your task is to evaluate 
+	   these options by giving them points. For each sentence, you have 100 points to distribute between 
+	   the two options. The better an option sounds compared to the other, the more points you should give 
+	   it. If you have Javascript enabled, this will be shown in the gray box on the right. 
+		<strong>It is recommended that you <span class="red">turn on  Javascript</span> to help in 
+		completing the study properly.</strong> Here is an example:</p>
+
+	<div class="trial">
+		<p>There is&nbsp;<span class="gap">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>&nbsp;cat in the garden.</p>
+	
+		<p>
+			<label for='ChoiceSample1_1'>
+				<input type='text' name='ChoiceSample1_1_Value' id='ChoiceSample1_1_Value' value="10"></input> the
+			</label>
+			<label for='ChoiceSample1_2'>
+				<input type='text' name='ChoiceSample1_2_Value' id='ChoiceSample1_2_Value' value="90"></input> a
+			</label>
+			<input readonly='readonly' name='ChoiceSample1_Total' id='ChoiceSample1_Total' value=""></input>
+		</p>
+	</div>
+
+	<p>In the above example, "a" sounds more natural than "the." Therefore, please rate "a" higher than 
+	    "the" when assigning points out of 100. For example, you could assign 90 points to "a" and 10 points 
+	    to "the", or all 100 points to "a" and 0 points to "the".</p>
+
+	<p>Here is another example:</p>
+
+	<div class="trial">
+		<p><span class="gap">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>&nbsp;boy is playing outside.</p>
+
+		<p>
+			<label for='ChoiceSample2_1'>
+				<input type='text' name='ChoiceSample2_1_Value' id='ChoiceSample2_1_Value'></input> Some
+			</label>
+			<label for='ChoiceSample2_2'>
+				<input type='text' name='ChoiceSample2_2_Value' id='ChoiceSample2_2_Value'></input> Every
+			</label>
+			<input readonly='readonly' name='ChoiceSample2_Total' id='ChoiceSample2_Total' value=""></input>
+		</p>
+	</div>
+
+	<p>In this example, both "some" and "every" are possible choices. In such cases, rate the options 
+	    according to how natural you think they make the sentence sound. For example, if you find 
+		both options to be equally good, please assign 50 points to "some" and 50 points to "every". 
+		If you think that "some" sounds somewhat better than "every", you could assign 55 points 
+	    to "some" and 45 points to "every," or 60 points to "some" and 40 points to "every." </p>
+
+	<p class="red"><strong>In order to get paid, please make sure that you answer all {{total_number}} questions.</strong></p>
+
+	<p><strong>Consent Statement:</strong>...</p>
+
+	<p>If your browser has JavaScript turned on, a counter will be displayed at the 
+		bottom of the page indicating how many questions have been answered. 
+		<strong>It is highly recommended that you <span class="red">turn on JavaScript</span> 
+		and use this tool before submitting to ensure that all questions have been 
+		answered and you can receive payment.</strong></p>
+
+<hr noshade="noshade" />
+
+{{#items}}
+
+<div class="trial">
+
+	<span class="trial_number">{{number}}.</span>
+	
+	<p>{{field_1}}&nbsp;<span class="gap">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>&nbsp;{{field_2}}.</p>
+	
+	<p class='count'>
+		<label for='Choice{{number}}_1'>
+			<input type='text' name='Choice{{number}}_1_Value' id='Choice{{number}}_1_Value'></input> {{field_3}}
+		</label>
+		<label for='Choice{{number}}_2'>
+			<input type='text' name='Choice{{number}}_2_Value' id='Choice{{number}}_2_Value'></input> {{field_4}}
+		</label>
+		<input readonly='readonly' name='Choice{{number}}_Total' id='Choice{{number}}_Total' value=""></input>
+	</p>
+</div>
+
+<hr noshade="noshade" />
+
+{{/items}}
+
+<p>Are you a native speaker of English? 
+	<label for="englishY">
+		<input id="englishY" type="radio" name="english" value="1" /> Yes
+	</label>
+	<label for="englishN">
+		<input id="englishN" type="radio" name="english" value="0" /> No
+	</label>
+</p>
+
+<p>Do you speak a language other than English? 
+	<label for="foreignlangY">
+		<input id="foreignlangY" type="radio" name="foreignlang" value="1" /> Yes
+	</label>
+	<label for="foreignlangN">
+		<input id="foreignlangN" type="radio" name="foreignlang" value="0" /> No
+	</label>
+</p>
+
+<p>(Your answers to these questions do not affect the payment.)</p>
+
+<div id="unanswered">
+	<span>&nbsp;</span> questions (out of {{total_number}} total) have been answered. If you submit now, you will not be paid.<br />
+	<input type="button" value="HIGHLIGHT UNANSWERED QUESTIONS" id="highlight-button" />
+</div>
+
+<div id="answered">
+	<span>&nbsp;</span> questions (out of {{total_number}} total) have been answered. You are ready to submit.
+</div>
+
+<h3 style="color: red; text-align:center;">After submitting this HIT, do NOT submit another HIT with survey code <span class="blue">{{code}}</span>. You will not be paid for completing more than one survey with this code.</h3>
+
+<p><input type="hidden" name="numanswered" id="numanswered" /> <input type="hidden" name="useragent" id="useragent" /></p>
+
+<script type="text/javascript" src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
+<script type='text/javascript'>
+<!--
+	// addition function
+	function totalCount() {
+		$('input[readonly]').each(function(){
+			// get number
+			var n = $(this).attr('name').slice(0,-6);
+			var ch1 = parseInt($('[name="' + n + '_1_Value"]').val());
+			var ch2 = parseInt($('[name="' + n + '_2_Value"]').val());
+			
+			// show value
+			if (isNaN(ch1) === false & isNaN(ch2) === false) {
+				$(this).val(ch1 + ch2);
+			} else {
+				$(this).val("");
+			}
+			
+			// change to red if not 100
+			if ($(this).val() != 100) {
+				$(this).css('background', 'red');
+			} else {
+				$(this).css('background', 'silver');
+			}
+		});
+	}
+	$(totalCount);
+	$('input:text').bind('change', totalCount);
+	
+	// finding out how many questions are answered
+	total_number = parseInt("{{total_number}}") || Infinity;
+
+	function count() {
+		if ($(this).is('input:radio') && $(this).closest('div').find('input:checked').length == 1)
+			$(this).closest('div').css('background','transparent');
+	
+		var num = 0;
+		$('.count').each(function(){
+			if ( $(this).find('input[readonly]').val() == 100 ) {
+				num = num + 1;
+			}
+		});
+	
+		$('#unanswered span, #answered span').text(num);
+		$('#numanswered').val(num);
+	
+		if ( num < total_number ) {
+			$('#unanswered').show();
+			$('#answered').hide();
+		} else {
+			$('#unanswered').hide();
+			$('#answered').show();
+		}
+	}
+	$(count);
+	$('input').bind('change', count);
+	
+	$(function() {
+		$('#useragent').val(navigator.userAgent);
+	});
+	
+	function highlight() {
+		$('div:has(.count)').each(function() {
+			if ($(this).find('input[readonly]').val() != 100)
+				$(this).css('background', 'yellow');
+			else
+				$(this).css('background', 'transparent');			
+		});
+	}
+	$('#highlight-button').click(highlight);
+-->
+</script>
