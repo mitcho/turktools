@@ -11,11 +11,11 @@ layout: default
 * **Template skeletons** which maximizes template reusability
 * **Cross-platform** (Windows, Mac, and Linux), requiring only Python (2.6 or 2.7)
 * **Easy-to-use tools** designed for non-programmers
-* Experiments can be used **without Mechanical Turk**, with the use of [**turkserver**](https://github.com/mitcho/turkserver)
+* Experiments can be used **without Mechanical Turk**, with the use of [turkserver](http://turktools.net/use/server.html)
 
 ## Citation and license
 
-If you use turktools or [turkserver](http://github.com/mitcho/turkserver) we ask that you cite the following paper:
+If you use turktools or [turkserver](http://turktools.net/use/server.html) we ask that you cite the following paper:
 
 > Erlewine, Michael Yoshitaka and Hadas Kotek (2013). [*A streamlined approach to online linguistic surveys*](http://ling.auf.net/lingbuzz/001802/current.pdf). Manuscript, MIT.
 

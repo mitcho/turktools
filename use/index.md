@@ -14,7 +14,7 @@ To download everything here, click on the "Download ZIP" button on the left. The
 
 We have additionally provided sample item files for three of the skeletons in the Examples folder. 
 
-If you would like to host Mechanical Turk-style surveys on your own server instead of using Amazon Mechanical Turk, this can be done using turktools' sister project, [turkserver](https://github.com/mitcho/turkserver).
+If you would like to host Mechanical Turk-style surveys on your own server instead of using Amazon Mechanical Turk, this can be done using turktools' sister project, [turkserver](http://turktools.net/use/server.html).
 
 The Python tools described here require Python 2.6.x or 2.7.x, available [here](http://python.org). Here is how to execute a Python script (here `templater.py`) in different platforms:
 
@@ -114,6 +114,6 @@ By the time you're done preparing, running, and analyzing an experiment, your fo
 * a text file with your raw items
 * a `xxxxxx.turk.csv` randomized item lists file (created by `lister.py`),
 * a simulation of one or more of your lists (created by `simulator.py`),
-* a raw results file (downloaded from AMT or from [turkserver](https://github.com/mitcho/turkserver)), 
+* a raw results file (downloaded from AMT or from [turkserver](http://turktools.net/use/server.html)), 
 * a decoded `xxxxxx.decoded.csv` results file (created by `decoder.py`), and 
 * an analysis script (possibly based on the sample `analysis.r` code provided here).
