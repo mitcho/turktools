@@ -1,5 +1,5 @@
 ---
-title: Using the experiment code to vary a border color
+title: Color-coding experiments
 layout: default
 ---
 
@@ -34,4 +34,4 @@ The one at the bottom of the survey could be replaced by:
 
 When using this setup, the experiment code that you use must be a known CSS color code. Here are 17 standard ones:
 
-aqua, black, blue, fuchsia, gray, grey, green, lime, maroon, navy, olive, purple, red, silver, teal, white and yellow
+aqua, black, blue, fuchsia, gray, grey, green, lime, maroon, navy, olive, purple, red, silver, teal, white, and yellow
