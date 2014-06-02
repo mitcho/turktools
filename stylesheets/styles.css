@@ -104,6 +104,7 @@ header {
   width:270px;
   float:left;
   position:fixed;
+  overflow-y: auto;
 }
 
 header ul.buttons {
@@ -171,9 +172,8 @@ header ul.buttons a strong {
 }
 
 section {
-  width:500px;
-  float:right;
-  padding-bottom:50px;
+	padding-bottom:50px;
+	padding-left: 360px;
 }
 
 small {
@@ -194,6 +194,26 @@ footer {
   bottom:50px;
 }
 
+@media screen and (max-height: 800px) {
+	footer {
+		float: none;
+		position: static;
+		width: auto;
+		padding-left: 360px;
+	}
+}
+
+@media print, screen and (max-width: 960px), screen and (max-height: 650px) {
+	header h2 {
+		font-size: 1.2em;
+		margin-bottom: 10px;
+		padding-bottom: 0px;
+	}
+	header a small {
+		font-size: 0.9em;
+	}
+}
+
 @media print, screen and (max-width: 960px) {
   
   div.wrapper {
@@ -205,6 +225,7 @@ footer {
     float:none;
     position:static;
     width:auto;
+    padding-left: 0px !important;
   }
   
   header {
@@ -229,7 +250,7 @@ footer {
   }
 }
 
-@media print, screen and (max-width: 720px) {
+@media screen and (max-width: 720px) {
   body {
     word-wrap:break-word;
   }
