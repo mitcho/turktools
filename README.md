@@ -49,6 +49,7 @@ A *skeleton* is an HTML file that contains substitution tags that will be filled
 * `constant-sum.skeleton.html`: grammaticality judgment, constant-sum scale task
 * `image-choice.skeleton.html`: picture selection task
 * `binary-image.skeleton.html`: picture judgment, yes-no task
+* `binary-audio.skeleton.html`: [audio stimuli](http://turktools.net/use/audio.html), yes-no task
 * `completion.skeleton.html`: word-completion task
 * `sentence-choice.skeleton.html`: sentence-completion task
 * `completion-menu.skeleton.html`: completion task with drop-down menu
