@@ -1,0 +1,196 @@
+{{! Forced choice audio playback template skeleton; use templater.py! }}
+
+<style type="text/css">
+label, input[type=radio], input[type=button] { cursor: pointer; }
+.blue { color: blue; }
+.red { color: red; }
+.trial { padding: 15px 10px; }
+.trial p, .trial table { padding-left: 50px; margin: 3px; }
+.trial table { width: 400px; }
+.trial tr td { width: 50%; text-align: center; }
+.trial_number { float: left; font-size: 1.5em; font-weight: bold; display:inline-block; min-width:50px; }
+#unanswered { font-weight: bold; font-size: 2em; color: black; background-color: red; margin: 0 auto; width: 500px; border: black 1px solid; padding: 10px; display:none; }
+#answered { margin: 0 auto; width: 500px; border: black 1px solid; padding: 10px; display:none; }
+
+.disabled label { color: gray; }
+</style>
+
+<p>Survey Code: <span class="blue">{{code}}</span></p>
+
+<p class="red"><strong>PLEASE COMPLETE AT MOST ONE <span class="blue">{{code}}</span> SURVEY. YOU WILL NOT BE PAID FOR COMPLETING MORE THAN ONE SURVEY WITH THIS CODE.</strong></p>
+
+<h3>Instructions</h3>
+
+<p>This questionnaire presents {{total_number}} audio recordings of English sentences. Your task is to listen to the recording and decide whether each sentence sounds natural or not. Please indicate whether the sentence sounds natural or not by selecting one of the buttons below the sentence. Here is an example:</p>
+
+<div class="trial">
+	
+	<p><audio controls="controls" preload="auto">
+		Your browser does not support the <code>audio</code> element. You cannot participate in this HIT.
+		<source src="http://turktools.net/images/test1.mp3" type="audio/mp3">
+		<source src="http://turktools.net/images/test1.ogg" type="audio/ogg">
+	</audio></p>
+
+	<table><tbody>
+		<tr>
+			<td><label for="ChoiceSample1Y">NATURAL</label></td>
+			<td><label for="ChoiceSample1N">UNNATURAL</label></td>
+		</tr>
+		<tr>
+			<td><input type="radio" id="ChoiceSample1Y" name="ChoiceSample1" value="1" /></td>
+			<td><input type="radio" id="ChoiceSample1N" name="ChoiceSample1" value="0" /></td>
+		</tr>
+	</tbody></table>
+</div>
+
+<p>In the above example, it is very clear that the sentence is natural, so please select the button on the left, labelled "Natural."</p>
+
+<p>Here is another example:</p>
+
+<div class="trial">
+	
+	<p><audio controls="controls" preload="auto">
+		Your browser does not support the <code>audio</code> element. You cannot participate in this HIT.
+		<source src="http://turktools.net/images/test2.mp3" type="audio/mp3">
+		<source src="http://turktools.net/images/test2.ogg" type="audio/ogg">
+	</audio></p>
+
+	<table><tbody>
+		<tr>
+			<td><label for="ChoiceSample2Y">NATURAL</label></td>
+			<td><label for="ChoiceSample2N">UNNATURAL</label></td>
+		</tr>
+		<tr>
+			<td><input type="radio" id="ChoiceSample2Y" name="ChoiceSample2" value="1" /></td>
+			<td><input type="radio" id="ChoiceSample2N" name="ChoiceSample2" value="0" /></td>
+		</tr>
+	</tbody></table>
+</div>
+
+<p>In this case you would probably feel that the sentence is unnatural. So please choose the button on the right, labelled "Unnatural."</p>
+
+<p class="red"><strong>In order to get paid, please make sure that you answer all {{total_number}} questions.</strong></p>
+
+<p><strong>Consent Statement:</strong>...</p>
+
+<p>If your browser has JavaScript turned on, a counter will be displayed at the bottom of the page indicating how many questions have been answered. <strong>It is highly recommended that you <span class="red">turn on JavaScript</span> and use this tool before submitting to ensure that all questions have been answered and you can receive payment.</strong></p>
+
+<hr noshade="noshade" />
+
+{{#items}}
+
+<div class="trial">
+	
+	<span class="trial_number">{{number}}.</span>
+	
+	<p><audio controls="controls" preload="auto">
+		Your browser does not support the <code>audio</code> element. You cannot participate in this HIT.
+		<source src="{{field_1}}.mp3" type="audio/mp3">
+		<source src="{{field_1}}.ogg" type="audio/ogg">
+	</audio></p>
+
+	<table class="count"><tbody>
+		<tr>
+			<td><label for="Choice{{number}}Y">NATURAL</label></td>
+			<td><label for="Choice{{number}}N">UNNATURAL</label></td>
+		</tr>
+		<tr>
+			<td><input class="count" type="radio" id="Choice{{number}}Y" name="Choice{{number}}" value="1" /></td>
+			<td><input class="count" type="radio" id="Choice{{number}}N" name="Choice{{number}}" value="0" /></td>
+		</tr>
+	</tbody></table>
+</div>
+
+<hr noshade="noshade" />
+
+{{/items}}
+
+<p>Are you a native speaker of English? <label for="englishY"><input id="englishY" type="radio" name="english" value="1" /> Yes</label> <label for="englishN"><input id="englishN" type="radio" name="english" value="0" /> No</label></p>
+
+<p>Do you speak a language other than English? <label for="foreignlangY"><input id="foreignlangY" type="radio" name="foreignlang" value="1" /> Yes</label> <label for="foreignlangN"><input id="foreignlangN" type="radio" name="foreignlang" value="0" /> No</label></p>
+
+<p>(Your answers to these questions do not affect the payment.)</p>
+
+<div id="unanswered">
+	<span>&nbsp;</span> questions (out of {{total_number}} total) have been answered. If you submit now, you will not be paid.<br />
+	<input type="button" value="HIGHLIGHT UNANSWERED QUESTIONS" id="highlight-button" />
+</div>
+
+<div id="answered">
+	<span>&nbsp;</span> questions (out of {{total_number}} total) have been answered. You are ready to submit.
+</div>
+
+<h3 style="color: red; text-align:center;">After submitting this HIT, do NOT submit another HIT with survey code <span class="blue">{{code}}</span>. You will not be paid for completing more than one survey with this code.</h3>
+
+<p><input type="hidden" name="numanswered" id="numanswered" /> <input type="hidden" name="useragent" id="useragent" /></p>
+
+<script type="text/javascript" src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
+
+<script type='text/javascript'>
+// audio playback code:
+//
+// The following code (a) disables the form elements at page load, and then (b) when some
+// audio is played, reenable the corresponding form elements. This acts as a (weak) check
+// that items can only be answered if the audio was played.
+//
+// If JavaScript is not enabled on the page, the form elements themselves will not be
+// disabled, so there simply will be no check that the audio playback happened. The
+// audio playback itself does not depend on JavaScript being enabled.
+
+$(function() {
+	// gray out the "natural" and "unnatural" labels:
+	$('.trial').addClass('disabled');
+	// disable the controls themselves:
+	$('.trial input').prop('disabled',true);
+	
+	// when the audio reaches the end, the "ended" event fires:
+	$('audio').on('ended', function() {
+		// find the relevant trial
+		var trial = $(this).closest('.trial');
+		
+		// un-gray out the labels:
+		trial.removeClass('disabled');
+		// enable the controls:
+		trial.find('input').prop('disabled',false);
+	})
+});
+</script>
+
+<script type='text/javascript'>
+// counter code:
+total_number = parseInt("{{total_number}}") || Infinity;
+
+function count() {
+	if ($(this).is('input') && $(this).closest('table').find('input[type=radio].count:checked').length == 1)
+		$(this).closest('.trial').css('background','transparent');
+
+	var num = $('input[type=radio].count:checked').length;
+
+	$('#unanswered span, #answered span').text(num);
+	$('#numanswered').val(num);
+
+	if ( num < total_number ) {
+		$('#unanswered').show();
+		$('#answered').hide();
+	} else {
+		$('#unanswered').hide();
+		$('#answered').show();
+	}
+}
+$(count);
+$('input[type=radio]').bind('change', count);
+
+$(function() {
+	$('#useragent').val(navigator.userAgent);
+});
+
+function highlight() {
+	$('table:has(.count)').each(function() {
+		if ($(this).find('input[type=radio].count:checked').length != 1)
+			$(this).closest('.trial').css('background', 'yellow');
+		else
+			$(this).closest('.trial').css('background', 'transparent');			
+	});
+}
+$('#highlight-button').click(highlight);
+</script>
