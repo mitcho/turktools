@@ -28,7 +28,7 @@ We recommend saving all of the files you create for a given experiment in the sa
 
 In the remainder of this section, we will describe the usage of these tools. For a more detailed description of the tools and a proposed workflow, please read:
 
-> Erlewine, Michael Yoshitaka and Hadas Kotek (2013). [*A streamlined approach to online linguistic surveys*](http://ling.auf.net/lingbuzz/001802/current.pdf). Manuscript, MIT.
+> Erlewine, Michael Yoshitaka and Hadas Kotek (to appear). [*A streamlined approach to online linguistic surveys*](http://ling.auf.net/lingbuzz/001802/current.pdf). To appear in [*Natural Language & Linguistic Theory*](http://link.springer.com/journal/11049).
 
 ### Skeletons
 
