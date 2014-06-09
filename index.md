@@ -17,6 +17,6 @@ layout: default
 
 If you use turktools or [turkserver](http://turktools.net/use/server.html) we ask that you cite the following paper:
 
-> Erlewine, Michael Yoshitaka and Hadas Kotek (2013). [*A streamlined approach to online linguistic surveys*](http://ling.auf.net/lingbuzz/001802/current.pdf). Manuscript, MIT.
+> Erlewine, Michael Yoshitaka and Hadas Kotek (to appear). [*A streamlined approach to online linguistic surveys*](http://ling.auf.net/lingbuzz/001802/current.pdf). To appear in [*Natural Language & Linguistic Theory*](http://link.springer.com/journal/11049).
 
 Turktools are licensed under [The MIT License](http://www.tldrlegal.com/license/mit-license).
