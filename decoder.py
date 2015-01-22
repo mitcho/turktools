@@ -6,7 +6,7 @@ mitcho (Michael Yoshitaka Erlewine), mitcho@mitcho.com, April 2013
 Decode a Turk results file into a format optimized for analysis
 
 The MIT License (MIT)
-Copyright (c) 2013 Michael Yoshitaka Erlewine
+Copyright (c) 2013--2014 Michael Yoshitaka Erlewine
 
 Permission is hereby granted, free of charge, to any person obtaining a
 copy of this software and associated documentation files (the
@@ -103,7 +103,8 @@ class ResultsData(object):
 			print( "ERROR: It looks like this results file is missing data or is not formatted correctly (no data found). Please try again." )
 			exit()
 
-		for expected in ['Title', 'Description', 'Keywords', 'Reward']:
+		# only expect Title, as other metadata is not included by turkserver
+		for expected in ['Title']:
 			if expected not in self.data[0]:
 				print( "ERROR: It looks like the results file is not formatted correctly (missing expected column {0}). Please try again.".format(expected) )
 				exit()
@@ -125,11 +126,11 @@ class ResultsData(object):
 			exit()
 
 	def report(self):
+		# AMT includes all of these, but turkserver only includes Title
 		print( '-' * 20 )
-		print( 'Title:       ', self.data[0]['Title'] )
-		print( 'Description: ', self.data[0]['Description'] )
-		print( 'Keywords:    ', self.data[0]['Keywords'] )
-		print( 'Reward:      ', self.data[0]['Reward'] )
+		for field in ['Title', 'Description', 'Keywords', 'Reward']:
+			if field in self.data[0]:
+				print( '{:<11}: '.format(field), self.data[0][field] )
 		print( '-' * 20 )
 
 	@property
@@ -179,9 +180,15 @@ class ResultsData(object):
 			('WorkerId', row['WorkerId']),
 			('AssignmentId', row['AssignmentId']),
 			('AssignmentStatus', row['AssignmentStatus']),
-			('WorkTimeInSeconds', row['WorkTimeInSeconds']),
+# 			('WorkTimeInSeconds', row['WorkTimeInSeconds']),
 			('List', row['Input.list']),
 		]
+
+		# optional user/assignment fields
+		# WorkTimeInSeconds is not included by turkserver (for now)
+		if 'WorkTimeInSeconds' in self.data[0]:
+			data.append( ('WorkTimeInSeconds', row['WorkTimeInSeconds']) )
+
 		return data
 
 	def decode(self):
