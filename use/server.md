@@ -7,7 +7,7 @@ Turkserver hosts Amazon Mechanical Turk (AMT)-style surveys on your own server. 
 
 ## Installation
 
-1. Copy the `turkserver` folder onto your server. The "turkserver" folder name will become part of survey URLs, so change the name of the directory if you like.
+1. [Download `turkserver`](https://github.com/mitcho/turkserver/zipball/master). Copy the `turkserver` folder onto your server. The "turkserver" folder name will become part of survey URLs, so change the name of the directory if you like.
 2. Point your browser to the test page, at `http://server/.../turkserver/index.php`. This page will check to make sure that turkserver is installed properly.
 3. Start hosting experiments! See "usage" below.
 
