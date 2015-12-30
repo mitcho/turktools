@@ -53,6 +53,7 @@ A *skeleton* is an HTML file that contains substitution tags that will be filled
 * `completion.skeleton.html`: word-completion task
 * `sentence-choice.skeleton.html`: sentence-completion task
 * `completion-menu.skeleton.html`: completion task with drop-down menu
+* `audio-transcription.skeleton.html`: audio transcription task
 
 The skeleton contains substitution tags, wrapped in double curly braces, i.e. `{{…}}`, will be filled in by the *Templater*. [Read more about supported substitution tags](http://turktools.net/use/tags).
 
@@ -174,11 +175,11 @@ turktools includes unit tests using the Python-standard `unittest` library. Test
 
 If you use turktools or [turkserver](http://github.com/mitcho/turkserver) we ask that you cite the following paper:
 
-> Erlewine, Michael Yoshitaka and Hadas Kotek (to appear). [*A streamlined approach to online linguistic surveys*](http://ling.auf.net/lingbuzz/001802/current.pdf). To appear in [*Natural Language & Linguistic Theory*](http://link.springer.com/journal/11049).
+> Erlewine, Michael Yoshitaka and Hadas Kotek (to appear). [*A streamlined approach to online linguistic surveys*](http://link.springer.com/article/10.1007/s11049-015-9305-9). To appear in [*Natural Language & Linguistic Theory*](http://link.springer.com/journal/11049).
 
 ## The MIT License (MIT)
 
-Copyright (c) 2013 Michael Yoshitaka Erlewine <mitcho@mitcho.com> and contributors
+Copyright (c) 2013--2015 Michael Yoshitaka Erlewine <mitcho@mitcho.com> and contributors
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal

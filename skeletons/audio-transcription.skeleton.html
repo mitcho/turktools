@@ -1,0 +1,201 @@
+{{! Audio transcription template skeleton; use templater.py! }}
+
+<!-- these icons are from https://github.com/google/material-design-icons, CC BY 
+	"We'd love attribution in your app's about screen, but it's not required." -->
+<style type="text/css">
+label, input[type=radio], input[type=button] { cursor: pointer; }
+.blue { color: blue; }
+.red { color: red; }
+.trial { padding: 15px 10px; }
+.trial p, .trial table { padding-left: 50px; margin: 3px; }
+.trial table { width: 400px; }
+.trial tr td { width: 50%; text-align: center; }
+.trial_number { float: left; font-size: 1.5em; font-weight: bold; display:inline-block; min-width:50px; }
+#unanswered { font-weight: bold; font-size: 2em; color: black; background-color: red; margin: 0 auto; width: 500px; border: black 1px solid; padding: 10px; display:none; }
+#answered { margin: 0 auto; width: 500px; border: black 1px solid; padding: 10px; display:none; }
+
+.player {
+	display: inline-block;
+	clear: both;
+	background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 48 48"><path d="M20 33l12-9-12-9v18zm4-29C12.95 4 4 12.95 4 24s8.95 20 20 20 20-8.95 20-20S35.05 4 24 4zm0 36c-8.82 0-16-7.18-16-16S15.18 8 24 8s16 7.18 16 16-7.18 16-16 16z"/></svg>');
+	width: 48px;
+	height: 48px;
+	cursor: pointer;
+	vertical-align: middle;
+	margin-right: 10px;
+}
+.player audio {
+	display: none;
+}
+.player.played {
+	background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 48 48"><path d="M18 32.34L9.66 24l-2.83 2.83L18 38l24-24-2.83-2.83z"/></svg>');
+	cursor: default;
+}
+.trial input {
+	font-size: 18px;
+}
+
+.disabled label { color: gray; }
+</style>
+
+<p>Survey Code: <span class="blue">{{code}}</span></p>
+
+<p class="red"><strong>PLEASE COMPLETE AT MOST ONE <span class="blue">{{code}}</span> SURVEY. YOU WILL NOT BE PAID FOR COMPLETING MORE THAN ONE SURVEY WITH THIS CODE.</strong></p>
+
+<h3>Instructions</h3>
+
+<p>This questionnaire presents {{total_number}} audio recordings of English sentences. Your task is to listen to the recording and write down what you heard. Here is an example:</p>
+
+<div class="trial">	
+	<div class="player"><audio preload="auto">
+		Your browser does not support the <code>audio</code> element. You cannot participate in this HIT.
+		<source src="http://turktools.net/images/test1.mp3" type="audio/mp3">
+		<source src="http://turktools.net/images/test1.ogg" type="audio/ogg">
+	</audio></div>
+
+	<label for="ChoiceSample1">Transcription:</label> <input type="text" id="ChoiceSample1" name="ChoiceSample1" size="30" />
+</div>
+
+<p>Here is another example:</p>
+
+<div class="trial">
+	<div class="player"><audio preload="auto">
+		Your browser does not support the <code>audio</code> element. You cannot participate in this HIT.
+		<source src="http://turktools.net/images/test2.mp3" type="audio/mp3">
+		<source src="http://turktools.net/images/test2.ogg" type="audio/ogg">
+	</audio></div>
+
+	<label for="ChoiceSample2">Transcription:</label> <input type="text" id="ChoiceSample2" name="ChoiceSample2" size="30" />
+</div>
+
+<p class="red"><strong>In order to get paid, please make sure that you answer all {{total_number}} questions.</strong></p>
+
+<p><strong>Consent Statement:</strong>...</p>
+
+<p>If your browser has JavaScript turned on, a counter will be displayed at the bottom of the page indicating how many questions have been answered. <strong>It is highly recommended that you <span class="red">turn on JavaScript</span> and use this tool before submitting to ensure that all questions have been answered and you can receive payment.</strong></p>
+
+<hr noshade="noshade" />
+
+{{#items}}
+
+<div class="trial count">
+	<span class="trial_number">{{number}}.</span>
+	
+	<div class="player"><audio preload="auto">
+		Your browser does not support the <code>audio</code> element. You cannot participate in this HIT.
+		<source src="{{field_1}}.mp3" type="audio/mp3">
+		<source src="{{field_1}}.ogg" type="audio/ogg">
+	</audio></div>
+
+	<label for="Choice{{number}}">Transcription:</label> <input type="text" id="Choice{{number}}" name="Choice{{number}}" size="30" />
+</div>
+
+<hr noshade="noshade" />
+
+{{/items}}
+
+<p>Are you a native speaker of English? <label for="englishY"><input id="englishY" type="radio" name="english" value="1" /> Yes</label> <label for="englishN"><input id="englishN" type="radio" name="english" value="0" /> No</label></p>
+
+<p>Do you speak a language other than English? <label for="foreignlangY"><input id="foreignlangY" type="radio" name="foreignlang" value="1" /> Yes</label> <label for="foreignlangN"><input id="foreignlangN" type="radio" name="foreignlang" value="0" /> No</label></p>
+
+<p>(Your answers to these questions do not affect the payment.)</p>
+
+<div id="unanswered">
+	<span>&nbsp;</span> questions (out of {{total_number}} total) have been answered. If you submit now, you will not be paid.<br />
+	<input type="button" value="HIGHLIGHT UNANSWERED QUESTIONS" id="highlight-button" />
+</div>
+
+<div id="answered">
+	<span>&nbsp;</span> questions (out of {{total_number}} total) have been answered. You are ready to submit.
+</div>
+
+<h3 style="color: red; text-align:center;">After submitting this HIT, do NOT submit another HIT with survey code <span class="blue">{{code}}</span>. You will not be paid for completing more than one survey with this code.</h3>
+
+<p><input type="hidden" name="numanswered" id="numanswered" /> <input type="hidden" name="useragent" id="useragent" /></p>
+
+<script type="text/javascript" src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
+
+<script type='text/javascript'>
+// audio playback code:
+//
+// The following code (a) disables the form elements at page load, and then (b) when some
+// audio is played, reenable the corresponding form elements. This acts as a (weak) check
+// that items can only be answered if the audio was played.
+//
+// If JavaScript is not enabled on the page, the form elements themselves will not be
+// disabled, so there simply will be no check that the audio playback happened. The
+// audio playback itself does not depend on JavaScript being enabled.
+
+$(function() {
+	$('.player').one('click', function() {
+		$(this).addClass('played');
+
+		// find the relevant trial
+		var trial = $(this).closest('.trial');
+		
+		// un-gray out the labels:
+		trial.removeClass('disabled');
+		// enable the controls:
+		trial.find('input').prop('disabled',false);
+
+		// focus on the transcription box:
+		trial.find('input').focus();
+
+		// if it's clicked again, just focus on the input again
+		$(this).click(function () {
+			trial.find('input').focus();
+		});
+
+		// play the audio
+		$(this).find('audio').get(0).play();
+	});
+
+	// gray out the "natural" and "unnatural" labels:
+	$('.trial').addClass('disabled');
+	// disable the controls themselves:
+	$('.trial input').prop('disabled',true);
+});
+</script>
+
+<script type='text/javascript'>
+// counter code:
+total_number = parseInt("{{total_number}}") || Infinity;
+
+function answered() {
+	var value = $(this).val();
+	return value.length;
+}
+function count() {
+	if ($(this).is('input') && $(this).is(answered))
+		$(this).closest('.trial').css('background','transparent');
+
+	var num = $('.count input[type="text"]').filter(answered).length;
+
+	$('#unanswered span, #answered span').text(num);
+	$('#numanswered').val(num);
+
+	if ( num < total_number ) {
+		$('#unanswered').show();
+		$('#answered').hide();
+	} else {
+		$('#unanswered').hide();
+		$('#answered').show();
+	}
+}
+$(count);
+$('input').bind('change', count);
+
+$(function() {
+	$('#useragent').val(navigator.userAgent);
+});
+
+function highlight() {
+	$('.trial.count').each(function() {
+		if (!$(this).find('input').is(answered))
+			$(this).css('background', 'yellow');
+		else
+			$(this).css('background', 'transparent');			
+	});
+}
+$('#highlight-button').click(highlight);
+</script>
