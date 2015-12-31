@@ -3,11 +3,11 @@ title: Using audio playback
 layout: default
 ---
 
-For many experimental designs, it is useful or necessary to have participants listen to an audio recording. Turktools includes a sample audio playback skeleton, `binary-audio.skeleton.html`. This page discusses technical details relevant to preparing and serving audio files with this and similar templates.
+For many experimental designs, it is useful or necessary to have participants listen to an audio recording. Turktools includes two sample audio playback skeletons, `binary-audio.skeleton.html` and `audio-transcription.skeleton.html`. This page discusses technical details relevant to preparing and serving audio files with this and similar templates.
 
 ## Audio playback with HTML5 Audio
 
-Modern browsers include built-in support for audio playback using the new `<audio>` HTML tag. This allows for audio playback on websites without the use of JavaScript or a plugin such as Flash. The sample skeleton `binary-audio.skeleton.html` uses this `<audio>` tag.
+Modern browsers include built-in support for audio playback using the new `<audio>` HTML tag. This allows for audio playback on websites without the use of JavaScript or a plugin such as Flash. The sample skeletons `binary-audio.skeleton.html` and `audio-transcription.skeleton.html` use this `<audio>` tag.
 
 Unfortunately, not all browsers support the same set of audio file formats for use with `<audio>`. Most modern browsers support the common mp3 format, but Firefox's support for mp3 is currently dependent on the operating system and environment. Firefox (as well as some other browsers) instead supports and encourages the use of the [ogg vorbis file format](https://en.wikipedia.org/wiki/Vorbis) (`.ogg`). See more information on [supported audio file formats](https://developer.mozilla.org/en-US/docs/Web/HTML/Supported_media_formats).
 
@@ -33,9 +33,15 @@ For each of these modifications, the template skeleton will require additional "
 
 ## Additional JavaScript code in the skeleton
 
+### `binary-audio`
+
 The `binary-audio.skeleton.html` template includes an additional bit of JavaScript code which makes it so that the "natural"/"unnatural" buttons cannot be pressed until the corresponding audio clip has reached the end. (Technically, this is triggered by the HTML5 Audio API's `ended` event.) This helps to ensure that users with JavaScript enabled cannot answer an item before they have listened to the audio.
 
 With the script as written in `binary-audio.skeleton.html`, users without JavaScript enabled will simply not have this feature enabled, but will still be able to play the audio and participate in the experiement. It may be advantageous instead to strictly require JavaScript to be enabled, for example by using CSS to hide the experimental items by default and using JavaScript, if enabled, to unhide the items.
+
+### `audio-transcription`
+
+The `audio-transcription.skeleton.html` template uses JavaScript to control audio playback, so that the recording can only be heard once. The `<audio>` tag itself is not displayed. Instead, a play button is displayed and pressing the button plays the audio and enables the corresponding transcription field. Subsequent button presses will not replay the audio. In this way, JavaScript can be used to control the precise presentation (in this case, audio playback) of stimuli.
 
 ## Final notes
 

@@ -45,6 +45,7 @@ A *skeleton* is an HTML file that contains substitution tags that will be filled
 * `completion.skeleton.html`: word-completion task
 * `sentence-choice.skeleton.html`: sentence-completion task
 * `completion-menu.skeleton.html`: completion task with drop-down menu
+* `audio-transcription.skeleton.html`: audio transcription task
 
 The skeleton contains substitution tags, wrapped in double curly braces, i.e. `{% raw %}{{…}}{% endraw %}`, will be filled in by the *Templater*. [Read more about the supported substitution tags](tags.html).
 
