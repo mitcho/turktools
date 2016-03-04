@@ -1,7 +1,7 @@
 # coding: utf-8
 """
 Turk Lister
-mitcho (Michael Yoshitaka Erlewine), mitcho@mitcho.com, May 2013
+Michael Yoshitaka ERLEWINE, mitcho@mitcho.com, May 2013
 
 Takes an items file and produces a Turk items CSV file and a decode CSV file.
 
@@ -13,7 +13,7 @@ This script is a clean-room rewrite of Gibson et al's Turkolizer, whose
 copyright and licensing terms are unclear.
 
 The MIT License (MIT)
-Copyright (c) 2013 Michael Yoshitaka Erlewine
+Copyright (c) 2013--2016 Michael Yoshitaka ERLEWINE and contributors
 
 Permission is hereby granted, free of charge, to any person obtaining a
 copy of this software and associated documentation files (the
@@ -55,7 +55,7 @@ except ImportError:
 	pass
 
 def graceful_write_csv(filename, data, keys = False):
-	from csv import DictWriter
+	import csv
 
 	if keys is False:
 		keys = data[0].keys()
@@ -64,12 +64,13 @@ def graceful_write_csv(filename, data, keys = False):
 
 	with open(filename, 'wb') as f:
 		# setting keys here fixes the order of columns
-		writer = DictWriter(f, keys, extrasaction = 'ignore')
+		writer = csv.DictWriter(f, keys, extrasaction = 'ignore', quoting = csv.QUOTE_NONNUMERIC)
 
 		# use this cumbersome line instead of writeheader() for python 2.6 compat:
 		writer.writerow(dict(zip(keys, keys)))
+		# encode utf8 on writerow, thanks to Anoop Sarkar:
 		for row in data:
-			writer.writerow(row)
+			writer.writerow({k: v.encode('utf8') if type(v) is unicode else v for k, v in row.items()})
 
 def lcm(numbers):
 	from fractions import gcd
