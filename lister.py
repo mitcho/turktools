@@ -70,7 +70,7 @@ def graceful_write_csv(filename, data, keys = False):
 		writer.writerow(dict(zip(keys, keys)))
 		# encode utf8 on writerow, thanks to Anoop Sarkar:
 		for row in data:
-			writer.writerow({k: v.encode('utf8') if type(v) is unicode else v for k, v in row.items()})
+			writer.writerow(dict((k, v.encode('utf8') if type(v) is unicode else v) for k, v in row.items()))
 
 def lcm(numbers):
 	from fractions import gcd
