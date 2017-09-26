@@ -455,7 +455,13 @@ def get_in_range(max, label, given=False):
 		value = -1
 		while value < 0 or value > max:
 			raw = raw_input("Minimum {0} (0-{1}): ".format(label, max))
+
+			if raw.isdigit() == False:
+				print("Please try again.")
+				continue
+			
 			value = int(raw)
+			
 			if value < 0 or value > max:
 				print("Please try again.")
 	return value
@@ -514,7 +520,7 @@ def main(args):
 	if number_of_lists.isdigit():
 		number_of_lists = int(number_of_lists)
 	else:
-		print("The value given, '{0}', could not be read. The minimum number, {0}, will be used instead.".format(number_of_lists, lnm))
+		print("The value given, '{0}', could not be read. The minimum number, {1}, will be used instead.".format(number_of_lists, lnm))
 		number_of_lists = lnm
 
 	if number_of_lists < lnm:
