@@ -13,7 +13,7 @@ This script is a clean-room rewrite of Gibson et al's Turkolizer, whose
 copyright and licensing terms are unclear.
 
 The MIT License (MIT)
-Copyright (c) 2013--2016 Michael Yoshitaka ERLEWINE and contributors
+Copyright (c) 2013--2017 Michael Yoshitaka ERLEWINE and contributors
 
 Permission is hereby granted, free of charge, to any person obtaining a
 copy of this software and associated documentation files (the
@@ -557,6 +557,8 @@ def main(args):
 
 	graceful_write_csv(name_part + '.turk.csv', data, keys)
 	print( 'Successfully wrote randomized lists to ' + name_part + '.turk.csv' )
+	print( 'The associated template file should take {0} items.'
+			.format(experiment.target_count + experiment.filler_count) )
 	graceful_exit()
 
 if __name__ == '__main__':
