@@ -454,10 +454,11 @@ def get_in_range(max, label, given=False):
 	else:
 		value = -1
 		while value < 0 or value > max:
-			raw = raw_input("Minimum {0} (0-{1}): ".format(label, max))
+			raw = raw_input("Minimum {0} ([0]-{1}): ".format(label, max))
 
 			if raw.isdigit() == False:
-				print("Please try again.")
+				print("Using the default value, 0.")
+				value = 0
 				continue
 			
 			value = int(raw)
@@ -520,7 +521,8 @@ def main(args):
 	if number_of_lists.isdigit():
 		number_of_lists = int(number_of_lists)
 	else:
-		print("The value given, '{0}', could not be read. The minimum number, {1}, will be used instead.".format(number_of_lists, lnm))
+		print("The value given, '{0}', could not be read. The minimum number, {1}, will be used instead."
+			.format(number_of_lists, lnm))
 		number_of_lists = lnm
 
 	if number_of_lists < lnm:
@@ -533,7 +535,7 @@ def main(args):
 
 	# ASK ABOUT REVERSE LISTS
 	reverse = False
-	want_reverse = args[5] if len(args) > 5 else raw_input("Would you like reverse lists? [y] ")
+	want_reverse = args[5] if len(args) > 5 else raw_input("Would you like reverse lists? ([yes], no) ")
 	if want_reverse == '' or want_reverse[0].lower() == 'y':
 		reverse = True
 	
