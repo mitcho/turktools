@@ -1,7 +1,7 @@
 turktools
 =========
 
-Tools for preparing linguistic surveys for Amazon Mechanical Turk (AMT), as described in [Erlewine and Kotek (to appear)](http://ling.auf.net/lingbuzz/001802/current.pdf). New website: [turktools.net](http://turktools.net)
+Tools for preparing linguistic surveys for Amazon Mechanical Turk (AMT), as described in [Erlewine and Kotek (2016)](https://link.springer.com/article/10.1007/s11049-015-9305-9). Website: [turktools.net](http://turktools.net)
 
 ## Features
 
@@ -36,7 +36,7 @@ We recommend saving all of the files you create for a given experiment in the sa
 
 In the remainder of this section, we will describe the usage of these tools. For a more detailed description of the tools and a proposed workflow, please read:
 
-> Erlewine, Michael Yoshitaka and Hadas Kotek (to appear). [*A streamlined approach to online linguistic surveys*](http://ling.auf.net/lingbuzz/001802/current.pdf). To appear in [*Natural Language & Linguistic Theory*](http://link.springer.com/journal/11049).
+> Erlewine, Michael Yoshitaka and Hadas Kotek (2016). [*A streamlined approach to online linguistic surveys*](https://link.springer.com/article/10.1007/s11049-015-9305-9). *Natural Language & Linguistic Theory* 34:481–495. ([Preprint](http://ling.auf.net/lingbuzz/001802/current.pdf))
 
 ### Skeletons
 
@@ -130,7 +130,6 @@ By the time you're done preparing, running, and analyzing an experiment, your fo
 
 ## Known issues
 
-* [Issue #1](https://github.com/mitcho/turktools/issues/1): Input files must be ASCII. Full Unicode support is planned.
 * [Issue #2](https://github.com/mitcho/turktools/issues/2): If the results CSV file from Turk is modified and saved in Excel, `decoder.py` will not be able to read it. This has to do with the line-endings which are used by Excel's CSV output.
 
 ## Technical information
@@ -175,11 +174,11 @@ turktools includes unit tests using the Python-standard `unittest` library. Test
 
 If you use turktools or [turkserver](http://github.com/mitcho/turkserver) we ask that you cite the following paper:
 
-> Erlewine, Michael Yoshitaka and Hadas Kotek (to appear). [*A streamlined approach to online linguistic surveys*](http://link.springer.com/article/10.1007/s11049-015-9305-9). To appear in [*Natural Language & Linguistic Theory*](http://link.springer.com/journal/11049).
+> Erlewine, Michael Yoshitaka and Hadas Kotek (2016). [*A streamlined approach to online linguistic surveys*](https://link.springer.com/article/10.1007/s11049-015-9305-9). *Natural Language & Linguistic Theory* 34:481–495.
 
 ## The MIT License (MIT)
 
-Copyright (c) 2013--2015 Michael Yoshitaka Erlewine <mitcho@mitcho.com> and contributors
+Copyright (c) 2013--2017 Michael Yoshitaka Erlewine <mitcho@mitcho.com> and contributors
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -203,3 +202,4 @@ THE SOFTWARE.
 
 * Hadas Kotek
 * Erin Olson
+* Chung-hye Han and Anoop Sarkar
