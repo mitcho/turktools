@@ -494,14 +494,14 @@ def main(args):
 			.format(experiment))
 		
 		# set between_fillers
-		if experiment.max_between_fillers > 0:
+		if experiment.target_count > 1 and experiment.max_between_fillers > 0:
 			experiment.between_fillers = get_in_range(
 				experiment.max_between_fillers,
 				'number of fillers between targets',
 				args[2] if len(args) > 2 else False)
-		else:
+
+		if experiment.target_count > 1 and experiment.max_between_fillers == 0:
 			print("WARNING: There are not enough fillers. There will be target items presented one after another.")
-			experiment.between_fillers = 0
 
 		# set edge_fillers
 		if experiment.max_edge_fillers > 0:
